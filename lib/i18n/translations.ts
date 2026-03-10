@@ -26,7 +26,7 @@ export const translations = {
     },
     // CTAs
     cta: {
-      rsvp: "Kinnita tulek",
+      rsvp: "Kinnita osalemine",
       menu: "Vali menüü",
       flowers: "Kingi lilli",
       info: "Rohkem infot",
@@ -43,7 +43,7 @@ export const translations = {
     },
     // RSVP Page
     rsvp: {
-      title: "Kinnita tulek",
+      title: "Kinnita osalemine",
       subtitle: "Palun anna meile teada, kas saad tulla",
       firstName: "Eesnimi",
       lastName: "Perekonnanimi",
