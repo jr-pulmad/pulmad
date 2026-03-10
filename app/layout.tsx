@@ -23,8 +23,8 @@ const _geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Johanna & Rannar | Randmäe pulmad 2026",
-  description: "Johanna ja Rannar pulmad Alatskivi lossis, 19. august 2026. Palun vasta, menüüvalik ja info.",
+  title: "Johanna & Rannar | Randmäed",
+  description: "Johanna ja Rannari pulmad Alatskivil, 19. august 2026.",
   keywords: ["pulmad", "wedding", "Randmäe", "Alatskivi Loss", "2026"],
   authors: [{ name: "Johanna & Rannar Randmäe" }],
   openGraph: {
