@@ -2,10 +2,9 @@ export type Language = "et" | "en"
 
 export const translations = {
   et: {
-    // Navigation
     nav: {
       home: "Avaleht",
-      rsvp: "Palun vasta",
+      rsvp: "RSVP",
       menu: "Menüü",
       flowers: "Lilled",
       info: "Info",
@@ -27,9 +26,9 @@ export const translations = {
     },
     // CTAs
     cta: {
-      rsvp: "Palun vasta",
+      rsvp: "Kinnita tulek",
       menu: "Vali menüü",
-      flowers: "Kinga lilli",
+      flowers: "Kingi lilli",
       info: "Rohkem infot",
       viewUpdates: "Vaata uuendusi",
       subscribe: "Telli uuendused",
@@ -40,11 +39,11 @@ export const translations = {
       lastUpdated: "Viimati uuendatud",
       noUpdates: "Hetkel uuendusi pole. Tule varsti tagasi!",
       subscribeTitle: "Ole kursis",
-      subscribeText: "Sisesta oma e-mail, et saada teavitusi uute uuenduste kohta.",
+      subscribeText: "Sisesta oma e-mail, et saada teavitusi uute muutuste kohta.",
     },
     // RSVP Page
     rsvp: {
-      title: "Palun vasta",
+      title: "Kinnita tulek",
       subtitle: "Palun anna meile teada, kas saad tulla",
       firstName: "Eesnimi",
       lastName: "Perekonnanimi",
@@ -88,15 +87,15 @@ export const translations = {
     },
     // Flowers Page
     flowers: {
-      title: "Kinga lilli",
+      title: "Kingi lilli",
       subtitle: "Aita meil luua unustamatu lillekaunistus",
       description:
-        "Lillede asemel palume panustada meie floristika eelarvesse. Kõik annetused lähevad otse meie pulmalillede ostuks.",
+        "Lillede asemel palume panustada meie floristika eelarvesse. Kõik maksed lähevad otse meie pulmalillede ostuks.",
       presetAmounts: "Vali summa",
       customAmount: "Muu summa",
       customAmountPlaceholder: "Sisesta summa",
       currency: "€",
-      donate: "Anneta",
+      donate: "Maksa",
       processing: "Töötlen...",
       success: "Suur tänu sinu panuse eest!",
       cancel: "Makse tühistati. Proovi uuesti.",
@@ -126,7 +125,7 @@ export const translations = {
       },
       children: {
         title: "Lapsed",
-        content: "Lapsed on tseremooniasse oodatud. Info peo kohta tuleb varsti...",
+        content: "Lapsed on tseremooniale oodatud. Info peo kohta tuleb varsti...",
       },
       contact: {
         title: "Kontakt",
