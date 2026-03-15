@@ -350,17 +350,6 @@ export function VenuePreview() {
               </CardContent>
             </Card>
           </div>
-
-          {/* Travel info note */}
-          <Card className="bg-secondary/30 border-border">
-            <CardContent className="p-4 sm:p-6">
-              <p className="text-sm text-muted-foreground text-center">
-                {language === "et"
-                  ? "Tartu Peetri kirikust on Alatskivi lossini ~45 km (~45 min autoga). Soovitame pärast laulatust liikuda otse toimumispaika."
-                  : "From Tartu St. Peter's Church to Alatskivi Castle is ~45 km (~45 min by car). We recommend heading directly to the venue after the ceremony."}
-              </p>
-            </CardContent>
-          </Card>
         </div>
       </div>
       
