@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n/context"
-import { Heart } from "lucide-react"
 
 export function Footer() {
   const { t } = useI18n()
@@ -35,12 +34,6 @@ export function Footer() {
               {t.footer.privacy}
             </Link>
           </nav>
-
-          {/* Made with love */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>{t.footer.madeWith}</span>
-            <Heart className="w-4 h-4 text-primary fill-primary" />
-          </div>
 
           {/* Copyright */}
           <p className="text-xs text-muted-foreground/60">© 2026 Randmäed. {t.footer.allRights}.</p>

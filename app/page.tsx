@@ -6,6 +6,7 @@ import { CTAGrid } from "@/components/sections/cta-grid"
 import { Updates } from "@/components/sections/updates"
 import { VenuePreview } from "@/components/sections/venue-preview"
 import { Weather } from "@/components/sections/weather"
+import { ScrollIndicator } from "@/components/ui/scroll-indicator"
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
         <VenuePreview />
       </main>
       <Footer />
+      <ScrollIndicator />
     </div>
   )
 }

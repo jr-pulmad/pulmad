@@ -5,9 +5,8 @@ import type React from "react"
 import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import { FloatingInput } from "@/components/ui/floating-input"
 import { Flower2, Loader2, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -65,10 +64,6 @@ export function DonationForm() {
       const data = await response.json()
 
       if (response.ok) {
-        // In production, redirect to payment provider URL
-        // if (data.paymentUrl) {
-        //   window.location.href = data.paymentUrl
-        // }
         setIsSuccess(true)
       } else {
         setError(data.error || t.flowers.cancel)
@@ -82,9 +77,9 @@ export function DonationForm() {
 
   if (isSuccess) {
     return (
-      <Card className="max-w-xl mx-auto bg-card/50 border-border">
+      <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm">
         <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
             <CheckCircle2 className="w-8 h-8 text-primary" />
           </div>
           <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3">{t.common.success}</h3>
@@ -98,10 +93,10 @@ export function DonationForm() {
   }
 
   return (
-    <Card className="max-w-xl mx-auto bg-card/50 border-border">
+    <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm shadow-xl">
       <CardHeader className="text-center pb-2">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 mx-auto">
-          <Flower2 className="w-6 h-6 text-primary" />
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
+          <Flower2 className="w-7 h-7 text-primary" />
         </div>
         <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.flowers.title}</CardTitle>
         <CardDescription className="text-muted-foreground mt-2 max-w-md mx-auto">
@@ -110,64 +105,62 @@ export function DonationForm() {
       </CardHeader>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Preset amounts */}
+          {/* Preset amounts with neumorphic style */}
           <div className="space-y-3">
-            <Label>{t.flowers.presetAmounts}</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
+            <div className="grid grid-cols-2 gap-4">
               {PRESET_AMOUNTS.map((amount) => (
                 <button
                   key={amount}
                   type="button"
                   onClick={() => handlePresetClick(amount)}
                   className={cn(
-                    "py-4 px-4 rounded-xl border-2 font-medium text-lg transition-all duration-200",
+                    "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-300",
                     selectedAmount === amount
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background/30 text-foreground hover:border-primary/50 hover:bg-background/50",
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-[1.02]"
+                      : "bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-secondary/50 shadow-[4px_4px_10px_rgba(0,0,0,0.05),-4px_-4px_10px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(255,255,255,0.05)]",
                   )}
                 >
-                  {amount}
-                  {t.flowers.currency}
+                  {amount}{t.flowers.currency}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Custom amount */}
-          <div className="space-y-2">
-            <Label htmlFor="customAmount">{t.flowers.customAmount}</Label>
-            <div className="relative">
-              <Input
-                id="customAmount"
-                type="text"
-                inputMode="decimal"
-                placeholder={t.flowers.customAmountPlaceholder}
-                value={customAmount}
-                onChange={handleCustomChange}
-                className={cn("bg-background/50 border-border pr-10 text-lg h-12", customAmount && "border-primary")}
-              />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                {t.flowers.currency}
-              </span>
-            </div>
+          {/* Custom amount with floating label */}
+          <div className="relative">
+            <FloatingInput
+              id="customAmount"
+              type="text"
+              inputMode="decimal"
+              value={customAmount}
+              onChange={handleCustomChange}
+              label={t.flowers.customAmount}
+              className={cn(
+                "pr-12 text-lg h-16",
+                customAmount && "border-primary"
+              )}
+            />
+            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+              {t.flowers.currency}
+            </span>
           </div>
 
           {/* Selected amount display */}
           {getFinalAmount() > 0 && (
-            <div className="text-center py-4 rounded-xl bg-secondary/30 border border-border">
+            <div className="text-center py-5 rounded-2xl bg-secondary/30 border border-border">
               <p className="text-sm text-muted-foreground mb-1">
                 {language === "et" ? "Valitud summa" : "Selected amount"}
               </p>
-              <p className="font-serif text-3xl font-medium text-primary">
-                {getFinalAmount()}
-                {t.flowers.currency}
+              <p className="font-serif text-4xl font-medium text-primary">
+                {getFinalAmount()}{t.flowers.currency}
               </p>
             </div>
           )}
 
           {/* Error message */}
           {error && (
-            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
               {error}
             </div>
           )}
@@ -181,10 +174,10 @@ export function DonationForm() {
           </div>
 
           {/* Submit button */}
-          <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || getFinalAmount() < 1}>
+          <Button type="submit" className="w-full" size="xl" disabled={isSubmitting || getFinalAmount() < 1}>
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 {t.flowers.processing}
               </>
             ) : (
