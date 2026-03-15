@@ -15,7 +15,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [hasScrolledOnce, setHasScrolledOnce] = useState(false)
-  const [highlightStyle, setHighlightStyle] = useState({ left: 0, width: 0 })
+  const [highlightStyle, setHighlightStyle] = useState({ left: 0, width: 0, opacity: 0 })
   const navRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const prevPathRef = useRef(pathname)
@@ -65,7 +65,7 @@ export function Header() {
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
 
-  // Update highlight position when pathname changes
+  // Update highlight position when pathname changes - animate from current to target
   useEffect(() => {
     const updateHighlight = () => {
       const activeIndex = navItems.findIndex(item => item.href === pathname)
@@ -78,10 +78,11 @@ export function Header() {
           setHighlightStyle({
             left: itemRect.left - navRect.left,
             width: itemRect.width,
+            opacity: 1,
           })
         }
       } else {
-        setHighlightStyle({ left: 0, width: 0 })
+        setHighlightStyle(prev => ({ ...prev, opacity: 0 }))
       }
     }
 
@@ -101,8 +102,8 @@ export function Header() {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo */}
-          <Link href="/" className="group flex flex-col items-start relative">
+          {/* Logo - no micro animations */}
+          <Link href="/" className="flex flex-col items-start relative">
             <span className={cn(
               "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
               showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
@@ -121,17 +122,23 @@ export function Header() {
               ref={navRef}
               className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30"
             >
-              {/* Animated highlight background */}
-              {currentNavIndex !== -1 && (
-                <div 
-                  className="absolute top-1.5 h-[calc(100%-12px)] bg-primary rounded-xl shadow-md transition-all duration-300 ease-out"
-                  style={{ 
-                    left: highlightStyle.left, 
-                    width: highlightStyle.width,
-                    opacity: highlightStyle.width > 0 ? 1 : 0 
-                  }}
-                />
-              )}
+              {/* Liquid glass highlight background - iOS 26 style */}
+              <div 
+                className={cn(
+                  "absolute top-1.5 h-[calc(100%-12px)] rounded-xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "bg-gradient-to-br from-white/90 via-white/70 to-white/50",
+                  "dark:from-white/20 dark:via-white/15 dark:to-white/10",
+                  "shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.5)]",
+                  "dark:shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]",
+                  "backdrop-blur-md border border-white/40 dark:border-white/10"
+                )}
+                style={{ 
+                  left: highlightStyle.left, 
+                  width: highlightStyle.width,
+                  opacity: highlightStyle.opacity,
+                  transform: `translateX(0)`,
+                }}
+              />
               
               {navItems.map((item, index) => {
                 const Icon = item.icon
@@ -144,15 +151,18 @@ export function Header() {
                       ref={el => { itemRefs.current[index] = el }}
                       href={item.href}
                       className={cn(
-                        "relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300 z-10",
+                        "group relative flex items-center gap-2 px-4 py-2 h-9 rounded-xl text-sm font-medium transition-colors duration-300 z-10",
                         isActive 
-                          ? "text-primary-foreground" 
+                          ? "text-foreground" 
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       <Icon className={cn(
                         "w-4 h-4 transition-transform",
-                        isRsvp && !isActive && "md:group-hover:animate-none md:hover:animate-heartbeat"
+                        // RSVP heart beats continuously on hover (desktop only)
+                        isRsvp && "md:group-hover:animate-heartbeat",
+                        // Other icons scale once on hover (desktop only)
+                        !isRsvp && "md:group-hover:scale-110 duration-200"
                       )} />
                       <span>{item.label}</span>
                     </Link>
@@ -176,8 +186,8 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button with heartbeat on RSVP */}
-            <Button asChild size="sm" className="hidden sm:inline-flex group">
+            {/* CTA Button with heartbeat on hover */}
+            <Button asChild size="sm" className="hidden sm:inline-flex group h-9">
               <Link href="/rsvp">
                 <Heart className="w-4 h-4 md:group-hover:animate-heartbeat" />
                 <span>{t.cta.rsvp}</span>
@@ -188,7 +198,7 @@ export function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                "md:hidden p-2 rounded-xl transition-all duration-300",
+                "md:hidden p-2 rounded-xl transition-all duration-300 h-10 w-10 flex items-center justify-center",
                 showSolidBackground 
                   ? "text-foreground hover:bg-secondary" 
                   : "text-white hover:bg-white/10",
@@ -278,7 +288,7 @@ export function Header() {
           
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <LanguageSwitcher isMobile />
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="h-9">
               <Link href="/rsvp" onClick={() => setIsMobileMenuOpen(false)}>
                 {t.cta.rsvp}
               </Link>

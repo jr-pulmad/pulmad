@@ -105,7 +105,7 @@ export function DonationForm() {
       </CardHeader>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Preset amounts with neumorphic style */}
+          {/* Preset amounts - regular button style */}
           <div className="space-y-3">
             <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
             <div className="grid grid-cols-2 gap-4">
@@ -115,10 +115,10 @@ export function DonationForm() {
                   type="button"
                   onClick={() => handlePresetClick(amount)}
                   className={cn(
-                    "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-300",
+                    "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-200",
                     selectedAmount === amount
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/30 scale-[1.02]"
-                      : "bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-secondary/50 shadow-[4px_4px_10px_rgba(0,0,0,0.05),-4px_-4px_10px_rgba(255,255,255,0.8)] dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(255,255,255,0.05)]",
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-secondary/50",
                   )}
                 >
                   {amount}{t.flowers.currency}

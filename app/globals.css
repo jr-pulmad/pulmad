@@ -231,3 +231,10 @@ html {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
+
+/* Remove focus ring from floating inputs - they use border only */
+input[data-slot="input"]:focus-visible,
+textarea[data-slot="textarea"]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
