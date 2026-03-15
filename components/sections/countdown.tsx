@@ -20,6 +20,14 @@ interface StickmanPosition {
   rotation: number
 }
 
+interface FlyingKiss {
+  id: string
+  x: number
+  y: number
+  angle: number
+  scale: number
+}
+
 // Bride with bigger wedding dress
 function BrideStickman({ className }: { className?: string }) {
   return (
@@ -122,6 +130,16 @@ function GroomStickman({ className }: { className?: string }) {
   )
 }
 
+// Kiss lips emoji component
+function KissLips({ className, style }: { className?: string, style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} fill="currentColor">
+      <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" opacity="0" />
+      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontSize="18">💋</text>
+    </svg>
+  )
+}
+
 // Hearts floating animation component with multiple colors - more visible
 function FloatingHearts() {
   const colors = [
@@ -155,6 +173,28 @@ function FloatingHearts() {
   )
 }
 
+// Flying kiss animation component
+function FlyingKisses({ kisses }: { kisses: FlyingKiss[] }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-30">
+      {kisses.map((kiss) => (
+        <div
+          key={kiss.id}
+          className="absolute text-pink-500 animate-fly-kiss"
+          style={{
+            left: `${kiss.x}%`,
+            top: `${kiss.y}%`,
+            transform: `rotate(${kiss.angle}deg) scale(${kiss.scale})`,
+            fontSize: '24px',
+          }}
+        >
+          💋
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // Draggable stickman component
 function DraggableStickman({ 
   type, 
@@ -164,6 +204,7 @@ function DraggableStickman({
   otherPosition,
   hasInteracted,
   onInteraction,
+  isKissing,
 }: { 
   type: "bride" | "groom"
   initialPosition: { x: number, y: number }
@@ -172,6 +213,7 @@ function DraggableStickman({
   otherPosition: { x: number, y: number }
   hasInteracted: boolean
   onInteraction: () => void
+  isKissing: boolean
 }) {
   const [position, setPosition] = useState<StickmanPosition>({
     x: initialPosition.x,
@@ -181,22 +223,8 @@ function DraggableStickman({
     velocityY: 0,
     rotation: 0,
   })
-  const [isDancing, setIsDancing] = useState(false)
   const elementRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number | null>(null)
-
-  // Check if close to other stickman for dance
-  useEffect(() => {
-    const distance = Math.sqrt(
-      Math.pow(position.x - otherPosition.x, 2) + 
-      Math.pow(position.y - otherPosition.y, 2)
-    )
-    if (distance < 15 && !position.isDragging && !position.isFalling) {
-      setIsDancing(true)
-    } else {
-      setIsDancing(false)
-    }
-  }, [position.x, position.y, position.isDragging, position.isFalling, otherPosition])
 
   // Update parent with position
   useEffect(() => {
@@ -235,22 +263,22 @@ function DraggableStickman({
     setPosition(prev => ({ ...prev, isDragging: false, isFalling: true }))
   }, [position.isDragging])
 
-  // Physics simulation for falling - MUCH SLOWER floating effect
+  // Physics simulation for falling - VERY slow graceful floating effect
   useEffect(() => {
     if (!position.isFalling) return
 
-    const gravity = 0.06 // Very slow gravity for floating effect
-    const bounce = 0.25
+    const gravity = 0.02 // Very very slow gravity for graceful floating
+    const bounce = 0.15
     const groundLevel = 72
 
     const animate = () => {
       setPosition(prev => {
-        const newVelocity = prev.velocityY + gravity
+        const newVelocity = Math.min(prev.velocityY + gravity, 0.8) // Cap max fall speed
         const newY = prev.y + newVelocity
         const newRotation = prev.rotation * 0.98
 
         if (newY >= groundLevel) {
-          if (Math.abs(newVelocity) < 0.25) {
+          if (Math.abs(newVelocity) < 0.15) {
             return { ...prev, y: groundLevel, velocityY: 0, isFalling: false, rotation: 0 }
           }
           return { 
@@ -313,8 +341,8 @@ function DraggableStickman({
       <StickmanComponent 
         className={`w-20 sm:w-24 lg:w-28 h-auto ${colorClass} transition-all duration-300 ${
           position.isDragging ? 'opacity-90 scale-110' : 'opacity-50 hover:opacity-70'
-        } ${!position.isDragging && !position.isFalling && !isDancing ? 'animate-sway' : ''} ${
-          isDancing ? 'animate-dance' : ''
+        } ${!position.isDragging && !position.isFalling && !isKissing ? 'animate-sway' : ''} ${
+          isKissing ? 'animate-kiss-lean' : ''
         }`} 
       />
       
@@ -362,7 +390,40 @@ export function Countdown() {
   const [hasInteracted, setHasInteracted] = useState(false)
   const [bridePos, setBridePos] = useState({ x: 12, y: 70 })
   const [groomPos, setGroomPos] = useState({ x: 88, y: 70 })
+  const [isKissing, setIsKissing] = useState(false)
+  const [flyingKisses, setFlyingKisses] = useState<FlyingKiss[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Check if close enough to kiss
+  useEffect(() => {
+    const distance = Math.sqrt(
+      Math.pow(bridePos.x - groomPos.x, 2) + 
+      Math.pow(bridePos.y - groomPos.y, 2)
+    )
+    const shouldKiss = distance < 18
+    
+    if (shouldKiss && !isKissing) {
+      setIsKissing(true)
+      // Spawn flying kisses
+      const newKisses: FlyingKiss[] = []
+      for (let i = 0; i < 6; i++) {
+        newKisses.push({
+          id: crypto.randomUUID(),
+          x: (bridePos.x + groomPos.x) / 2,
+          y: (bridePos.y + groomPos.y) / 2 - 5,
+          angle: -45 + Math.random() * 90,
+          scale: 0.6 + Math.random() * 0.6,
+        })
+      }
+      setFlyingKisses(prev => [...prev, ...newKisses])
+      // Remove kisses after animation
+      setTimeout(() => {
+        setFlyingKisses(prev => prev.filter(k => !newKisses.find(nk => nk.id === k.id)))
+      }, 2000)
+    } else if (!shouldKiss && isKissing) {
+      setIsKissing(false)
+    }
+  }, [bridePos, groomPos, isKissing])
 
   useEffect(() => {
     setMounted(true)
@@ -425,6 +486,9 @@ export function Countdown() {
       {/* Floating hearts background */}
       <FloatingHearts />
       
+      {/* Flying kisses when they kiss */}
+      <FlyingKisses kisses={flyingKisses} />
+      
       {/* Draggable Bride stickman - left side */}
       <DraggableStickman 
         type="bride" 
@@ -434,6 +498,7 @@ export function Countdown() {
         otherPosition={groomPos}
         hasInteracted={hasInteracted}
         onInteraction={() => setHasInteracted(true)}
+        isKissing={isKissing}
       />
       
       {/* Draggable Groom stickman - right side */}
@@ -445,6 +510,7 @@ export function Countdown() {
         otherPosition={bridePos}
         hasInteracted={hasInteracted}
         onInteraction={() => setHasInteracted(true)}
+        isKissing={isKissing}
       />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">

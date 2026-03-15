@@ -321,6 +321,44 @@
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes kiss-lean {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(5deg) scale(1.05);
+  }
+}
+
+@keyframes fly-kiss {
+  0% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) translateX(var(--fly-x, 20px)) scale(0.3) rotate(var(--fly-rotate, 45deg));
+  }
+}
+
+.animate-kiss-lean {
+  animation: kiss-lean 1s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-fly-kiss {
+  animation: fly-kiss 2s ease-out forwards;
+  --fly-x: calc(-40px + 80px * var(--random, 0.5));
+  --fly-rotate: calc(-90deg + 180deg * var(--random, 0.5));
+}
+
+.animate-fly-kiss:nth-child(1) { --fly-x: -30px; --fly-rotate: -45deg; }
+.animate-fly-kiss:nth-child(2) { --fly-x: 40px; --fly-rotate: 60deg; }
+.animate-fly-kiss:nth-child(3) { --fly-x: -50px; --fly-rotate: -30deg; }
+.animate-fly-kiss:nth-child(4) { --fly-x: 25px; --fly-rotate: 75deg; }
+.animate-fly-kiss:nth-child(5) { --fly-x: -15px; --fly-rotate: -60deg; }
+.animate-fly-kiss:nth-child(6) { --fly-x: 55px; --fly-rotate: 30deg; }
+
 .animate-dance {
   animation: dance 2s ease-in-out infinite;
   transform-origin: bottom center;
