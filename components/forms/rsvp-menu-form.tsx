@@ -287,7 +287,51 @@ export function RSVPMenuForm() {
         <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
-              <UserCheck className="w-7 h-7 text-primary" />
+              <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4 mx-auto flex-wrap">
+  <div
+    className={cn(
+      "inline-flex items-center justify-center gap-2 rounded-2xl px-3 sm:px-4 h-14 text-sm font-medium transition-all duration-300",
+      currentStep === "rsvp"
+        ? "bg-primary/10 text-primary"
+        : "bg-primary/10 text-primary"
+    )}
+  >
+    <UserCheck className="w-7 h-7 text-primary" />
+    <span>{t.nav.rsvp}</span>
+  </div>
+
+  {showMenuSection && (
+    <>
+      <ChevronRight className="w-4 h-4 text-muted-foreground" />
+
+      <div
+        className={cn(
+          "inline-flex items-center justify-center gap-2 rounded-2xl px-3 sm:px-4 h-14 text-sm font-medium transition-all duration-300",
+          currentStep === "guests"
+            ? "bg-primary/10 text-primary"
+            : "bg-primary/10 text-primary"
+        )}
+      >
+        <Users className="w-7 h-7 text-primary" />
+        <span>{language === "et" ? "Külalised" : "Guests"}</span>
+      </div>
+
+      <ChevronRight className="w-4 h-4 text-muted-foreground" />
+
+      <div
+        className={cn(
+          "inline-flex items-center justify-center gap-2 rounded-2xl px-3 sm:px-4 h-14 text-sm font-medium transition-all duration-300",
+          currentStep === "menu"
+            ? "bg-primary/10 text-primary"
+            : "bg-primary/10 text-primary"
+        )}
+      >
+        <UtensilsCrossed className="w-7 h-7 text-primary" />
+        <span>{t.nav.menu}</span>
+      </div>
+    </>
+  )}
+</div>
             </div>
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
