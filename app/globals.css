@@ -6,7 +6,7 @@
 /* Wedding color palette - Light mode */
 /* Based on: #ffffff (white), #9abc06 (lime green), #236130 (forest green), #ff28b0 (magenta), #000000 (black) */
 :root {
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #1a1a1a;
   --card: #fafafa;
   --card-foreground: #1a1a1a;

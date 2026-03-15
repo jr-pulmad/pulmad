@@ -4,11 +4,11 @@ import Link from "next/link"
 import { useTheme } from "next-themes"
 import { useI18n } from "@/lib/i18n/context"
 import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, ArrowDown } from "lucide-react"
+import { MapPin, Calendar, ArrowDown, Church, PartyPopper } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export function Hero() {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -54,20 +54,38 @@ export function Hero() {
           </h1>
 
           {/* Family name */}
-          <p className="text-base sm:text-lg md:text-xl text-white/70 tracking-[0.25em] uppercase mb-12 sm:mb-16 font-light">
+          <p className="text-base sm:text-lg md:text-xl text-white/70 tracking-[0.25em] uppercase mb-10 sm:mb-12 font-light">
             Randmäe
           </p>
 
-          {/* Date and venue */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-12 sm:mb-16">
+          {/* Date */}
+          <div className="flex items-center justify-center gap-2.5 text-white/90 mb-6">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            <span className="text-sm sm:text-base font-medium tracking-wide">{t.hero.date}</span>
+          </div>
+
+          {/* Venues */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12 sm:mb-16">
             <div className="flex items-center gap-2.5 text-white/90">
-              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-              <span className="text-sm sm:text-base font-medium tracking-wide">{t.hero.date}</span>
+              <Church className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <div className="text-left">
+                <p className="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider">
+                  {language === "et" ? "Tseremoonia" : "Ceremony"}
+                </p>
+                <span className="text-sm sm:text-base font-medium tracking-wide">
+                  {language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church, Tartu"}
+                </span>
+              </div>
             </div>
             <div className="hidden sm:block w-1 h-1 rounded-full bg-white/40" />
             <div className="flex items-center gap-2.5 text-white/90">
-              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-              <span className="text-sm sm:text-base font-medium tracking-wide">{t.hero.venue}</span>
+              <PartyPopper className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <div className="text-left">
+                <p className="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider">
+                  {language === "et" ? "Pidu" : "Reception"}
+                </p>
+                <span className="text-sm sm:text-base font-medium tracking-wide">Alatskivi Loss</span>
+              </div>
             </div>
           </div>
 

@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
   ],
   width: "device-width",
@@ -55,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="et" suppressHydrationWarning>
-      <body className="font-sans antialiased min-h-screen">
+      <body className="font-sans antialiased min-h-screen bg-background">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>

@@ -47,7 +47,7 @@ export default function InfoPage() {
             </div>
 
             {/* Quick info cards */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-8">
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-5 flex items-center gap-4">
                   <div className="p-3 rounded-xl bg-primary/10 text-primary">
@@ -65,8 +65,19 @@ export default function InfoPage() {
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Koht" : "Venue"}</p>
-                    <p className="font-medium text-foreground">{t.hero.venue}</p>
+                    <p className="text-sm text-muted-foreground">{language === "et" ? "Tseremoonia" : "Ceremony"}</p>
+                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church"}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-secondary/30 border-border">
+                <CardContent className="p-5 flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{language === "et" ? "Pidu" : "Reception"}</p>
+                    <p className="font-medium text-foreground">Alatskivi Loss</p>
                   </div>
                 </CardContent>
               </Card>
@@ -77,19 +88,37 @@ export default function InfoPage() {
               {/* Schedule */}
               <InfoSection icon={<Clock className="w-5 h-5" />} title={t.info.schedule.title}>
                 <div className="text-muted-foreground">
-                  <p className="mb-4">{t.info.schedule.content}</p>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
-                      <div className="w-16 text-sm font-medium text-primary">TBD</div>
-                      <div className="text-foreground">{language === "et" ? "Tseremoonia" : "Ceremony"}</div>
+                  <div className="space-y-4">
+                    {/* Ceremony */}
+                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-14 text-sm font-medium text-primary">14:00</div>
+                        <div className="text-foreground font-medium">{language === "et" ? "Tseremoonia" : "Ceremony"}</div>
+                      </div>
+                      <p className="text-sm ml-[68px]">
+                        {language === "et" ? "Tartu Peetri kirik, Narva mnt 104, Tartu" : "St. Peter's Church, Narva mnt 104, Tartu"}
+                      </p>
+                    </div>
+                    {/* Travel */}
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground pl-4">
+                      <Car className="w-4 h-4" />
+                      <span>{language === "et" ? "~45 min sõitu Alatskivile" : "~45 min drive to Alatskivi"}</span>
+                    </div>
+                    {/* Reception */}
+                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-14 text-sm font-medium text-primary">~17:00</div>
+                        <div className="text-foreground font-medium">{language === "et" ? "Pidu algab" : "Reception begins"}</div>
+                      </div>
+                      <p className="text-sm ml-[68px]">Alatskivi Loss, Lossi 1, Alatskivi</p>
                     </div>
                     <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
-                      <div className="w-16 text-sm font-medium text-primary">TBD</div>
+                      <div className="w-14 text-sm font-medium text-primary">TBD</div>
                       <div className="text-foreground">{language === "et" ? "Õhtusöök" : "Dinner"}</div>
                     </div>
                     <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
-                      <div className="w-16 text-sm font-medium text-primary">TBD</div>
-                      <div className="text-foreground">{language === "et" ? "Pidu" : "Party"}</div>
+                      <div className="w-14 text-sm font-medium text-primary">TBD</div>
+                      <div className="text-foreground">{language === "et" ? "Tantsimine & pidu" : "Dancing & party"}</div>
                     </div>
                   </div>
                 </div>

@@ -8,8 +8,9 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="border-t border-border bg-card/50 mt-auto">
-      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <footer className="border-t border-border bg-card mt-auto">
+      {/* Footer padding extension for iOS Safari overscroll */}
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-[env(safe-area-inset-bottom,20px)]">
         <div className="flex flex-col items-center gap-4 sm:gap-6">
           {/* Logo */}
           <div className="flex flex-col items-center">
