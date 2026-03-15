@@ -53,8 +53,8 @@ export const translations = {
       phone: "Telefon",
       attendance: "Osalemine",
       attendanceOptions: {
-        ceremonyAndReception: "Tseremoonia + pidu",
-        ceremonyOnly: "Ainult tseremoonia",
+      ceremonyAndReception: "Laulatus + pidu",
+      ceremonyOnly: "Ainult laulatus",
         cantAttend: "Kahjuks ei saa tulla",
       },
       notes: "Lisamärkused",

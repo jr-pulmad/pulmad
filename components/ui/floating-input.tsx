@@ -4,7 +4,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 interface FloatingInputProps extends React.ComponentProps<"input"> {
-  label: string
+  label: React.ReactNode
   error?: string
 }
 
@@ -45,7 +45,7 @@ function FloatingInput({
         id={id}
         data-slot="input"
         className={cn(
-          "peer h-14 w-full rounded-xl border bg-card px-4 pt-5 pb-2 text-base transition-colors duration-200",
+          "peer h-14 w-full rounded-xl border bg-card px-4 pt-4 pb-2 text-base transition-colors duration-200",
           "border-input dark:bg-input/30",
           "focus:border-primary",
           // Remove all ring and outline styles
@@ -67,8 +67,8 @@ function FloatingInput({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
-            : "top-1/2 -translate-y-1/2 text-base",
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
+            : "top-[50%] -translate-y-1/2 text-base",
           error && isFloating && "text-destructive",
         )}
       >
@@ -82,7 +82,7 @@ function FloatingInput({
 }
 
 interface FloatingTextareaProps extends React.ComponentProps<"textarea"> {
-  label: string
+  label: React.ReactNode
   error?: string
 }
 
@@ -145,7 +145,7 @@ function FloatingTextarea({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-4 text-base",
           error && isFloating && "text-destructive",
         )}

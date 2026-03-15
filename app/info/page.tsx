@@ -65,7 +65,7 @@ export default function InfoPage() {
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Tseremoonia" : "Ceremony"}</p>
+                    <p className="text-sm text-muted-foreground">{language === "et" ? "Laulatus" : "Ceremony"}</p>
                     <p className="font-medium text-foreground text-sm">{language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church"}</p>
                   </div>
                 </CardContent>
@@ -93,7 +93,7 @@ export default function InfoPage() {
                     <div className="p-4 rounded-lg bg-secondary/30 border border-border">
                       <div className="flex items-center gap-3 mb-2">
                         <div className="w-14 text-sm font-medium text-primary">14:00</div>
-                        <div className="text-foreground font-medium">{language === "et" ? "Tseremoonia" : "Ceremony"}</div>
+                        <div className="text-foreground font-medium">{language === "et" ? "Laulatus" : "Ceremony"}</div>
                       </div>
                       <p className="text-sm ml-[68px]">
                         {language === "et" ? "Tartu Peetri kirik, Narva mnt 104, Tartu" : "St. Peter's Church, Narva mnt 104, Tartu"}
@@ -102,7 +102,7 @@ export default function InfoPage() {
                     {/* Travel */}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground pl-4">
                       <Car className="w-4 h-4" />
-                      <span>{language === "et" ? "~45 min sõitu Alatskivile" : "~45 min drive to Alatskivi"}</span>
+                      <span>{language === "et" ? "~45 min sõitu Alatskivi lossini" : "~45 min drive to Alatskivi"}</span>
                     </div>
                     {/* Reception */}
                     <div className="p-4 rounded-lg bg-secondary/30 border border-border">

@@ -14,7 +14,6 @@ interface WeatherData {
   icon: string
 }
 
-// Map weather codes to icons and descriptions
 const getWeatherInfo = (code: number, language: string) => {
   const weatherMap: Record<number, { icon: React.ComponentType<{ className?: string }>, et: string, en: string }> = {
     0: { icon: Sun, et: "Selge", en: "Clear" },
@@ -112,6 +111,25 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   )
 }
 
+// Scroll hint component with custom text - clickable
+function ScrollHint({ text }: { text: string }) {
+  const handleClick = () => {
+    window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+  }
+
+  return (
+    <button 
+      onClick={handleClick}
+      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+    >
+      <span className="text-xs text-muted-foreground/70 leading-relaxed">
+        {text}
+      </span>
+      <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
+    </button>
+  )
+}
+
 export function VenuePreview() {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -119,8 +137,12 @@ export function VenuePreview() {
   const castleGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
 
+  const scrollHintText = language === "et" 
+    ? "Kinnita osalemine ja tutvu infoga" 
+    : "Confirm attendance and learn more"
+
   return (
-    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Section header */}
@@ -130,7 +152,7 @@ export function VenuePreview() {
               <span className="text-sm tracking-widest uppercase">{t.venue.title}</span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light text-foreground">
-              {language === "et" ? "Tseremoonia & Pidu" : "Ceremony & Reception"}
+              {language === "et" ? "Laulatus & Pidu" : "Ceremony & Reception"}
             </h2>
           </div>
 
@@ -146,7 +168,7 @@ export function VenuePreview() {
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground uppercase tracking-wider">
-                        {language === "et" ? "Tseremoonia" : "Ceremony"}
+                        {language === "et" ? "Laulatus" : "Ceremony"}
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
                         {language === "et" ? "Tartu Peetri kirik" : "Tartu St. Peter's Church"}
@@ -296,13 +318,16 @@ export function VenuePreview() {
             <CardContent className="p-4 sm:p-6">
               <p className="text-sm text-muted-foreground text-center">
                 {language === "et"
-                  ? "Tartu Peetri kirikust on Alatskivi lossini ~45 km (~45 min autoga). Soovitame pärast tseremooniat liikuda otse toimumispaika."
+                  ? "Tartu Peetri kirikust on Alatskivi lossini ~45 km (~45 min autoga). Soovitame pärast laulatust liikuda otse toimumispaika."
                   : "From Tartu St. Peter's Church to Alatskivi Castle is ~45 km (~45 min by car). We recommend heading directly to the venue after the ceremony."}
               </p>
             </CardContent>
           </Card>
         </div>
       </div>
+      
+      {/* Scroll hint with custom text */}
+      <ScrollHint text={scrollHintText} />
     </section>
   )
 }
