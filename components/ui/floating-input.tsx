@@ -46,7 +46,7 @@ function FloatingInput({
         data-slot="input"
         className={cn(
           "peer h-14 w-full rounded-xl border bg-card px-4 pt-4 pb-2 text-base transition-colors duration-200",
-          "border-input dark:bg-background",
+          "border-input dark:bg-input/30",
           "focus:border-primary",
           // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
@@ -67,7 +67,7 @@ function FloatingInput({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-background px-1 ml-[-4px]" 
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-[50%] -translate-y-1/2 text-base",
           error && isFloating && "text-destructive",
         )}
@@ -124,7 +124,7 @@ function FloatingTextarea({
         data-slot="textarea"
         className={cn(
           "peer min-h-[120px] w-full rounded-xl border bg-card px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
-          "border-input dark:bg-background",
+          "border-input dark:bg-input/30",
           "focus:border-primary",
           // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
@@ -145,7 +145,7 @@ function FloatingTextarea({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-background px-1 ml-[-4px]" 
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-4 text-base",
           error && isFloating && "text-destructive",
         )}
