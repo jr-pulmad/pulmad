@@ -67,7 +67,7 @@ function FloatingInput({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
+            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-1/2 -translate-y-1/2 text-base",
           error && isFloating && "text-destructive",
         )}
@@ -145,7 +145,7 @@ function FloatingTextarea({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
+            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-4 text-base",
           error && isFloating && "text-destructive",
         )}
