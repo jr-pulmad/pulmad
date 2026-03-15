@@ -9,9 +9,9 @@ import { Weather } from "@/components/sections/weather"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 flex flex-col">
         <Hero />
         <Countdown />
         <CTAGrid />

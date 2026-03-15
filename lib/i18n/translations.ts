@@ -14,6 +14,8 @@ export const translations = {
     hero: {
       date: "19. august 2026",
       venue: "Alatskivi Loss",
+      ceremony: "Tartu Peetri kirik",
+      reception: "Alatskivi Loss",
       saveTheDate: "Jäta kuupäev meelde",
     },
     // Countdown
@@ -183,6 +185,8 @@ export const translations = {
     hero: {
       date: "19 August 2026",
       venue: "Alatskivi Castle",
+      ceremony: "St. Peter's Church, Tartu",
+      reception: "Alatskivi Castle",
       saveTheDate: "Save the Date",
     },
     // Countdown
