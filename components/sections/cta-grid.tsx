@@ -3,7 +3,21 @@
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent } from "@/components/ui/card"
-import { UserCheck, Flower2, Info, ArrowRight } from "lucide-react"
+import { UserCheck, Flower2, Info, ArrowRight, ChevronDown } from "lucide-react"
+
+// Scroll hint component
+function ScrollHint() {
+  const { language } = useI18n()
+  
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity">
+      <span className="text-xs text-muted-foreground/70 uppercase tracking-wider">
+        {language === "et" ? "Keri alla" : "Scroll down"}
+      </span>
+      <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
+    </div>
+  )
+}
 
 export function CTAGrid() {
   const { t, language } = useI18n()
@@ -32,7 +46,7 @@ export function CTAGrid() {
   ]
 
   return (
-    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -55,6 +69,9 @@ export function CTAGrid() {
           </div>
         </div>
       </div>
+      
+      {/* Scroll hint */}
+      <ScrollHint />
     </section>
   )
 }

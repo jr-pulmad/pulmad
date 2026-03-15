@@ -14,7 +14,6 @@ interface WeatherData {
   icon: string
 }
 
-// Map weather codes to icons and descriptions
 const getWeatherInfo = (code: number, language: string) => {
   const weatherMap: Record<number, { icon: React.ComponentType<{ className?: string }>, et: string, en: string }> = {
     0: { icon: Sun, et: "Selge", en: "Clear" },
@@ -112,6 +111,20 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   )
 }
 
+// Scroll hint component
+function ScrollHint() {
+  const { language } = useI18n()
+  
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity">
+      <span className="text-xs text-muted-foreground/70 uppercase tracking-wider">
+        {language === "et" ? "Keri alla" : "Scroll down"}
+      </span>
+      <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
+    </div>
+  )
+}
+
 export function VenuePreview() {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -120,7 +133,7 @@ export function VenuePreview() {
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
 
   return (
-    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Section header */}
@@ -303,6 +316,9 @@ export function VenuePreview() {
           </Card>
         </div>
       </div>
+      
+      {/* Scroll hint */}
+      <ScrollHint />
     </section>
   )
 }

@@ -274,6 +274,39 @@
   }
 }
 
+@keyframes dance {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  10% {
+    transform: translateY(-10px) rotate(-5deg) scale(1.05);
+  }
+  20% {
+    transform: translateY(0) rotate(5deg) scale(1);
+  }
+  30% {
+    transform: translateY(-15px) rotate(-3deg) scale(1.08);
+  }
+  40% {
+    transform: translateY(0) rotate(3deg) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) rotate(-8deg) scale(1.1);
+  }
+  60% {
+    transform: translateY(0) rotate(8deg) scale(1);
+  }
+  70% {
+    transform: translateY(-12px) rotate(-4deg) scale(1.05);
+  }
+  80% {
+    transform: translateY(0) rotate(4deg) scale(1);
+  }
+  90% {
+    transform: translateY(-5px) rotate(-2deg) scale(1.02);
+  }
+}
+
 .animate-sway {
   animation: sway 4s ease-in-out infinite;
   transform-origin: bottom center;
@@ -286,6 +319,11 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.animate-dance {
+  animation: dance 1.2s ease-in-out infinite;
+  transform-origin: bottom center;
 }
 
 .animate-success-pop {

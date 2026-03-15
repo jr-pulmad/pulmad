@@ -2,22 +2,39 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Button } from "@/components/ui/button"
-import { Menu, X, MapPin, Flower2, Info, Heart } from "lucide-react"
+import { Menu, X, MapPin, Flower2, Info, Heart, FlowerIcon as Flower2Filled } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+// Filled heart icon
+function HeartFilled({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    </svg>
+  )
+}
+
+// Filled info icon
+function InfoFilled({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+    </svg>
+  )
+}
+
 export function Header() {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
   const pathname = usePathname()
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   const isHomePage = pathname === "/"
-  // On homepage: only show solid background when scrolled
-  // On other pages: always show solid background
   const showSolidBackground = !isHomePage || isScrolled
 
   useEffect(() => {
@@ -30,20 +47,43 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Reset scroll state when navigating to homepage
+  // Scroll to top when pathname changes
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" })
+  }, [pathname])
+
+  const handleLogoClick = (e: React.MouseEvent) => {
     if (isHomePage) {
-      const handleScroll = () => {
-        setIsScrolled(window.scrollY > 20)
-      }
-      handleScroll()
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: "smooth" })
     }
-  }, [isHomePage, pathname])
+  }
 
   const navItems = [
-    { href: "/rsvp", label: t.nav.rsvp, icon: Heart, description: "Confirm attendance" },
-    { href: "/flowers", label: t.nav.flowers, icon: Flower2, description: "Gift flowers" },
-    { href: "/info", label: t.nav.info, icon: Info, description: "Event details" },
+    { 
+      href: "/rsvp", 
+      label: t.nav.rsvp,
+      mobileLabel: language === "et" ? "Kinnita osalemine" : "RSVP",
+      icon: Heart, 
+      iconFilled: HeartFilled,
+      description: language === "et" ? "Kinnita osalemine" : "Confirm attendance" 
+    },
+    { 
+      href: "/flowers", 
+      label: t.nav.flowers,
+      mobileLabel: language === "et" ? "Lilled" : "Flowers",
+      icon: Flower2, 
+      iconFilled: Flower2,
+      description: language === "et" ? "Kingi lilli" : "Gift flowers" 
+    },
+    { 
+      href: "/info", 
+      label: t.nav.info,
+      mobileLabel: language === "et" ? "Info" : "Info",
+      icon: Info, 
+      iconFilled: InfoFilled,
+      description: language === "et" ? "Kasulik info" : "Useful info" 
+    },
   ]
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
@@ -59,8 +99,12 @@ export function Header() {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo - no micro animations */}
-          <Link href="/" className="flex flex-col items-start relative">
+          {/* Logo - clicks scroll to top on homepage */}
+          <Link 
+            href="/" 
+            onClick={handleLogoClick}
+            className="flex flex-col items-start relative"
+          >
             <span className={cn(
               "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
               showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
@@ -73,12 +117,12 @@ export function Header() {
             )}>Randmäe</span>
           </Link>
 
-          {/* Desktop Navigation - Simple highlight without slide animation */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center">
             <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
               {navItems.map((item, index) => {
-                const Icon = item.icon
                 const isActive = pathname === item.href
+                const Icon = isActive ? item.iconFilled : item.icon
                 const isRsvp = item.href === "/rsvp"
                 
                 return (
@@ -94,9 +138,7 @@ export function Header() {
                     >
                       <Icon className={cn(
                         "w-4 h-4 transition-transform duration-200",
-                        // RSVP heart beats continuously on hover (desktop only)
                         isRsvp && "md:group-hover:animate-heartbeat",
-                        // Other icons scale once on hover (desktop only)
                         !isRsvp && "md:group-hover:scale-110"
                       )} />
                       <span>{item.label}</span>
@@ -169,8 +211,8 @@ export function Header() {
             
             <div className="space-y-2">
               {navItems.map((item, index) => {
-                const Icon = item.icon
                 const isActive = pathname === item.href
+                const Icon = isActive ? item.iconFilled : item.icon
                 
                 return (
                   <Link
@@ -204,7 +246,7 @@ export function Header() {
                         "font-medium transition-colors",
                         isActive ? "text-primary" : "text-foreground"
                       )}>
-                        {item.label}
+                        {item.mobileLabel}
                       </p>
                       <p className="text-xs text-muted-foreground">{item.description}</p>
                     </div>

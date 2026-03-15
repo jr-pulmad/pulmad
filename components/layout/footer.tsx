@@ -7,9 +7,9 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="border-t border-border bg-card mt-auto">
-      {/* Footer padding extension for iOS Safari overscroll */}
-      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-[env(safe-area-inset-bottom,20px)]">
+    <footer className="border-t border-border bg-background mt-auto">
+      {/* Footer with safe area padding */}
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <div className="flex flex-col items-center gap-4 sm:gap-6">
           {/* Logo */}
           <div className="flex flex-col items-center">
@@ -39,6 +39,9 @@ export function Footer() {
           <p className="text-xs text-muted-foreground/60">© 2026 Randmäed. {t.footer.allRights}.</p>
         </div>
       </div>
+      
+      {/* Safe area spacer - matches background color */}
+      <div className="h-[env(safe-area-inset-bottom,0px)] bg-background" />
     </footer>
   )
 }

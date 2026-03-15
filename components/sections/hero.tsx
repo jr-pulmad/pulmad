@@ -17,7 +17,6 @@ export function Hero() {
 
   useEffect(() => {
     setMounted(true)
-    // Show video after a brief delay for a cinematic entrance
     const timer = setTimeout(() => setShowVideo(true), 300)
     return () => clearTimeout(timer)
   }, [])
@@ -27,7 +26,6 @@ export function Hero() {
     window.scrollTo({ top: heroHeight, behavior: "smooth" })
   }
 
-  // Fallback image for when video is not available
   const heroImage = mounted && resolvedTheme === "dark" 
     ? "/romantic-castle-evening-twilight-dark-moody-estoni.jpg"
     : "/alatskivi-castle-hero.jpg"
@@ -48,50 +46,51 @@ export function Hero() {
           playsInline
           poster={heroImage}
         >
-          {/* Sample wedding video - can be replaced */}
           <source 
             src="https://assets.mixkit.co/videos/1946/1946-720.mp4" 
             type="video/mp4" 
           />
         </video>
         
-        {/* Gradient overlays for better text readability */}
+        {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 dark:from-black/80 dark:via-black/50 dark:to-background" />
-        
-        {/* Vignette effect */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
       </div>
 
-      {/* Content - Minimalist design */}
+      {/* Content */}
       <div className={cn(
         "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-all duration-1000 delay-500",
         showVideo ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
         <div className="max-w-3xl mx-auto">
-          {/* Simple decorative line */}
+          {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-10 sm:w-16 bg-white/40" />
             <span className="text-white/80 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-light">{t.hero.saveTheDate}</span>
             <div className="h-px w-10 sm:w-16 bg-white/40" />
           </div>
 
-          {/* Names - clean typography */}
+          {/* Names - & symbol in white */}
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-3 sm:mb-4 text-balance drop-shadow-lg">
             <span className="inline-block animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>Johanna</span>
             {" "}
-            <span className="inline-block text-primary animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "both" }}>&</span>
+            <span className="inline-block text-white animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "both" }}>&</span>
             {" "}
             <span className="inline-block animate-fade-in-up" style={{ animationDelay: "1s", animationFillMode: "both" }}>Rannar</span>
           </h1>
 
-          {/* Date - prominent and elegant */}
+          {/* Date */}
           <p className="text-lg sm:text-xl md:text-2xl text-white font-light tracking-wide mb-8 sm:mb-12 animate-fade-in-up" style={{ animationDelay: "1.2s", animationFillMode: "both" }}>
             {t.hero.date}
           </p>
 
-          {/* Single CTA - minimal */}
+          {/* Luxurious RSVP Button */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
-            <Button asChild size="lg" className="min-w-[180px] h-12 sm:h-14 text-sm sm:text-base font-medium">
+            <Button 
+              asChild 
+              size="lg" 
+              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-medium bg-white/10 backdrop-blur-md border border-white/30 text-white hover:bg-white/20 hover:border-white/50 shadow-lg shadow-black/20 transition-all duration-300"
+            >
               <Link href="/rsvp">{t.cta.rsvp}</Link>
             </Button>
           </div>
