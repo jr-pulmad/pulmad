@@ -5,7 +5,6 @@ import { Countdown } from "@/components/sections/countdown"
 import { CTAGrid } from "@/components/sections/cta-grid"
 import { Updates } from "@/components/sections/updates"
 import { VenuePreview } from "@/components/sections/venue-preview"
-import { Weather } from "@/components/sections/weather"
 import { ScrollIndicator } from "@/components/ui/scroll-indicator"
 
 export default function HomePage() {
@@ -16,9 +15,8 @@ export default function HomePage() {
         <Hero />
         <Countdown />
         <CTAGrid />
-        <Weather />
-        <Updates />
         <VenuePreview />
+        <Updates />
       </main>
       <Footer />
       <ScrollIndicator />

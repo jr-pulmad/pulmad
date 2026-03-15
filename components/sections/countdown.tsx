@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useI18n } from "@/lib/i18n/context"
 
 interface TimeLeft {
@@ -8,6 +8,15 @@ interface TimeLeft {
   hours: number
   minutes: number
   seconds: number
+}
+
+interface StickmanPosition {
+  x: number
+  y: number
+  isDragging: boolean
+  isFalling: boolean
+  velocityY: number
+  rotation: number
 }
 
 // Simple cute stickman SVG components
@@ -69,22 +78,22 @@ function GroomStickman({ className }: { className?: string }) {
   )
 }
 
-// Hearts floating animation component
+// Hearts floating animation component with more hearts
 function FloatingHearts() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(6)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <div
           key={i}
           className="absolute text-primary/20 animate-float"
           style={{
-            left: `${15 + i * 15}%`,
-            top: `${20 + (i % 3) * 25}%`,
-            animationDelay: `${i * 0.8}s`,
-            animationDuration: `${3 + i * 0.5}s`,
+            left: `${10 + (i * 7) % 80}%`,
+            top: `${15 + (i % 4) * 20}%`,
+            animationDelay: `${i * 0.5}s`,
+            animationDuration: `${3 + (i % 3) * 0.5}s`,
           }}
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <svg width={16 + (i % 3) * 4} height={16 + (i % 3) * 4} viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
         </div>
@@ -93,10 +102,146 @@ function FloatingHearts() {
   )
 }
 
+// Draggable stickman component
+function DraggableStickman({ 
+  type, 
+  initialPosition,
+  containerRef 
+}: { 
+  type: "bride" | "groom"
+  initialPosition: { x: number, y: number }
+  containerRef: React.RefObject<HTMLDivElement | null>
+}) {
+  const [position, setPosition] = useState<StickmanPosition>({
+    x: initialPosition.x,
+    y: initialPosition.y,
+    isDragging: false,
+    isFalling: false,
+    velocityY: 0,
+    rotation: 0,
+  })
+  const elementRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number | null>(null)
+
+  const handleMouseDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault()
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current)
+    }
+    setPosition(prev => ({ ...prev, isDragging: true, isFalling: false, velocityY: 0 }))
+  }, [])
+
+  const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
+    if (!position.isDragging || !containerRef.current) return
+    
+    const container = containerRef.current.getBoundingClientRect()
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    
+    const x = ((clientX - container.left) / container.width) * 100
+    const y = ((clientY - container.top) / container.height) * 100
+    
+    setPosition(prev => ({ 
+      ...prev, 
+      x: Math.max(5, Math.min(95, x)), 
+      y: Math.max(5, Math.min(95, y)),
+      rotation: (x - prev.x) * 2
+    }))
+  }, [position.isDragging, containerRef])
+
+  const handleMouseUp = useCallback(() => {
+    if (!position.isDragging) return
+    setPosition(prev => ({ ...prev, isDragging: false, isFalling: true }))
+  }, [position.isDragging])
+
+  // Physics simulation for falling
+  useEffect(() => {
+    if (!position.isFalling) return
+
+    const gravity = 0.5
+    const bounce = 0.4
+    const groundLevel = 75 // percentage from top
+
+    const animate = () => {
+      setPosition(prev => {
+        const newVelocity = prev.velocityY + gravity
+        const newY = prev.y + newVelocity
+        const newRotation = prev.rotation * 0.95
+
+        // Check if hit ground
+        if (newY >= groundLevel) {
+          if (Math.abs(newVelocity) < 1) {
+            // Settled
+            return { ...prev, y: groundLevel, velocityY: 0, isFalling: false, rotation: 0 }
+          }
+          // Bounce
+          return { 
+            ...prev, 
+            y: groundLevel, 
+            velocityY: -newVelocity * bounce,
+            rotation: newRotation
+          }
+        }
+
+        return { ...prev, y: newY, velocityY: newVelocity, rotation: newRotation }
+      })
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [position.isFalling])
+
+  // Global mouse/touch events
+  useEffect(() => {
+    if (position.isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+      window.addEventListener('touchmove', handleMouseMove)
+      window.addEventListener('touchend', handleMouseUp)
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('touchmove', handleMouseMove)
+      window.removeEventListener('touchend', handleMouseUp)
+    }
+  }, [position.isDragging, handleMouseMove, handleMouseUp])
+
+  const StickmanComponent = type === "bride" ? BrideStickman : GroomStickman
+
+  return (
+    <div
+      ref={elementRef}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleMouseDown}
+      className="absolute cursor-grab active:cursor-grabbing select-none touch-none"
+      style={{
+        left: `${position.x}%`,
+        top: `${position.y}%`,
+        transform: `translate(-50%, -50%) rotate(${position.rotation}deg)`,
+        transition: position.isDragging ? 'none' : 'transform 0.1s ease-out',
+        zIndex: position.isDragging ? 50 : 10,
+      }}
+    >
+      <StickmanComponent 
+        className={`w-16 sm:w-20 lg:w-24 h-auto text-primary transition-opacity duration-300 ${
+          position.isDragging ? 'opacity-80' : 'opacity-30 hover:opacity-50'
+        } ${!position.isDragging && !position.isFalling ? 'animate-sway' : ''}`} 
+      />
+    </div>
+  )
+}
+
 export function Countdown() {
   const { t } = useI18n()
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   const [mounted, setMounted] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -148,19 +293,26 @@ export function Countdown() {
   ]
 
   return (
-    <section className="min-h-[100dvh] flex items-center justify-center bg-card/30 relative overflow-hidden">
-      {/* Floating hearts background */}
+    <section 
+      ref={containerRef}
+      className="min-h-[100dvh] flex items-center justify-center bg-card/30 relative overflow-hidden"
+    >
+      {/* Floating hearts background - more hearts */}
       <FloatingHearts />
       
-      {/* Bride stickman - left side */}
-      <div className="absolute left-4 sm:left-8 lg:left-16 bottom-1/4 opacity-20 hover:opacity-40 transition-opacity duration-500">
-        <BrideStickman className="w-16 sm:w-24 lg:w-32 h-auto text-primary animate-sway" />
-      </div>
+      {/* Draggable Bride stickman - left side */}
+      <DraggableStickman 
+        type="bride" 
+        initialPosition={{ x: 12, y: 70 }}
+        containerRef={containerRef}
+      />
       
-      {/* Groom stickman - right side */}
-      <div className="absolute right-4 sm:right-8 lg:right-16 bottom-1/4 opacity-20 hover:opacity-40 transition-opacity duration-500">
-        <GroomStickman className="w-16 sm:w-24 lg:w-32 h-auto text-primary animate-sway-reverse" />
-      </div>
+      {/* Draggable Groom stickman - right side */}
+      <DraggableStickman 
+        type="groom" 
+        initialPosition={{ x: 88, y: 70 }}
+        containerRef={containerRef}
+      />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
@@ -183,6 +335,11 @@ export function Countdown() {
 
           {/* Until text */}
           <p className="text-sm sm:text-base text-muted-foreground tracking-wide">{t.countdown.until}</p>
+          
+          {/* Drag hint */}
+          <p className="text-xs text-muted-foreground/50 mt-8 hidden sm:block">
+            Drag the figures to play!
+          </p>
         </div>
       </div>
     </section>

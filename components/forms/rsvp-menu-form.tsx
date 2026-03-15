@@ -57,7 +57,12 @@ export function RSVPMenuForm() {
     setError("")
     setEmailError("")
 
-    if (formData.email && !validateEmail(formData.email)) {
+    if (!formData.email) {
+      setEmailError(language === "et" ? "E-mail on kohustuslik" : "Email is required")
+      return
+    }
+
+    if (!validateEmail(formData.email)) {
       setEmailError(language === "et" ? "Palun sisesta korrektne e-maili aadress" : "Please enter a valid email address")
       return
     }
@@ -237,15 +242,23 @@ export function RSVPMenuForm() {
 
               {/* Contact fields with floating labels */}
               <div className="grid sm:grid-cols-2 gap-4">
-                <FloatingInput
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  label={t.rsvp.email}
-                  error={emailError}
-                />
+                <div className="space-y-1">
+                  <FloatingInput
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    label={`${t.rsvp.email} *`}
+                    error={emailError}
+                  />
+                  <p className="text-xs text-muted-foreground/70 px-1">
+                    {language === "et" 
+                      ? "Vajalik ürituse uuenduste saamiseks" 
+                      : "Required to receive event updates"}
+                  </p>
+                </div>
                 <FloatingInput
                   id="phone"
                   name="phone"
@@ -304,7 +317,7 @@ export function RSVPMenuForm() {
               )}
 
               {/* Submit button */}
-              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !formData.attendance}>
+              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !formData.attendance || !formData.email}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />

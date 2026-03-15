@@ -63,7 +63,7 @@ export function Updates() {
   }
 
   return (
-    <section className="py-16 sm:py-24 bg-card/30">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 bg-card/30">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Section header */}
@@ -120,8 +120,12 @@ export function Updates() {
               </CardHeader>
               <CardContent>
                 {isSubscribed ? (
-                  <div className="flex flex-col items-center text-center py-4">
-                    <CheckCircle2 className="w-12 h-12 text-primary mb-4" />
+                  <div className="flex flex-col items-center text-center py-4 animate-success-pop">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 animate-success-pop" style={{ animationDelay: "0.1s" }}>
+                      <svg className="w-6 h-6 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 13l4 4L19 7" className="animate-success-check" />
+                      </svg>
+                    </div>
                     <p className="text-foreground font-medium">{t.common.success}</p>
                     <p className="text-sm text-muted-foreground mt-1">{t.rsvp.success}</p>
                   </div>
