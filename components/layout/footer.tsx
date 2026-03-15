@@ -8,9 +8,9 @@ export function Footer() {
   const { t } = useI18n()
 
   return (
-    <footer className="border-t border-border bg-card/50">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="flex flex-col items-center gap-6">
+    <footer className="border-t border-border bg-card/50 mt-auto">
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        <div className="flex flex-col items-center gap-4 sm:gap-6">
           {/* Logo */}
           <div className="flex flex-col items-center">
             <span className="font-serif text-2xl sm:text-3xl font-medium tracking-wide text-foreground">
@@ -23,9 +23,6 @@ export function Footer() {
           <nav className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm text-muted-foreground">
             <Link href="/rsvp" className="hover:text-foreground transition-colors">
               {t.nav.rsvp}
-            </Link>
-            <Link href="/menu" className="hover:text-foreground transition-colors">
-              {t.nav.menu}
             </Link>
             <Link href="/flowers" className="hover:text-foreground transition-colors">
               {t.nav.flowers}

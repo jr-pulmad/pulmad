@@ -3,23 +3,19 @@
 import Link from "next/link"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent } from "@/components/ui/card"
-import { UserCheck, UtensilsCrossed, Flower2, Info, ArrowRight } from "lucide-react"
+import { UserCheck, Flower2, Info, ArrowRight } from "lucide-react"
 
 export function CTAGrid() {
-  const { t } = useI18n()
+  const { t, language } = useI18n()
 
   const cards = [
     {
       href: "/rsvp",
       icon: UserCheck,
       title: t.cta.rsvp,
-      description: t.rsvp.subtitle,
-    },
-    {
-      href: "/menu",
-      icon: UtensilsCrossed,
-      title: t.cta.menu,
-      description: t.menu.subtitle,
+      description: language === "et" 
+        ? "Kinnita osalemine ja vali oma menüü" 
+        : "Confirm attendance and select your menu",
     },
     {
       href: "/flowers",
@@ -39,7 +35,7 @@ export function CTAGrid() {
     <section className="py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {cards.map((card, index) => (
               <Link key={index} href={card.href} className="group">
                 <Card className="h-full bg-card/50 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">

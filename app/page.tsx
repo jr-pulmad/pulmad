@@ -5,6 +5,7 @@ import { Countdown } from "@/components/sections/countdown"
 import { CTAGrid } from "@/components/sections/cta-grid"
 import { Updates } from "@/components/sections/updates"
 import { VenuePreview } from "@/components/sections/venue-preview"
+import { Weather } from "@/components/sections/weather"
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
         <Hero />
         <Countdown />
         <CTAGrid />
+        <Weather />
         <Updates />
         <VenuePreview />
       </main>
