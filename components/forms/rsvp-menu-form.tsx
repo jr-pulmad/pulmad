@@ -5,12 +5,11 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
 import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -35,7 +34,6 @@ export function RSVPMenuForm() {
     honeypot: "",
   })
 
-  // Reset email error when email changes
   useEffect(() => {
     if (emailError && formData.email) {
       setEmailError("")
@@ -47,7 +45,7 @@ export function RSVPMenuForm() {
   }
 
   const validateEmail = (email: string): boolean => {
-    if (!email) return true // Email is optional
+    if (!email) return true
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return emailRegex.test(email)
   }
@@ -59,19 +57,16 @@ export function RSVPMenuForm() {
     setError("")
     setEmailError("")
 
-    // Validate email if provided
     if (formData.email && !validateEmail(formData.email)) {
       setEmailError(language === "et" ? "Palun sisesta korrektne e-maili aadress" : "Please enter a valid email address")
       return
     }
 
-    // If attending reception, go to menu step
     if (showMenuSection) {
       setCurrentStep("menu")
       return
     }
 
-    // Otherwise submit directly
     await submitForm()
   }
 
@@ -85,7 +80,6 @@ export function RSVPMenuForm() {
     setIsSubmitting(true)
 
     try {
-      // Submit RSVP
       const rsvpResponse = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -107,7 +101,6 @@ export function RSVPMenuForm() {
         return
       }
 
-      // If attending reception, also submit menu
       if (showMenuSection && formData.mainCourseChoice) {
         const menuResponse = await fetch("/api/menu", {
           method: "POST",
@@ -147,9 +140,9 @@ export function RSVPMenuForm() {
 
   if (currentStep === "success") {
     return (
-      <Card className="max-w-2xl mx-auto bg-card/50 border-border">
+      <Card className="max-w-2xl mx-auto bg-card/50 border-border backdrop-blur-sm">
         <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
             <CheckCircle2 className="w-8 h-8 text-primary" />
           </div>
           <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3">{t.common.success}</h3>
@@ -172,9 +165,9 @@ export function RSVPMenuForm() {
       {/* Progress indicator */}
       <div className="flex items-center justify-center gap-3 mb-8">
         <div className={cn(
-          "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors",
+          "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
           currentStep === "rsvp" 
-            ? "bg-primary text-primary-foreground" 
+            ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
             : "bg-secondary text-muted-foreground"
         )}>
           <UserCheck className="w-4 h-4" />
@@ -184,9 +177,9 @@ export function RSVPMenuForm() {
           <>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
             <div className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors",
+              "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
               currentStep === "menu" 
-                ? "bg-primary text-primary-foreground" 
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
                 : "bg-secondary text-muted-foreground"
             )}>
               <UtensilsCrossed className="w-4 h-4" />
@@ -198,16 +191,16 @@ export function RSVPMenuForm() {
 
       {/* RSVP Step */}
       {currentStep === "rsvp" && (
-        <Card className="bg-card/50 border-border">
+        <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 mx-auto">
-              <UserCheck className="w-6 h-6 text-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
+              <UserCheck className="w-7 h-7 text-primary" />
             </div>
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            <form onSubmit={handleRSVPSubmit} className="space-y-6">
+            <form onSubmit={handleRSVPSubmit} className="space-y-5">
               {/* Honeypot */}
               <input
                 type="text"
@@ -220,117 +213,90 @@ export function RSVPMenuForm() {
                 aria-hidden="true"
               />
 
-              {/* Name fields */}
+              {/* Name fields with floating labels */}
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">
-                    {t.rsvp.firstName} <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required
-                    className="bg-background/50 border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">
-                    {t.rsvp.lastName} <span className="text-destructive">*</span>
-                  </Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required
-                    className="bg-background/50 border-border"
-                  />
-                </div>
+                <FloatingInput
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  label={`${t.rsvp.firstName} *`}
+                />
+                <FloatingInput
+                  id="lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  label={`${t.rsvp.lastName} *`}
+                />
               </div>
 
-              {/* Contact fields */}
+              {/* Contact fields with floating labels */}
               <div className="grid sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">{t.rsvp.email}</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={cn(
-                      "bg-background/50 border-border",
-                      emailError && "border-destructive"
-                    )}
-                    aria-invalid={!!emailError}
-                  />
-                  {emailError && (
-                    <p className="text-sm text-destructive font-medium">{emailError}</p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">{t.rsvp.phone}</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="bg-background/50 border-border"
-                  />
-                </div>
+                <FloatingInput
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  label={t.rsvp.email}
+                  error={emailError}
+                />
+                <FloatingInput
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  label={t.rsvp.phone}
+                />
               </div>
 
               {/* Attendance */}
               <div className="space-y-3">
-                <Label>
+                <Label className="text-sm font-medium">
                   {t.rsvp.attendance} <span className="text-destructive">*</span>
                 </Label>
                 <RadioGroup
                   value={formData.attendance}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, attendance: value }))}
-                  className="space-y-3"
+                  className="space-y-2"
                 >
-                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border bg-background/30 hover:bg-background/50 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
                     <RadioGroupItem value="ceremony_and_reception" id="ceremony_and_reception" />
-                    <Label htmlFor="ceremony_and_reception" className="flex-1 cursor-pointer font-normal">
+                    <Label htmlFor="ceremony_and_reception" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.ceremonyAndReception}
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border bg-background/30 hover:bg-background/50 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
                     <RadioGroupItem value="ceremony_only" id="ceremony_only" />
-                    <Label htmlFor="ceremony_only" className="flex-1 cursor-pointer font-normal">
+                    <Label htmlFor="ceremony_only" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.ceremonyOnly}
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg border border-border bg-background/30 hover:bg-background/50 transition-colors cursor-pointer">
+                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
                     <RadioGroupItem value="cant_attend" id="cant_attend" />
-                    <Label htmlFor="cant_attend" className="flex-1 cursor-pointer font-normal">
+                    <Label htmlFor="cant_attend" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.cantAttend}
                     </Label>
                   </div>
                 </RadioGroup>
               </div>
 
-              {/* Notes */}
-              <div className="space-y-2">
-                <Label htmlFor="notes">{t.rsvp.notes}</Label>
-                <Textarea
-                  id="notes"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                  placeholder={t.rsvp.notesPlaceholder}
-                  rows={3}
-                  className="bg-background/50 border-border resize-none"
-                />
-              </div>
+              {/* Notes with floating label */}
+              <FloatingTextarea
+                id="notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                label={t.rsvp.notes}
+              />
 
               {/* Error message */}
               {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
                   {error}
                 </div>
               )}
@@ -360,10 +326,10 @@ export function RSVPMenuForm() {
 
       {/* Menu Step */}
       {currentStep === "menu" && (
-        <Card className="bg-card/50 border-border">
+        <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 mx-auto">
-              <UtensilsCrossed className="w-6 h-6 text-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
+              <UtensilsCrossed className="w-7 h-7 text-primary" />
             </div>
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.menu.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">{t.menu.subtitle}</CardDescription>
@@ -377,17 +343,17 @@ export function RSVPMenuForm() {
               <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
             </div>
 
-            <form onSubmit={handleMenuSubmit} className="space-y-6">
+            <form onSubmit={handleMenuSubmit} className="space-y-5">
               {/* Main course selection */}
               <div className="space-y-2">
-                <Label htmlFor="mainCourse">
+                <Label htmlFor="mainCourse" className="text-sm font-medium">
                   {t.menu.mainCourse} <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={formData.mainCourseChoice}
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, mainCourseChoice: value }))}
                 >
-                  <SelectTrigger className="bg-background/50 border-border">
+                  <SelectTrigger className="h-14 rounded-xl bg-card border-input">
                     <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
                   </SelectTrigger>
                   <SelectContent>
@@ -400,26 +366,19 @@ export function RSVPMenuForm() {
                 </Select>
               </div>
 
-              {/* Allergies */}
-              <div className="space-y-2">
-                <Label htmlFor="allergiesAndDiet">
-                  {t.menu.allergies} <span className="text-destructive">*</span>
-                </Label>
-                <Textarea
-                  id="allergiesAndDiet"
-                  name="allergiesAndDiet"
-                  value={formData.allergiesAndDiet}
-                  onChange={handleChange}
-                  placeholder={t.menu.allergiesPlaceholder}
-                  rows={3}
-                  required
-                  className="bg-background/50 border-border resize-none"
-                />
-              </div>
+              {/* Allergies with floating label */}
+              <FloatingTextarea
+                id="allergiesAndDiet"
+                name="allergiesAndDiet"
+                value={formData.allergiesAndDiet}
+                onChange={handleChange}
+                required
+                label={`${t.menu.allergies} *`}
+              />
 
               {/* Error message */}
               {error && (
-                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
                   {error}
                 </div>
               )}
