@@ -92,16 +92,16 @@ export function Hero() {
               className="
                 min-w-[200px] h-14 sm:h-16
                 px-6
-                text-sm sm:text-base font-extrabold text-white
+                text-sm sm:text-base font-bold text-white
                 rounded-2xl
-                border border-white/20
-                bg-emerald-900/35
-                backdrop-blur-xl
-                supports-[backdrop-filter]:bg-emerald-900/25
-                shadow-[0_8px_30px_rgba(0,0,0,0.35)]
-                hover:bg-emerald-800/35
-                hover:border-white/30
-                hover:shadow-[0_12px_40px_rgba(0,0,0,0.45)]
+                border border-white/15
+                bg-white/10
+                backdrop-blur-2xl
+                shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+                hover:bg-white/15
+                hover:border-white/25
+                hover:scale-[1.01]
+                active:scale-[0.99]
                 transition-all duration-300
               "
             >
