@@ -1,23 +1,40 @@
 "use client"
 
 import Link from "next/link"
+import { useTheme } from "next-themes"
 import { useI18n } from "@/lib/i18n/context"
 import { Button } from "@/components/ui/button"
 import { MapPin, Calendar, ArrowDown } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export function Hero() {
   const { t } = useI18n()
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const scrollToContent = () => {
     const heroHeight = window.innerHeight
     window.scrollTo({ top: heroHeight, behavior: "smooth" })
   }
 
+  // Use different hero images for light/dark mode
+  const heroImage = mounted && resolvedTheme === "dark" 
+    ? "/romantic-castle-evening-twilight-dark-moody-estoni.jpg"
+    : "/alatskivi-castle-hero.jpg"
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image with overlay - stronger gradient for text contrast */}
       <div className="absolute inset-0 z-0">
-        <img src="/alatskivi-castle-hero.jpg" alt="Alatskivi Castle" className="w-full h-full object-cover" />
+        <img 
+          src={heroImage} 
+          alt="Alatskivi Castle" 
+          className="w-full h-full object-cover transition-opacity duration-500" 
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 dark:from-black/80 dark:via-black/60 dark:to-background" />
       </div>
 

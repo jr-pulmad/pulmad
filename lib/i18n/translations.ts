@@ -152,6 +152,14 @@ export const translations = {
       gdprNote: "Sinu andmeid kasutatakse ainult pulmaga seotud info edastamiseks.",
       submit: "Saada",
     },
+    // Weather
+    weather: {
+      title: "Ilm Alatskivil",
+      subtitle: "Praegune ilm toimumiskohas",
+      humidity: "Niiskus",
+      wind: "Tuul",
+      loading: "Laen ilmaandmeid...",
+    },
     // Common
     common: {
       loading: "Laadin...",
@@ -312,6 +320,14 @@ export const translations = {
       consent: "I agree to receive wedding updates",
       gdprNote: "Your data will only be used for wedding-related communications.",
       submit: "Submit",
+    },
+    // Weather
+    weather: {
+      title: "Weather at Alatskivi",
+      subtitle: "Current weather at the venue",
+      humidity: "Humidity",
+      wind: "Wind",
+      loading: "Loading weather...",
     },
     // Common
     common: {

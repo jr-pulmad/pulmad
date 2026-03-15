@@ -10,7 +10,13 @@ const languages = [
   { code: "en" as const, label: "English", flag: "🇬🇧" },
 ]
 
-export function LanguageSwitcher({ className }: { className?: string }) {
+interface LanguageSwitcherProps {
+  className?: string
+  variant?: "default" | "transparent"
+  isMobile?: boolean
+}
+
+export function LanguageSwitcher({ className, variant = "default", isMobile = false }: LanguageSwitcherProps) {
   const { language, setLanguage } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -28,11 +34,39 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
   const currentLang = languages.find((l) => l.code === language) || languages[0]
 
+  // For mobile, use a simple inline selection instead of dropdown
+  if (isMobile) {
+    return (
+      <div className={cn("flex items-center gap-1", className)}>
+        {languages.map((lang) => (
+          <button
+            key={lang.code}
+            onClick={() => setLanguage(lang.code)}
+            className={cn(
+              "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+              language === lang.code
+                ? "bg-primary/10 text-primary"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+            )}
+          >
+            <span className="text-base">{lang.flag}</span>
+            <span>{lang.code.toUpperCase()}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div ref={dropdownRef} className={cn("relative", className)}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-secondary/50 hover:bg-secondary text-foreground transition-colors"
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+          variant === "default" 
+            ? "bg-secondary/50 hover:bg-secondary text-foreground"
+            : "bg-white/10 hover:bg-white/20 text-white"
+        )}
         aria-label="Select language"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -46,7 +80,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute top-full right-0 mt-2 w-40 bg-popover border border-border rounded-lg shadow-lg overflow-hidden z-50"
+          className="absolute top-full right-0 mt-2 w-40 bg-popover border border-border rounded-lg shadow-lg overflow-hidden z-[60]"
           role="listbox"
         >
           {languages.map((lang) => (

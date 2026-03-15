@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Flower2, Loader2, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const PRESET_AMOUNTS = [10, 25, 50, 100]
+const PRESET_AMOUNTS = [35, 50]
 
 export function DonationForm() {
   const { t, language } = useI18n()
@@ -113,7 +113,7 @@ export function DonationForm() {
           {/* Preset amounts */}
           <div className="space-y-3">
             <Label>{t.flowers.presetAmounts}</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {PRESET_AMOUNTS.map((amount) => (
                 <button
                   key={amount}
