@@ -1,12 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Button } from "@/components/ui/button"
-import { Menu, X, MapPin, Flower2, Info, Heart, FlowerIcon as Flower2Filled } from "lucide-react"
+import { Menu, X, Flower2, Info, Heart, FlowerIcon as Flower2Filled } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Filled heart icon
@@ -24,6 +24,76 @@ function InfoFilled({ className }: { className?: string }) {
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
     </svg>
+  )
+}
+
+// Animated logo component
+function AnimatedLogo({ showSolidBackground }: { showSolidBackground: boolean }) {
+  const [isHovered, setIsHovered] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  return (
+    <div 
+      ref={containerRef}
+      className="hidden md:flex flex-col items-start relative cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="flex items-baseline overflow-hidden">
+        <span className={cn(
+          "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
+          showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
+        )}>
+          <span className="inline-flex overflow-hidden">
+            <span>J</span>
+            <span 
+              className={cn(
+                "inline-block transition-all duration-500 ease-out",
+                isHovered ? "max-w-[70px] opacity-100" : "max-w-0 opacity-0"
+              )}
+            >
+              ohanna
+            </span>
+          </span>
+          {" "}
+          <span className="inline-block">&</span>
+          {" "}
+          <span className="inline-flex overflow-hidden">
+            <span>R</span>
+            <span 
+              className={cn(
+                "inline-block transition-all duration-500 ease-out",
+                isHovered ? "max-w-[60px] opacity-100" : "max-w-0 opacity-0"
+              )}
+            >
+              annar
+            </span>
+          </span>
+        </span>
+      </div>
+      <span className={cn(
+        "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
+        showSolidBackground ? "text-muted-foreground" : "text-white/80"
+      )}>Randmäe</span>
+    </div>
+  )
+}
+
+// Mobile logo (no animation)
+function MobileLogo({ showSolidBackground }: { showSolidBackground: boolean }) {
+  return (
+    <div className="flex md:hidden flex-col items-start relative">
+      <span className={cn(
+        "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
+        showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
+      )}>
+        J & R
+      </span>
+      <span className={cn(
+        "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
+        showSolidBackground ? "text-muted-foreground" : "text-white/80"
+      )}>Randmäe</span>
+    </div>
   )
 }
 
@@ -104,23 +174,19 @@ export function Header() {
           <Link 
             href="/" 
             onClick={handleLogoClick}
-            className="flex flex-col items-start relative"
           >
-            <span className={cn(
-              "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
-              showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
-            )}>
-              J & R
-            </span>
-            <span className={cn(
-              "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
-              showSolidBackground ? "text-muted-foreground" : "text-white/80"
-            )}>Randmäe</span>
+            <AnimatedLogo showSolidBackground={showSolidBackground} />
+            <MobileLogo showSolidBackground={showSolidBackground} />
           </Link>
 
           {/* Desktop Navigation - centered */}
           <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
-            <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
+            <div className={cn(
+                "relative flex items-center rounded-2xl p-1.5 backdrop-blur-sm border border-border/30",
+                showSolidBackground 
+                  ? "bg-secondary/50 dark:bg-secondary/30" 
+                  : "bg-white/10 dark:bg-secondary/30"
+              )}>
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href
                 const Icon = isActive ? item.iconFilled : item.icon
@@ -218,7 +284,7 @@ export function Header() {
             <div className="absolute left-6 top-6 bottom-6 w-px bg-border" />
             
             <div className="space-y-2">
-              {navItems.map((item, index) => {
+              {navItems.map((item) => {
                 const isActive = pathname === item.href
                 const Icon = isActive ? item.iconFilled : item.icon
                 
@@ -242,11 +308,6 @@ export function Header() {
                         : "bg-secondary text-muted-foreground"
                     )}>
                       <Icon className="w-5 h-5" />
-                      
-                      {/* Completion indicator */}
-                      {currentNavIndex >= index && currentNavIndex !== -1 && (
-                        <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-accent border-2 border-background" />
-                      )}
                     </div>
                     
                     <div className="flex-1">
@@ -258,12 +319,6 @@ export function Header() {
                       </p>
                       <p className="text-xs text-muted-foreground">{item.description}</p>
                     </div>
-                    
-                    {/* Arrow indicator */}
-                    <MapPin className={cn(
-                      "w-4 h-4 transition-all duration-300",
-                      isActive ? "text-primary opacity-100" : "opacity-0"
-                    )} />
                   </Link>
                 )
               })}

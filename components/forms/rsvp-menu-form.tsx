@@ -198,6 +198,8 @@ export function RSVPMenuForm() {
       }
 
       setCurrentStep("success")
+      // Scroll to top when success page appears
+      window.scrollTo({ top: 0, behavior: "smooth" })
     } catch {
       setError(t.rsvp.error)
     } finally {
@@ -365,7 +367,7 @@ export function RSVPMenuForm() {
                 >
                   <label 
                     htmlFor="ceremony_and_reception" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="ceremony_and_reception" id="ceremony_and_reception" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -374,7 +376,7 @@ export function RSVPMenuForm() {
                   </label>
                   <label 
                     htmlFor="ceremony_only" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="ceremony_only" id="ceremony_only" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -383,7 +385,7 @@ export function RSVPMenuForm() {
                   </label>
                   <label 
                     htmlFor="cant_attend" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="cant_attend" id="cant_attend" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -408,7 +410,7 @@ export function RSVPMenuForm() {
                       <label 
                         key={option.value}
                         htmlFor={`transport_${option.value}`}
-                        className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                        className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                       >
                         <RadioGroupItem value={option.value} id={`transport_${option.value}`} />
                         <option.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -491,7 +493,7 @@ export function RSVPMenuForm() {
                     {language === "et" ? "Kaastulijad" : "Additional guests"}
                   </Label>
                   {additionalGuests.map((guest, index) => (
-                    <div key={guest.id} className="p-4 rounded-xl border border-border bg-card space-y-3">
+                    <div key={guest.id} className="p-4 rounded-xl border border-border bg-card dark:bg-background space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-muted-foreground">
                           {language === "et" ? `Külaline ${index + 2}` : `Guest ${index + 2}`}
@@ -592,7 +594,7 @@ export function RSVPMenuForm() {
           <CardContent className="pt-6">
             <form onSubmit={handleMenuSubmit} className="space-y-6">
               {/* Main guest menu */}
-              <div className="p-4 rounded-xl border border-border bg-card space-y-4">
+              <div className="p-4 rounded-xl border border-border bg-card dark:bg-background space-y-4">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">1</div>
                   <div>
@@ -609,7 +611,7 @@ export function RSVPMenuForm() {
                     value={formData.mainCourseChoice}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, mainCourseChoice: value }))}
                   >
-                    <SelectTrigger className="h-14 rounded-xl bg-card border-input">
+                    <SelectTrigger className="h-14 rounded-xl bg-card dark:bg-background border-input">
                       <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
                     </SelectTrigger>
                     <SelectContent>
@@ -634,7 +636,7 @@ export function RSVPMenuForm() {
 
               {/* Additional guests menu */}
               {additionalGuests.map((guest, index) => (
-                <div key={guest.id} className="p-4 rounded-xl border border-border bg-card space-y-4">
+                <div key={guest.id} className="p-4 rounded-xl border border-border bg-card dark:bg-background space-y-4">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">{index + 2}</div>
                     <div>
@@ -651,7 +653,7 @@ export function RSVPMenuForm() {
                       value={guest.mainCourseChoice}
                       onValueChange={(value) => updateGuest(guest.id, "mainCourseChoice", value)}
                     >
-                      <SelectTrigger className="h-14 rounded-xl bg-card border-input">
+                      <SelectTrigger className="h-14 rounded-xl bg-card dark:bg-background border-input">
                         <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
                       </SelectTrigger>
                       <SelectContent>

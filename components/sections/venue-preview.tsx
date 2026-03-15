@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MapPin, ExternalLink, ChevronDown, Church, PartyPopper, Cloud, Sun, CloudRain, CloudSnow, Wind, CloudFog, CloudLightning, Loader2, Droplets } from "lucide-react"
+import { MapPin, ExternalLink, ChevronDown, Church, PartyPopper, Cloud, Sun, CloudRain, CloudSnow, Wind, CloudFog, CloudLightning, Loader2, Droplets, Calendar } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface WeatherData {
@@ -12,6 +12,7 @@ interface WeatherData {
   humidity: number
   windSpeed: number
   icon: string
+  isForecast?: boolean
 }
 
 const getWeatherInfo = (code: number, language: string) => {
@@ -45,29 +46,60 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Wedding date: August 19, 2026
+  const weddingDate = "2026-08-19"
+
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Europe%2FTallinn`
+        // First try to get forecast for the wedding date
+        const forecastResponse = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weather_code,relative_humidity_2m_max,wind_speed_10m_max&timezone=Europe%2FTallinn&start_date=${weddingDate}&end_date=${weddingDate}`
         )
-        if (!response.ok) throw new Error("Weather fetch failed")
-        const data = await response.json()
-        const current = data.current
+        
+        if (forecastResponse.ok) {
+          const data = await forecastResponse.json()
+          if (data.daily && data.daily.time && data.daily.time.includes(weddingDate)) {
+            const dayIndex = data.daily.time.indexOf(weddingDate)
+            const maxTemp = data.daily.temperature_2m_max[dayIndex]
+            const minTemp = data.daily.temperature_2m_min[dayIndex]
+            setWeather({
+              temperature: Math.round((maxTemp + minTemp) / 2),
+              humidity: data.daily.relative_humidity_2m_max?.[dayIndex] || 70,
+              windSpeed: Math.round(data.daily.wind_speed_10m_max?.[dayIndex] || 10),
+              icon: String(data.daily.weather_code[dayIndex]),
+              isForecast: true,
+            })
+            setLoading(false)
+            return
+          }
+        }
+
+        // If forecast not available for wedding date, show optimistic placeholder
+        // Average August weather in Estonia: sunny/partly cloudy, 18-22°C
         setWeather({
-          temperature: Math.round(current.temperature_2m),
-          humidity: current.relative_humidity_2m,
-          windSpeed: Math.round(current.wind_speed_10m),
-          icon: String(current.weather_code)
+          temperature: 20,
+          humidity: 65,
+          windSpeed: 12,
+          icon: "1", // Mostly clear
+          isForecast: true,
         })
       } catch {
-        // Silently fail
+        // Silently fail with placeholder
+        setWeather({
+          temperature: 20,
+          humidity: 65,
+          windSpeed: 12,
+          icon: "1",
+          isForecast: true,
+        })
       } finally {
         setLoading(false)
       }
     }
     fetchWeather()
-    const interval = setInterval(fetchWeather, 30 * 60 * 1000)
+    // Refresh daily
+    const interval = setInterval(fetchWeather, 24 * 60 * 60 * 1000)
     return () => clearInterval(interval)
   }, [lat, lon])
 
@@ -88,10 +120,16 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50 mt-4">
       <div className="p-2 rounded-lg bg-primary/10">
-        <WeatherIcon className="w-5 h-5 text-primary" />
+        {weather.isForecast ? (
+          <Calendar className="w-5 h-5 text-primary" />
+        ) : (
+          <WeatherIcon className="w-5 h-5 text-primary" />
+        )}
       </div>
       <div className="flex-1">
-        <p className="text-xs text-muted-foreground">{language === "et" ? "Praegune ilm" : "Current weather"}</p>
+        <p className="text-xs text-muted-foreground">
+          {language === "et" ? "19. augusti ilm" : "August 19th weather"}
+        </p>
         <div className="flex items-center gap-3 text-sm">
           <span className="font-medium text-foreground">{weather.temperature}°C</span>
           <span className="text-muted-foreground">{weatherInfo.description}</span>
@@ -120,7 +158,7 @@ function ScrollHint({ text }: { text: string }) {
   return (
     <button 
       onClick={handleClick}
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+      className="absolute bottom-8 sm:bottom-8 mt-8 sm:mt-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
     >
       <span className="text-xs text-muted-foreground/70 leading-relaxed">
         {text}
@@ -138,8 +176,8 @@ export function VenuePreview() {
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
 
   const scrollHintText = language === "et" 
-    ? "Kinnita osalemine ja tutvu infoga" 
-    : "Confirm attendance and learn more"
+    ? "Vaata viimaseid uuendusi" 
+    : "See the latest updates"
 
   return (
     <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">
@@ -185,7 +223,7 @@ export function VenuePreview() {
                     <span>14:00</span>
                   </div>
                   
-                  {/* Weather widget for Tartu */}
+                  {/* Weather widget for wedding date */}
                   <WeatherWidget lat={58.3776} lon={26.7387} location="Tartu" />
                 </div>
                 <div className="aspect-[16/10] w-full">
@@ -233,7 +271,7 @@ export function VenuePreview() {
                     <span>~17:00</span>
                   </div>
                   
-                  {/* Weather widget for Alatskivi */}
+                  {/* Weather widget for wedding date */}
                   <WeatherWidget lat={58.5997} lon={27.1306} location="Alatskivi" />
                 </div>
                 
