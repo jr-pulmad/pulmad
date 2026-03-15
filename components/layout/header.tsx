@@ -36,6 +36,8 @@ export function Header() {
   
   const isHomePage = pathname === "/"
   const showSolidBackground = !isHomePage || isScrolled
+  // Hide RSVP button on homepage when at top (hero section visible)
+  const showRsvpButton = !isHomePage || isScrolled
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +75,7 @@ export function Header() {
       label: t.nav.flowers,
       mobileLabel: language === "et" ? "Lilled" : "Flowers",
       icon: Flower2, 
-      iconFilled: Flower2,
+      iconFilled: Flower2Filled,
       description: language === "et" ? "Kingi lilli" : "Gift flowers" 
     },
     { 
@@ -103,7 +105,11 @@ export function Header() {
           <Link 
             href="/" 
             onClick={handleLogoClick}
-            className="flex flex-col items-start relative"
+            className={cn(
+              "flex flex-col items-start relative transition-all duration-300",
+              // Center when RSVP button is hidden
+              !showRsvpButton && "sm:absolute sm:left-1/2 sm:-translate-x-1/2"
+            )}
           >
             <span className={cn(
               "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
@@ -117,8 +123,11 @@ export function Header() {
             )}>Randmäe</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center">
+          {/* Desktop Navigation - centered */}
+          <nav className={cn(
+            "hidden md:flex items-center transition-all duration-300",
+            !showRsvpButton && "flex-1 justify-center"
+          )}>
             <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href
@@ -160,11 +169,21 @@ export function Header() {
           </nav>
 
           {/* Right side */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className={cn(
+            "flex items-center gap-2 sm:gap-3 transition-all duration-300",
+            !showRsvpButton && "sm:absolute sm:right-4 sm:sm:right-6"
+          )}>
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button - no heart icon */}
-            <Button asChild size="sm" className="hidden sm:inline-flex h-9">
+            {/* CTA Button - hide on homepage hero */}
+            <Button 
+              asChild 
+              size="sm" 
+              className={cn(
+                "hidden sm:inline-flex h-9 transition-all duration-300",
+                !showRsvpButton && "opacity-0 pointer-events-none scale-90"
+              )}
+            >
               <Link href="/rsvp">
                 <span>{t.cta.rsvp}</span>
               </Link>

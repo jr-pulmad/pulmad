@@ -322,7 +322,7 @@
 }
 
 .animate-dance {
-  animation: dance 1.2s ease-in-out infinite;
+  animation: dance 2s ease-in-out infinite;
   transform-origin: bottom center;
 }
 

@@ -10,10 +10,18 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
-import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft } from "lucide-react"
+import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type Step = "rsvp" | "menu" | "success"
+type Step = "rsvp" | "guests" | "menu" | "success"
+
+interface GuestData {
+  id: string
+  firstName: string
+  lastName: string
+  mainCourseChoice: string
+  allergiesAndDiet: string
+}
 
 export function RSVPMenuForm() {
   const { t, language } = useI18n()
@@ -29,10 +37,14 @@ export function RSVPMenuForm() {
     phone: "",
     attendance: "",
     notes: "",
+    transport: "",
     mainCourseChoice: "",
     allergiesAndDiet: "",
     honeypot: "",
   })
+
+  // Additional guests
+  const [additionalGuests, setAdditionalGuests] = useState<GuestData[]>([])
 
   useEffect(() => {
     if (emailError && formData.email) {
@@ -51,6 +63,27 @@ export function RSVPMenuForm() {
   }
 
   const showMenuSection = formData.attendance === "ceremony_and_reception"
+  const hasAdditionalGuests = additionalGuests.length > 0
+
+  const addGuest = () => {
+    setAdditionalGuests(prev => [...prev, {
+      id: crypto.randomUUID(),
+      firstName: "",
+      lastName: "",
+      mainCourseChoice: "",
+      allergiesAndDiet: "",
+    }])
+  }
+
+  const removeGuest = (id: string) => {
+    setAdditionalGuests(prev => prev.filter(g => g.id !== id))
+  }
+
+  const updateGuest = (id: string, field: keyof GuestData, value: string) => {
+    setAdditionalGuests(prev => prev.map(g => 
+      g.id === id ? { ...g, [field]: value } : g
+    ))
+  }
 
   const handleRSVPSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,11 +101,18 @@ export function RSVPMenuForm() {
     }
 
     if (showMenuSection) {
-      setCurrentStep("menu")
+      // Go to guests confirmation step
+      setCurrentStep("guests")
       return
     }
 
     await submitForm()
+  }
+
+  const handleGuestsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setCurrentStep("menu")
   }
 
   const handleMenuSubmit = async (e: React.FormEvent) => {
@@ -85,6 +125,7 @@ export function RSVPMenuForm() {
     setIsSubmitting(true)
 
     try {
+      // Submit main guest RSVP
       const rsvpResponse = await fetch("/api/rsvp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +135,9 @@ export function RSVPMenuForm() {
           email: formData.email,
           phone: formData.phone,
           attendance: formData.attendance,
+          transport: formData.transport,
           notes: formData.notes,
+          additionalGuests: additionalGuests.length,
           honeypot: formData.honeypot,
           language,
         }),
@@ -106,6 +149,7 @@ export function RSVPMenuForm() {
         return
       }
 
+      // Submit menu for main guest if attending reception
       if (showMenuSection && formData.mainCourseChoice) {
         const menuResponse = await fetch("/api/menu", {
           method: "POST",
@@ -126,6 +170,31 @@ export function RSVPMenuForm() {
           setIsSubmitting(false)
           return
         }
+
+        // Submit menu for each additional guest
+        for (const guest of additionalGuests) {
+          if (guest.mainCourseChoice) {
+            const guestMenuResponse = await fetch("/api/menu", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                firstName: guest.firstName,
+                lastName: guest.lastName,
+                email: formData.email, // Use main guest's email
+                mainCourseChoice: guest.mainCourseChoice,
+                allergiesAndDiet: guest.allergiesAndDiet,
+                honeypot: formData.honeypot,
+                language,
+              }),
+            })
+
+            if (!guestMenuResponse.ok) {
+              setError(t.menu.error)
+              setIsSubmitting(false)
+              return
+            }
+          }
+        }
       }
 
       setCurrentStep("success")
@@ -143,6 +212,11 @@ export function RSVPMenuForm() {
     { value: "vegan", label: t.menu.mainCourseOptions.option4 },
   ]
 
+  const transportOptions = [
+    { value: "own", label: language === "et" ? "Tulen oma transpordiga" : "Coming by own transport", icon: Car },
+    { value: "bus_tartu", label: language === "et" ? "Vajan bussitransporti Tartust ja tagasi" : "Need bus transfer from Tartu and back", icon: Bus },
+  ]
+
   if (currentStep === "success") {
     return (
       <Card className="max-w-2xl mx-auto bg-card/50 border-border backdrop-blur-sm animate-success-pop">
@@ -156,8 +230,8 @@ export function RSVPMenuForm() {
           <p className="text-muted-foreground max-w-md mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>
             {showMenuSection ? (
               language === "et" 
-                ? "Aitäh! Sinu osalemine ja menüüvalik on salvestatud." 
-                : "Thank you! Your attendance and menu selection have been saved."
+                ? `Aitäh! ${hasAdditionalGuests ? `${additionalGuests.length + 1} külalise` : "Sinu"} osalemine ja menüüvalik on salvestatud.`
+                : `Thank you! ${hasAdditionalGuests ? `${additionalGuests.length + 1} guests'` : "Your"} attendance and menu selection have been saved.`
             ) : (
               t.rsvp.success
             )}
@@ -170,9 +244,9 @@ export function RSVPMenuForm() {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Progress indicator */}
-      <div className="flex items-center justify-center gap-3 mb-8">
+      <div className="flex items-center justify-center gap-2 sm:gap-3 mb-8 flex-wrap">
         <div className={cn(
-          "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+          "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300",
           currentStep === "rsvp" 
             ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
             : "bg-secondary text-muted-foreground"
@@ -184,7 +258,17 @@ export function RSVPMenuForm() {
           <>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
             <div className={cn(
-              "flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300",
+              "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300",
+              currentStep === "guests" 
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
+                : "bg-secondary text-muted-foreground"
+            )}>
+              <Users className="w-4 h-4" />
+              <span>{language === "et" ? "Külalised" : "Guests"}</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            <div className={cn(
+              "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300",
               currentStep === "menu" 
                 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
                 : "bg-secondary text-muted-foreground"
@@ -279,26 +363,63 @@ export function RSVPMenuForm() {
                   onValueChange={(value) => setFormData((prev) => ({ ...prev, attendance: value }))}
                   className="space-y-2"
                 >
-                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
+                  <label 
+                    htmlFor="ceremony_and_reception" 
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                  >
                     <RadioGroupItem value="ceremony_and_reception" id="ceremony_and_reception" />
-                    <Label htmlFor="ceremony_and_reception" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
+                    <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.ceremonyAndReception}
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
+                    </span>
+                  </label>
+                  <label 
+                    htmlFor="ceremony_only" 
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                  >
                     <RadioGroupItem value="ceremony_only" id="ceremony_only" />
-                    <Label htmlFor="ceremony_only" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
+                    <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.ceremonyOnly}
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group">
+                    </span>
+                  </label>
+                  <label 
+                    htmlFor="cant_attend" 
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                  >
                     <RadioGroupItem value="cant_attend" id="cant_attend" />
-                    <Label htmlFor="cant_attend" className="flex-1 cursor-pointer font-normal group-hover:text-foreground transition-colors">
+                    <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
                       {t.rsvp.attendanceOptions.cantAttend}
-                    </Label>
-                  </div>
+                    </span>
+                  </label>
                 </RadioGroup>
               </div>
+
+              {/* Transport options - only show if attending reception */}
+              {formData.attendance === "ceremony_and_reception" && (
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium">
+                    {language === "et" ? "Transport" : "Transport"}
+                  </Label>
+                  <RadioGroup
+                    value={formData.transport}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, transport: value }))}
+                    className="space-y-2"
+                  >
+                    {transportOptions.map((option) => (
+                      <label 
+                        key={option.value}
+                        htmlFor={`transport_${option.value}`}
+                        className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                      >
+                        <RadioGroupItem value={option.value} id={`transport_${option.value}`} />
+                        <option.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                        <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
+                          {option.label}
+                        </span>
+                      </label>
+                    ))}
+                  </RadioGroup>
+                </div>
+              )}
 
               {/* Notes with floating label */}
               <FloatingTextarea
@@ -325,7 +446,7 @@ export function RSVPMenuForm() {
                   </>
                 ) : showMenuSection ? (
                   <>
-                    {language === "et" ? "Jätka menüüvalikuga" : "Continue to menu"}
+                    {language === "et" ? "Jätka" : "Continue"}
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </>
                 ) : (
@@ -339,57 +460,92 @@ export function RSVPMenuForm() {
         </Card>
       )}
 
-      {/* Menu Step */}
-      {currentStep === "menu" && (
+      {/* Guests Step */}
+      {currentStep === "guests" && (
         <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
-              <UtensilsCrossed className="w-7 h-7 text-primary" />
+              <Users className="w-7 h-7 text-primary" />
             </div>
-            <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.menu.title}</CardTitle>
-            <CardDescription className="text-muted-foreground mt-2">{t.menu.subtitle}</CardDescription>
+            <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">
+              {language === "et" ? "Lisage kaastulijad" : "Add companions"}
+            </CardTitle>
+            <CardDescription className="text-muted-foreground mt-2">
+              {language === "et" 
+                ? "Kas tuled üksi või kellegagi koos? Lisa siia oma kaaslased." 
+                : "Coming alone or with someone? Add your companions here."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            {/* Guest name reminder */}
-            <div className="mb-6 p-4 rounded-xl bg-secondary/30 border border-border">
-              <p className="text-sm text-muted-foreground">
-                {language === "et" ? "Menüüvalik külalisele:" : "Menu selection for:"}
-              </p>
-              <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
-            </div>
-
-            <form onSubmit={handleMenuSubmit} className="space-y-5">
-              {/* Main course selection */}
-              <div className="space-y-2">
-                <Label htmlFor="mainCourse" className="text-sm font-medium">
-                  {t.menu.mainCourse} <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={formData.mainCourseChoice}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, mainCourseChoice: value }))}
-                >
-                  <SelectTrigger className="h-14 rounded-xl bg-card border-input">
-                    <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {menuOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <form onSubmit={handleGuestsSubmit} className="space-y-5">
+              {/* Main guest reminder */}
+              <div className="p-4 rounded-xl bg-secondary/30 border border-border">
+                <p className="text-sm text-muted-foreground">{language === "et" ? "Peamine külaline:" : "Primary guest:"}</p>
+                <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
               </div>
 
-              {/* Allergies with floating label */}
-              <FloatingTextarea
-                id="allergiesAndDiet"
-                name="allergiesAndDiet"
-                value={formData.allergiesAndDiet}
-                onChange={handleChange}
-                required
-                label={`${t.menu.allergies} *`}
-              />
+              {/* Additional guests */}
+              {additionalGuests.length > 0 && (
+                <div className="space-y-4">
+                  <Label className="text-sm font-medium">
+                    {language === "et" ? "Kaastulijad" : "Additional guests"}
+                  </Label>
+                  {additionalGuests.map((guest, index) => (
+                    <div key={guest.id} className="p-4 rounded-xl border border-border bg-card space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          {language === "et" ? `Külaline ${index + 2}` : `Guest ${index + 2}`}
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeGuest(guest.id)}
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <FloatingInput
+                          id={`guest-${guest.id}-firstName`}
+                          value={guest.firstName}
+                          onChange={(e) => updateGuest(guest.id, "firstName", e.target.value)}
+                          required
+                          label={`${t.rsvp.firstName} *`}
+                        />
+                        <FloatingInput
+                          id={`guest-${guest.id}-lastName`}
+                          value={guest.lastName}
+                          onChange={(e) => updateGuest(guest.id, "lastName", e.target.value)}
+                          required
+                          label={`${t.rsvp.lastName} *`}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Add guest button */}
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full bg-transparent border-dashed"
+                onClick={addGuest}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {language === "et" ? "Lisa kaastulija" : "Add companion"}
+              </Button>
+
+              {/* Info note */}
+              <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                <p className="text-sm text-muted-foreground">
+                  {language === "et" 
+                    ? "Iga külalise jaoks on vaja eraldi menüüvalikut. Saad menüü valida järgmises sammus." 
+                    : "Each guest needs a separate menu selection. You can select menus in the next step."}
+                </p>
+              </div>
 
               {/* Error message */}
               {error && (
@@ -412,8 +568,135 @@ export function RSVPMenuForm() {
                 <Button 
                   type="submit" 
                   className="sm:flex-1" 
+                  size="lg"
+                >
+                  {language === "et" ? "Jätka menüüvalikuga" : "Continue to menu"}
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Menu Step */}
+      {currentStep === "menu" && (
+        <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
+          <CardHeader className="text-center pb-2">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
+              <UtensilsCrossed className="w-7 h-7 text-primary" />
+            </div>
+            <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.menu.title}</CardTitle>
+            <CardDescription className="text-muted-foreground mt-2">{t.menu.subtitle}</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={handleMenuSubmit} className="space-y-6">
+              {/* Main guest menu */}
+              <div className="p-4 rounded-xl border border-border bg-card space-y-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">1</div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{language === "et" ? "Peamine külaline" : "Primary guest"}</p>
+                    <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="mainCourse" className="text-sm font-medium">
+                    {t.menu.mainCourse} <span className="text-destructive">*</span>
+                  </Label>
+                  <Select
+                    value={formData.mainCourseChoice}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, mainCourseChoice: value }))}
+                  >
+                    <SelectTrigger className="h-14 rounded-xl bg-card border-input">
+                      <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {menuOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <FloatingTextarea
+                  id="allergiesAndDiet"
+                  name="allergiesAndDiet"
+                  value={formData.allergiesAndDiet}
+                  onChange={handleChange}
+                  required
+                  label={`${t.menu.allergies} *`}
+                />
+              </div>
+
+              {/* Additional guests menu */}
+              {additionalGuests.map((guest, index) => (
+                <div key={guest.id} className="p-4 rounded-xl border border-border bg-card space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">{index + 2}</div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{language === "et" ? "Kaastulija" : "Companion"}</p>
+                      <p className="font-medium text-foreground">{guest.firstName} {guest.lastName}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      {t.menu.mainCourse} <span className="text-destructive">*</span>
+                    </Label>
+                    <Select
+                      value={guest.mainCourseChoice}
+                      onValueChange={(value) => updateGuest(guest.id, "mainCourseChoice", value)}
+                    >
+                      <SelectTrigger className="h-14 rounded-xl bg-card border-input">
+                        <SelectValue placeholder={t.menu.mainCourseOptions.placeholder} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {menuOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <FloatingTextarea
+                    id={`guest-${guest.id}-allergies`}
+                    value={guest.allergiesAndDiet}
+                    onChange={(e) => updateGuest(guest.id, "allergiesAndDiet", e.target.value)}
+                    required
+                    label={`${t.menu.allergies} *`}
+                  />
+                </div>
+              ))}
+
+              {/* Error message */}
+              {error && (
+                <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
+                  {error}
+                </div>
+              )}
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="sm:flex-1"
+                  onClick={() => setCurrentStep("guests")}
+                >
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  {t.common.back}
+                </Button>
+                <Button 
+                  type="submit" 
+                  className="sm:flex-1" 
                   size="lg" 
-                  disabled={isSubmitting || !formData.mainCourseChoice || !formData.allergiesAndDiet}
+                  disabled={isSubmitting || !formData.mainCourseChoice || !formData.allergiesAndDiet || additionalGuests.some(g => !g.mainCourseChoice || !g.allergiesAndDiet)}
                 >
                   {isSubmitting ? (
                     <>
