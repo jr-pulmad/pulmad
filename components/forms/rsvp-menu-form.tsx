@@ -253,7 +253,7 @@ export function RSVPMenuForm() {
             ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
             : "bg-secondary text-muted-foreground"
         )}>
-          <UserCheck className="w-4 h-4" />
+          <UserCheck className="w-7 h-7 text-primary" />
           <span>{t.nav.rsvp}</span>
         </div>
         {showMenuSection && (
@@ -265,7 +265,7 @@ export function RSVPMenuForm() {
                 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
                 : "bg-secondary text-muted-foreground"
             )}>
-              <Users className="w-4 h-4" />
+              <Users className="w-7 h-7" />
               <span>{language === "et" ? "Külalised" : "Guests"}</span>
             </div>
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
@@ -275,7 +275,7 @@ export function RSVPMenuForm() {
                 ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25" 
                 : "bg-secondary text-muted-foreground"
             )}>
-              <UtensilsCrossed className="w-4 h-4" />
+              <UtensilsCrossed className="w-7 h-7" />
               <span>{t.nav.menu}</span>
             </div>
           </>
