@@ -14,7 +14,7 @@ export const translations = {
     hero: {
       date: "19. august 2026",
       venue: "Alatskivi Loss",
-      ceremony: "Tartu Peetri kirik",
+      ceremony: "Tartu Jaani kirik",
       reception: "Alatskivi Loss",
       saveTheDate: "Jäta kuupäev meelde",
     },
@@ -53,8 +53,8 @@ export const translations = {
       phone: "Telefon",
       attendance: "Osalemine",
       attendanceOptions: {
-      ceremonyAndReception: "Laulatus + pidu",
-      ceremonyOnly: "Ainult laulatus",
+        ceremonyAndReception: "Laulatus + pidu",
+        ceremonyOnly: "Ainult laulatus",
         cantAttend: "Kahjuks ei saa tulla",
       },
       notes: "Lisamärkused",
@@ -79,7 +79,7 @@ export const translations = {
         option3: "Kana ürdivõiga",
         option4: "Taimetoitlaste valik (vegan)",
       },
-      allergies: "Allergiad ja erisovid",
+      allergies: "Allergiad ja erisoovid",
       allergiesPlaceholder: "Kirjelda allergiaid ja erisoove (nt gluteen, laktoos, pähklid)",
       submit: "Salvesta valik",
       success: "Aitäh! Menüüvalik on salvestatud.",
@@ -185,7 +185,7 @@ export const translations = {
     hero: {
       date: "19 August 2026",
       venue: "Alatskivi Castle",
-      ceremony: "St. Peter's Church, Tartu",
+      ceremony: "St. John's Church, Tartu",
       reception: "Alatskivi Castle",
       saveTheDate: "Save the Date",
     },
@@ -204,7 +204,7 @@ export const translations = {
       flowers: "Gift Flowers",
       info: "More Info",
       viewUpdates: "View Updates",
-      subscribe: "Subscribe for Updates",
+      subscribe: "Subscribe to Updates",
     },
     // Updates section
     updates: {
@@ -263,12 +263,12 @@ export const translations = {
       title: "Gift Flowers",
       subtitle: "Help us create an unforgettable floral arrangement",
       description:
-        "Instead of bringing flowers, we kindly ask you to contribute to our florist budget. All donations go directly towards our wedding flowers.",
+        "Instead of bringing flowers, we kindly ask you to contribute to our florist budget. All payments go directly towards our wedding flowers.",
       presetAmounts: "Select amount",
       customAmount: "Custom amount",
       customAmountPlaceholder: "Enter amount",
       currency: "€",
-      donate: "Donate",
+      donate: "Pay",
       processing: "Processing...",
       success: "Thank you so much for your contribution!",
       cancel: "Payment was cancelled. Please try again.",
