@@ -16,7 +16,7 @@ function ScrollHint({ text }: { text: string }) {
       onClick={handleClick}
       className="absolute bottom-8 sm:bottom-8 mt-8 sm:mt-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
     >
-      <span className="text-xs text-muted-foreground/70 leading-relaxed">
+      <span className="text-s text-muted-foreground/70 leading-relaxed">
         {text}
       </span>
       <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
