@@ -16,7 +16,7 @@ export const translations = {
       venue: "Alatskivi Loss",
       ceremony: "Tartu Jaani kirik",
       reception: "Alatskivi Loss",
-      saveTheDate: "Jäta kuupäev meelde",
+      saveTheDate: "Randmäed",
     },
     // Countdown
     countdown: {
@@ -187,7 +187,7 @@ export const translations = {
       venue: "Alatskivi Castle",
       ceremony: "St. John's Church, Tartu",
       reception: "Alatskivi Castle",
-      saveTheDate: "Save the Date",
+      saveTheDate: "Randmäed",
     },
     // Countdown
     countdown: {
