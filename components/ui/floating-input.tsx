@@ -47,9 +47,7 @@ function FloatingInput({
         className={cn(
           "peer h-14 w-full rounded-xl border bg-card px-4 pt-5 pb-2 text-base transition-colors duration-200",
           "border-input dark:bg-input/30",
-          "focus:border-primary",
-          // Remove all ring and outline styles
-          "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
+          "focus:border-primary focus:outline-none",
           error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
@@ -125,9 +123,7 @@ function FloatingTextarea({
         className={cn(
           "peer min-h-[120px] w-full rounded-xl border bg-card px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
           "border-input dark:bg-input/30",
-          "focus:border-primary",
-          // Remove all ring and outline styles
-          "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
+          "focus:border-primary focus:outline-none",
           error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
