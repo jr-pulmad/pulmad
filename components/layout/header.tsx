@@ -65,7 +65,7 @@ export function Header() {
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
 
-  // Update highlight position when pathname changes - animate from current to target
+  // Update highlight position based on current active item
   useEffect(() => {
     const updateHighlight = () => {
       const activeIndex = navItems.findIndex(item => item.href === pathname)
@@ -88,7 +88,11 @@ export function Header() {
 
     // Small delay to ensure DOM is ready
     const timer = setTimeout(updateHighlight, 50)
-    return () => clearTimeout(timer)
+    window.addEventListener("resize", updateHighlight)
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener("resize", updateHighlight)
+    }
   }, [pathname, navItems])
 
   return (
@@ -122,21 +126,16 @@ export function Header() {
               ref={navRef}
               className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30"
             >
-              {/* Liquid glass highlight background - iOS 26 style */}
+              {/* Simple highlight background - no liquid glass */}
               <div 
                 className={cn(
-                  "absolute top-1.5 h-[calc(100%-12px)] rounded-xl transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  "bg-gradient-to-br from-white/90 via-white/70 to-white/50",
-                  "dark:from-white/20 dark:via-white/15 dark:to-white/10",
-                  "shadow-[0_8px_32px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.5)]",
-                  "dark:shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]",
-                  "backdrop-blur-md border border-white/40 dark:border-white/10"
+                  "absolute top-1.5 h-[calc(100%-12px)] rounded-xl transition-all duration-300 ease-out",
+                  "bg-primary/10 dark:bg-primary/20"
                 )}
                 style={{ 
                   left: highlightStyle.left, 
                   width: highlightStyle.width,
                   opacity: highlightStyle.opacity,
-                  transform: `translateX(0)`,
                 }}
               />
               
@@ -158,11 +157,11 @@ export function Header() {
                       )}
                     >
                       <Icon className={cn(
-                        "w-4 h-4 transition-transform",
+                        "w-4 h-4 transition-transform duration-200",
                         // RSVP heart beats continuously on hover (desktop only)
                         isRsvp && "md:group-hover:animate-heartbeat",
                         // Other icons scale once on hover (desktop only)
-                        !isRsvp && "md:group-hover:scale-110 duration-200"
+                        !isRsvp && "md:group-hover:scale-110"
                       )} />
                       <span>{item.label}</span>
                     </Link>
@@ -186,10 +185,9 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button with heartbeat on hover */}
-            <Button asChild size="sm" className="hidden sm:inline-flex group h-9">
+            {/* CTA Button - no heart icon, only on RSVP menu */}
+            <Button asChild size="sm" className="hidden sm:inline-flex h-9">
               <Link href="/rsvp">
-                <Heart className="w-4 h-4 md:group-hover:animate-heartbeat" />
                 <span>{t.cta.rsvp}</span>
               </Link>
             </Button>

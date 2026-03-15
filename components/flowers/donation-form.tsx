@@ -77,14 +77,16 @@ export function DonationForm() {
 
   if (isSuccess) {
     return (
-      <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm">
+      <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm animate-success-pop">
         <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
-            <CheckCircle2 className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6 animate-success-pop" style={{ animationDelay: "0.1s" }}>
+            <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" className="animate-success-check" />
+            </svg>
           </div>
-          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3">{t.common.success}</h3>
-          <p className="text-muted-foreground max-w-md mx-auto">{t.flowers.success}</p>
-          <p className="text-sm text-muted-foreground/60 mt-4">
+          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3 animate-fade-in-up" style={{ animationDelay: "0.3s", animationFillMode: "both" }}>{t.common.success}</h3>
+          <p className="text-muted-foreground max-w-md mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>{t.flowers.success}</p>
+          <p className="text-sm text-muted-foreground/60 mt-4 animate-fade-in-up" style={{ animationDelay: "0.5s", animationFillMode: "both" }}>
             {language === "et" ? "Makse integratsioon tuleb peagi." : "Payment integration coming soon."}
           </p>
         </CardContent>
