@@ -75,6 +75,13 @@ export function RSVPForm() {
 
   return (
     <Card className="max-w-2xl mx-auto bg-card/50 border-border">
+      <CardHeader className="text-center pb-2">
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4 mx-auto">
+          <UserCheck className="w-6 h-6 text-primary" />
+        </div>
+        <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
+        <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
+      </CardHeader>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Honeypot field - hidden from users */}
