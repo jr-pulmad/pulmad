@@ -165,7 +165,7 @@ export function Header() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         showSolidBackground 
           ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-sm" 
-          : "bg-white/5 dark:bg-transparent backdrop-blur-sm",
+          : "bg-transparent",
       )}
     >
       <div className="container mx-auto px-4 sm:px-6">
@@ -181,7 +181,12 @@ export function Header() {
 
           {/* Desktop Navigation - centered */}
           <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
-            <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
+            <div className={cn(
+                "relative flex items-center rounded-2xl p-1.5 backdrop-blur-sm border border-border/30",
+                showSolidBackground 
+                  ? "bg-secondary/50 dark:bg-secondary/30" 
+                  : "bg-white/10 dark:bg-secondary/30"
+              )}>
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href
                 const Icon = isActive ? item.iconFilled : item.icon

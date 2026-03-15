@@ -176,8 +176,8 @@ export function VenuePreview() {
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
 
   const scrollHintText = language === "et" 
-    ? "Vaata kus toimub laulatus ja pidu" 
-    : "See where the ceremony and reception take place"
+    ? "Vaata viimaseid uuendusi" 
+    : "See the latest updates"
 
   return (
     <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">

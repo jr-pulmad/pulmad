@@ -64,23 +64,27 @@ function BrideStickman({ className }: { className?: string }) {
   )
 }
 
-// Groom with cool gel hairstyle (styled up, not helmet)
+// Groom with punk/mohawk style haircut
 function GroomStickman({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 200" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       {/* Head */}
       <circle cx="50" cy="35" r="15" />
-      {/* Cool gel hairstyle - swept up and to the side */}
-      <path d="M35 30 Q32 18 40 12 Q50 6 60 10 Q70 14 68 28" fill="currentColor" fillOpacity="0.5" />
-      <path d="M38 25 Q36 15 45 10 Q55 5 62 12" fill="currentColor" fillOpacity="0.4" />
-      <path d="M40 22 Q42 12 52 8 Q60 6 65 14" fill="currentColor" fillOpacity="0.3" />
-      {/* Hair spikes/texture */}
-      <path d="M42 14 Q45 6 50 8" strokeWidth="1.5" opacity="0.6" />
-      <path d="M48 10 Q52 4 56 7" strokeWidth="1.5" opacity="0.6" />
-      <path d="M54 9 Q60 5 63 12" strokeWidth="1.5" opacity="0.5" />
-      {/* Side hair detail */}
-      <path d="M35 32 Q32 28 35 24" strokeWidth="2" />
-      <path d="M65 32 Q68 28 65 24" strokeWidth="2" />
+      {/* Punk mohawk style - tall spikes in the middle */}
+      <path d="M45 20 L42 2 L48 12 L45 -2 L52 10 L50 -4 L55 8 L53 -2 L58 12 L55 2 L58 20" fill="currentColor" fillOpacity="0.5" />
+      {/* Main mohawk body */}
+      <path d="M42 22 Q44 8 50 5 Q56 8 58 22" fill="currentColor" fillOpacity="0.45" />
+      {/* Individual spikes */}
+      <path d="M44 18 L43 4" strokeWidth="2.5" opacity="0.6" />
+      <path d="M47 16 L46 0" strokeWidth="2.5" opacity="0.7" />
+      <path d="M50 15 L50 -3" strokeWidth="3" opacity="0.75" />
+      <path d="M53 16 L54 0" strokeWidth="2.5" opacity="0.7" />
+      <path d="M56 18 L57 4" strokeWidth="2.5" opacity="0.6" />
+      {/* Shaved sides - subtle lines */}
+      <path d="M35 30 L37 25" strokeWidth="1" opacity="0.3" />
+      <path d="M36 33 L38 28" strokeWidth="1" opacity="0.3" />
+      <path d="M65 30 L63 25" strokeWidth="1" opacity="0.3" />
+      <path d="M64 33 L62 28" strokeWidth="1" opacity="0.3" />
       {/* Body */}
       <line x1="50" y1="50" x2="50" y2="110" />
       {/* Suit jacket - proper shape with shoulders */}

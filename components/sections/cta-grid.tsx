@@ -51,8 +51,8 @@ export function CTAGrid() {
   ]
 
   const scrollHintText = language === "et" 
-    ? "Vaata viimaseid uuendusi" 
-    : "See the latest updates"
+    ? "Vaata kus toimub laulatus ja pidu" 
+    : "See where the ceremony and reception take place"
 
   return (
     <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">

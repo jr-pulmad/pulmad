@@ -89,7 +89,8 @@ export function Hero() {
             <Button 
               asChild 
               size="lg" 
-              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-bold rounded-2xl bg-primary/70 backdrop-blur-xl border border-white/20 text-primary-foreground hover:bg-primary/85 shadow-2xl shadow-black/40 transition-all duration-300"
+              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-extrabold rounded-2xl border border-white/30 text-white hover:border-white/50 shadow-2xl shadow-black/40 transition-all duration-300"
+              style={{ background: "rgba(35, 97, 48, 0.65)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}
             >
               <Link href="/rsvp">{t.cta.rsvp}</Link>
             </Button>
