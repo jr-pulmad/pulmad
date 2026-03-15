@@ -27,6 +27,15 @@ export const metadata: Metadata = {
   description: "Johanna ja Rannari pulmad Alatskivil, 19. august 2026.",
   keywords: ["pulmad", "wedding", "Randmäe", "Alatskivi Loss", "2026"],
   authors: [{ name: "Johanna & Rannar Randmäe" }],
+  icons: {
+    icon: [
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: [
+      { url: "/favicon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: "/favicon.png",
+  },
   openGraph: {
     title: "Johanna & Rannar | Randmäe Wedding 2026",
     description: "Join us for our wedding at Alatskivi Castle on August 19, 2026",
@@ -34,7 +43,7 @@ export const metadata: Metadata = {
     locale: "et_EE",
     alternateLocale: "en_US",
   },
-    generator: 'v0.app'
+  generator: 'v0.app'
 }
 
 export const viewport: Viewport = {

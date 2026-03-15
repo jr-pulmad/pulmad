@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useTheme } from "next-themes"
 import { useI18n } from "@/lib/i18n/context"
 import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, ArrowDown, Church, PartyPopper } from "lucide-react"
+import { ArrowDown, Church, PartyPopper } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export function Hero() {
@@ -27,89 +27,96 @@ export function Hero() {
     : "/alatskivi-castle-hero.jpg"
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background image with overlay - stronger gradient for text contrast */}
+    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
+      {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
         <img 
           src={heroImage} 
           alt="Alatskivi Castle" 
           className="w-full h-full object-cover transition-opacity duration-500" 
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 dark:from-black/80 dark:via-black/60 dark:to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 dark:from-black/75 dark:via-black/55 dark:to-background" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 pt-24 pb-32 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center">
         <div className="max-w-4xl mx-auto">
           {/* Decorative line */}
-          <div className="flex items-center justify-center gap-4 mb-8 sm:mb-10">
-            <div className="h-px w-16 sm:w-24 bg-white/40" />
-            <span className="text-white/80 text-[10px] sm:text-xs tracking-[0.4em] uppercase font-medium">{t.hero.saveTheDate}</span>
-            <div className="h-px w-16 sm:w-24 bg-white/40" />
+          <div className="flex items-center justify-center gap-3 mb-5 sm:mb-8">
+            <div className="h-px w-12 sm:w-20 bg-white/50" />
+            <span className="text-white/90 text-[10px] sm:text-xs tracking-[0.3em] sm:tracking-[0.4em] uppercase font-medium">{t.hero.saveTheDate}</span>
+            <div className="h-px w-12 sm:w-20 bg-white/50" />
           </div>
 
           {/* Names */}
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-medium tracking-tight text-white mb-3 sm:mb-4 text-balance drop-shadow-xl">
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-2 sm:mb-3 text-balance drop-shadow-lg">
             Johanna <span className="text-primary">&</span> Rannar
           </h1>
 
           {/* Family name */}
-          <p className="text-base sm:text-lg md:text-xl text-white/70 tracking-[0.25em] uppercase mb-10 sm:mb-12 font-light">
+          <p className="text-sm sm:text-base md:text-lg text-white/80 tracking-[0.2em] sm:tracking-[0.25em] uppercase mb-6 sm:mb-10 font-light">
             Randmäe
           </p>
 
-          {/* Date */}
-          <div className="flex items-center justify-center gap-2.5 text-white/90 mb-6">
-            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-            <span className="text-sm sm:text-base font-medium tracking-wide">{t.hero.date}</span>
+          {/* Date badge */}
+          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 mb-5 sm:mb-8">
+            <span className="text-sm sm:text-base font-semibold tracking-wide text-white">{t.hero.date}</span>
           </div>
 
-          {/* Venues */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12 sm:mb-16">
-            <div className="flex items-center gap-2.5 text-white/90">
-              <Church className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+          {/* Venues - improved visibility with card backgrounds */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12">
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/30">
+                <Church className="w-4 h-4 text-primary" />
+              </div>
               <div className="text-left">
-                <p className="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider">
+                <p className="text-[10px] sm:text-xs text-white/70 uppercase tracking-wider font-medium">
                   {language === "et" ? "Tseremoonia" : "Ceremony"}
                 </p>
-                <span className="text-sm sm:text-base font-medium tracking-wide">
-                  {language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church, Tartu"}
+                <span className="text-sm sm:text-base font-medium text-white">
+                  {language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church"}
                 </span>
               </div>
             </div>
-            <div className="hidden sm:block w-1 h-1 rounded-full bg-white/40" />
-            <div className="flex items-center gap-2.5 text-white/90">
-              <PartyPopper className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+            
+            <div className="hidden sm:flex items-center justify-center w-6 h-6">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/80" />
+            </div>
+            
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 border border-primary/30">
+                <PartyPopper className="w-4 h-4 text-primary" />
+              </div>
               <div className="text-left">
-                <p className="text-[10px] sm:text-xs text-white/60 uppercase tracking-wider">
+                <p className="text-[10px] sm:text-xs text-white/70 uppercase tracking-wider font-medium">
                   {language === "et" ? "Pidu" : "Reception"}
                 </p>
-                <span className="text-sm sm:text-base font-medium tracking-wide">Alatskivi Loss</span>
+                <span className="text-sm sm:text-base font-medium text-white">Alatskivi Loss</span>
               </div>
             </div>
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
-            <Button asChild size="lg" className="w-full sm:w-auto min-w-[180px] h-12 text-base font-medium">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <Button asChild size="lg" className="w-full sm:w-auto min-w-[160px] h-11 sm:h-12 text-sm sm:text-base font-medium">
               <Link href="/rsvp">{t.cta.rsvp}</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-w-[180px] h-12 text-base font-medium bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 dark:bg-white/5 dark:border-white/20 dark:hover:bg-white/10">
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto min-w-[160px] h-11 sm:h-12 text-sm sm:text-base font-medium bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 dark:bg-white/5 dark:border-white/20 dark:hover:bg-white/10">
               <Link href="/info">{t.cta.info}</Link>
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator - elegant arrow */}
+      {/* Scroll indicator - positioned to be visible on mobile */}
       <button
         onClick={scrollToContent}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-3"
+        className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-10 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-2"
         aria-label="Scroll down"
       >
-        <div className="relative flex flex-col items-center">
-          <div className="w-px h-8 bg-gradient-to-b from-transparent via-white/50 to-white/80 mb-2" />
-          <ArrowDown className="w-5 h-5 text-white/80 group-hover:text-white transition-colors animate-bounce" />
+        <div className="flex flex-col items-center gap-1">
+          <div className="w-px h-5 sm:h-6 bg-gradient-to-b from-transparent to-white/70" />
+          <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-white/80 group-hover:text-white transition-colors animate-bounce" />
         </div>
       </button>
     </section>
