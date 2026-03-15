@@ -86,11 +86,24 @@ export function Hero() {
 
           {/* Luxurious RSVP Button - green theme with transparency and blur */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
-            <Button 
-              asChild 
-              size="lg" 
-              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-extrabold rounded-2xl border border-white/30 text-white hover:border-white/50 shadow-2xl shadow-black/40 transition-all duration-300"
-              style={{ background: "rgba(35, 97, 48, 0.65)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}
+            <Button
+              asChild
+              size="lg"
+              className="
+                min-w-[200px] h-14 sm:h-16
+                px-6
+                text-sm sm:text-base font-extrabold text-white
+                rounded-2xl
+                border border-white/20
+                bg-emerald-900/35
+                backdrop-blur-xl
+                supports-[backdrop-filter]:bg-emerald-900/25
+                shadow-[0_8px_30px_rgba(0,0,0,0.35)]
+                hover:bg-emerald-800/35
+                hover:border-white/30
+                hover:shadow-[0_12px_40px_rgba(0,0,0,0.45)]
+                transition-all duration-300
+              "
             >
               <Link href="/rsvp">{t.cta.rsvp}</Link>
             </Button>
