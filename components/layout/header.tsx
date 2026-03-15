@@ -15,7 +15,9 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [hasScrolledOnce, setHasScrolledOnce] = useState(false)
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [highlightStyle, setHighlightStyle] = useState({ left: 0, width: 0 })
+  const navRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([])
   const prevPathRef = useRef(pathname)
   
   const isHomePage = pathname === "/"
@@ -63,6 +65,31 @@ export function Header() {
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
 
+  // Update highlight position when pathname changes
+  useEffect(() => {
+    const updateHighlight = () => {
+      const activeIndex = navItems.findIndex(item => item.href === pathname)
+      if (activeIndex !== -1 && itemRefs.current[activeIndex] && navRef.current) {
+        const item = itemRefs.current[activeIndex]
+        const nav = navRef.current
+        if (item) {
+          const itemRect = item.getBoundingClientRect()
+          const navRect = nav.getBoundingClientRect()
+          setHighlightStyle({
+            left: itemRect.left - navRect.left,
+            width: itemRect.width,
+          })
+        }
+      } else {
+        setHighlightStyle({ left: 0, width: 0 })
+      }
+    }
+
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(updateHighlight, 50)
+    return () => clearTimeout(timer)
+  }, [pathname, navItems])
+
   return (
     <header
       className={cn(
@@ -74,55 +101,60 @@ export function Header() {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo with micro-animation */}
+          {/* Logo */}
           <Link href="/" className="group flex flex-col items-start relative">
             <span className={cn(
-              "font-serif text-lg sm:text-xl font-medium tracking-wide transition-all duration-300 group-hover:tracking-wider",
+              "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
               showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
             )}>
-              J <span className="inline-block transition-transform duration-300 group-hover:scale-110 group-hover:text-primary">&</span> R
+              J & R
             </span>
             <span className={cn(
-              "text-[10px] sm:text-xs tracking-widest uppercase transition-all duration-300",
+              "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
               showSolidBackground ? "text-muted-foreground" : "text-white/80"
             )}>Randmäe</span>
-            {/* Subtle hover glow */}
-            <div className="absolute -inset-2 rounded-lg bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300 -z-10" />
           </Link>
 
           {/* Desktop Journey Navigation */}
           <nav className="hidden md:flex items-center">
-            <div className="flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
+            <div 
+              ref={navRef}
+              className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30"
+            >
+              {/* Animated highlight background */}
+              {currentNavIndex !== -1 && (
+                <div 
+                  className="absolute top-1.5 h-[calc(100%-12px)] bg-primary rounded-xl shadow-md transition-all duration-300 ease-out"
+                  style={{ 
+                    left: highlightStyle.left, 
+                    width: highlightStyle.width,
+                    opacity: highlightStyle.width > 0 ? 1 : 0 
+                  }}
+                />
+              )}
+              
               {navItems.map((item, index) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href
-                const isHovered = hoveredItem === item.href
+                const isRsvp = item.href === "/rsvp"
                 
                 return (
                   <div key={item.href} className="flex items-center">
                     <Link
+                      ref={el => { itemRefs.current[index] = el }}
                       href={item.href}
-                      onMouseEnter={() => setHoveredItem(item.href)}
-                      onMouseLeave={() => setHoveredItem(null)}
                       className={cn(
-                        "relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+                        "relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300 z-10",
                         isActive 
-                          ? "bg-primary text-primary-foreground shadow-md" 
-                          : isHovered
-                            ? "bg-background/80 text-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground"
+                          ? "text-primary-foreground" 
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       <Icon className={cn(
-                        "w-4 h-4 transition-transform duration-300",
-                        (isActive || isHovered) && "scale-110"
+                        "w-4 h-4 transition-transform",
+                        isRsvp && !isActive && "md:group-hover:animate-none md:hover:animate-heartbeat"
                       )} />
                       <span>{item.label}</span>
-                      
-                      {/* Active indicator dot */}
-                      {isActive && (
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-foreground" />
-                      )}
                     </Link>
                     
                     {/* Journey connector line */}
@@ -144,11 +176,11 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button with glow effect */}
-            <Button asChild size="sm" className="hidden sm:inline-flex relative overflow-hidden group">
+            {/* CTA Button with heartbeat on RSVP */}
+            <Button asChild size="sm" className="hidden sm:inline-flex group">
               <Link href="/rsvp">
-                <span className="relative z-10">{t.cta.rsvp}</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] opacity-0 group-hover:opacity-100 group-hover:animate-shimmer transition-opacity duration-300" />
+                <Heart className="w-4 h-4 md:group-hover:animate-heartbeat" />
+                <span>{t.cta.rsvp}</span>
               </Link>
             </Button>
 

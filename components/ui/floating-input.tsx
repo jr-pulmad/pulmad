@@ -45,10 +45,10 @@ function FloatingInput({
         id={id}
         data-slot="input"
         className={cn(
-          "peer h-14 w-full rounded-xl border bg-card px-4 pt-5 pb-2 text-base outline-none transition-all duration-200",
+          "peer h-14 w-full rounded-xl border bg-card px-4 pt-5 pb-2 text-base transition-colors duration-200",
           "border-input dark:bg-input/30",
-          "focus:border-primary focus:ring-1 focus:ring-primary/30",
-          error && "border-destructive focus:border-destructive focus:ring-destructive/30",
+          "focus:border-primary focus:outline-none",
+          error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
@@ -65,7 +65,7 @@ function FloatingInput({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-2 text-xs font-medium text-primary" 
+            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-1/2 -translate-y-1/2 text-base",
           error && isFloating && "text-destructive",
         )}
@@ -121,10 +121,10 @@ function FloatingTextarea({
         id={id}
         data-slot="textarea"
         className={cn(
-          "peer min-h-[120px] w-full rounded-xl border bg-card px-4 pt-7 pb-3 text-base outline-none transition-all duration-200 resize-none",
+          "peer min-h-[120px] w-full rounded-xl border bg-card px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
           "border-input dark:bg-input/30",
-          "focus:border-primary focus:ring-1 focus:ring-primary/30",
-          error && "border-destructive focus:border-destructive focus:ring-destructive/30",
+          "focus:border-primary focus:outline-none",
+          error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
           className,
         )}
@@ -141,7 +141,7 @@ function FloatingTextarea({
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
           isFloating 
-            ? "top-2 text-xs font-medium text-primary" 
+            ? "-top-2 text-xs font-medium text-primary bg-card dark:bg-[#141414] px-1 ml-[-4px]" 
             : "top-4 text-base",
           error && isFloating && "text-destructive",
         )}

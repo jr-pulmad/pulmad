@@ -183,6 +183,32 @@
   }
 }
 
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.2);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+/* Desktop only heartbeat animation */
+@media (min-width: 768px) {
+  .md\:group-hover\:animate-heartbeat:is(:where(.group):hover *),
+  .md\:hover\:animate-heartbeat:hover {
+    animation: heartbeat 1s ease-in-out infinite;
+  }
+}
+
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
 }
