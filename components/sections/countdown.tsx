@@ -64,64 +64,69 @@ function BrideStickman({ className }: { className?: string }) {
   )
 }
 
-// Groom with modern hairstyle (larger hair, proper suit)
+// Groom with cool gel hairstyle (styled up, not helmet)
 function GroomStickman({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 200" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       {/* Head */}
-      <circle cx="50" cy="32" r="15" />
-      {/* Modern styled hair - larger and fuller */}
-      <path d="M32 28 Q35 10 50 8 Q65 10 68 28" fill="currentColor" fillOpacity="0.4" />
-      <path d="M35 22 Q40 12 50 10 Q60 12 65 22" fill="currentColor" fillOpacity="0.3" />
-      <path d="M38 18 Q45 8 55 10" strokeWidth="2" opacity="0.6" />
-      <path d="M40 20 Q48 12 58 14" strokeWidth="1.5" opacity="0.5" />
-      <path d="M42 22 Q50 16 56 18" strokeWidth="1" opacity="0.4" />
+      <circle cx="50" cy="35" r="15" />
+      {/* Cool gel hairstyle - swept up and to the side */}
+      <path d="M35 30 Q32 18 40 12 Q50 6 60 10 Q70 14 68 28" fill="currentColor" fillOpacity="0.5" />
+      <path d="M38 25 Q36 15 45 10 Q55 5 62 12" fill="currentColor" fillOpacity="0.4" />
+      <path d="M40 22 Q42 12 52 8 Q60 6 65 14" fill="currentColor" fillOpacity="0.3" />
+      {/* Hair spikes/texture */}
+      <path d="M42 14 Q45 6 50 8" strokeWidth="1.5" opacity="0.6" />
+      <path d="M48 10 Q52 4 56 7" strokeWidth="1.5" opacity="0.6" />
+      <path d="M54 9 Q60 5 63 12" strokeWidth="1.5" opacity="0.5" />
       {/* Side hair detail */}
-      <path d="M34 30 Q30 25 34 20" strokeWidth="2" />
-      <path d="M66 30 Q70 25 66 20" strokeWidth="2" />
+      <path d="M35 32 Q32 28 35 24" strokeWidth="2" />
+      <path d="M65 32 Q68 28 65 24" strokeWidth="2" />
       {/* Body */}
-      <line x1="50" y1="47" x2="50" y2="110" />
+      <line x1="50" y1="50" x2="50" y2="110" />
       {/* Suit jacket - proper shape with shoulders */}
-      <path d="M30 55 L30 110 L70 110 L70 55 Q60 50 50 50 Q40 50 30 55" fill="currentColor" fillOpacity="0.12" />
-      {/* Suit shoulders */}
-      <path d="M30 55 Q25 55 22 60" strokeWidth="2" />
-      <path d="M70 55 Q75 55 78 60" strokeWidth="2" />
+      <path d="M32 58 L32 110 L68 110 L68 58 Q60 52 50 52 Q40 52 32 58" fill="currentColor" fillOpacity="0.12" />
+      {/* Suit shoulders - extended */}
+      <path d="M32 58 Q26 56 22 62" strokeWidth="2.5" />
+      <path d="M68 58 Q74 56 78 62" strokeWidth="2.5" />
       {/* Lapels */}
-      <path d="M50 50 L40 65 L40 80" strokeWidth="1.5" />
-      <path d="M50 50 L60 65 L60 80" strokeWidth="1.5" />
+      <path d="M50 52 L42 68 L42 82" strokeWidth="1.5" />
+      <path d="M50 52 L58 68 L58 82" strokeWidth="1.5" />
       {/* Bow tie */}
-      <path d="M44 50 L50 54 L56 50 L50 46 Z" fill="currentColor" fillOpacity="0.5" />
+      <path d="M44 52 L50 56 L56 52 L50 48 Z" fill="currentColor" fillOpacity="0.5" />
       {/* Pocket square */}
-      <path d="M36 70 L40 64 L44 70" fill="currentColor" fillOpacity="0.3" />
-      {/* Arms - from shoulders */}
-      <line x1="22" y1="60" x2="15" y2="95" />
-      <line x1="78" y1="60" x2="85" y2="95" />
+      <path d="M36 72 L40 66 L44 72" fill="currentColor" fillOpacity="0.3" />
+      {/* Arms - from shoulders, with sleeves */}
+      <path d="M22 62 L18 82 L15 95" strokeWidth="2" />
+      <path d="M78 62 L82 82 L85 95" strokeWidth="2" />
+      {/* Suit sleeve cuffs */}
+      <ellipse cx="15" cy="96" rx="4" ry="2" fill="currentColor" fillOpacity="0.2" />
+      <ellipse cx="85" cy="96" rx="4" ry="2" fill="currentColor" fillOpacity="0.2" />
       {/* Hands */}
-      <circle cx="15" cy="97" r="3" fill="currentColor" fillOpacity="0.3" />
-      <circle cx="85" cy="97" r="3" fill="currentColor" fillOpacity="0.3" />
+      <circle cx="15" cy="99" r="3.5" fill="currentColor" fillOpacity="0.3" />
+      <circle cx="85" cy="99" r="3.5" fill="currentColor" fillOpacity="0.3" />
       {/* Legs */}
-      <line x1="50" y1="110" x2="35" y2="190" />
-      <line x1="50" y1="110" x2="65" y2="190" />
+      <line x1="50" y1="110" x2="35" y2="190" strokeWidth="2" />
+      <line x1="50" y1="110" x2="65" y2="190" strokeWidth="2" />
       {/* Shoes */}
-      <ellipse cx="35" cy="192" rx="6" ry="3" fill="currentColor" fillOpacity="0.4" />
-      <ellipse cx="65" cy="192" rx="6" ry="3" fill="currentColor" fillOpacity="0.4" />
+      <ellipse cx="35" cy="192" rx="7" ry="3" fill="currentColor" fillOpacity="0.4" />
+      <ellipse cx="65" cy="192" rx="7" ry="3" fill="currentColor" fillOpacity="0.4" />
       {/* Face */}
-      <path d="M44 35 Q50 41 56 35" />
-      <circle cx="44" cy="30" r="1.5" fill="currentColor" />
-      <circle cx="56" cy="30" r="1.5" fill="currentColor" />
+      <path d="M44 38 Q50 44 56 38" />
+      <circle cx="44" cy="33" r="1.5" fill="currentColor" />
+      <circle cx="56" cy="33" r="1.5" fill="currentColor" />
     </svg>
   )
 }
 
-// Hearts floating animation component with multiple colors
+// Hearts floating animation component with multiple colors - more visible
 function FloatingHearts() {
   const colors = [
-    "text-pink-300/25",
-    "text-rose-300/25",
-    "text-red-300/20",
-    "text-primary/15",
-    "text-accent/20",
-    "text-pink-200/30",
+    "text-pink-400/40 dark:text-pink-300/25",
+    "text-rose-400/40 dark:text-rose-300/25",
+    "text-red-400/35 dark:text-red-300/20",
+    "text-primary/30 dark:text-primary/15",
+    "text-accent/35 dark:text-accent/20",
+    "text-pink-300/45 dark:text-pink-200/30",
   ]
   
   return (
@@ -283,7 +288,7 @@ function DraggableStickman({
 
   const StickmanComponent = type === "bride" ? BrideStickman : GroomStickman
   // Bride is pink (slightly darker), groom is green
-  const colorClass = type === "bride" ? "text-pink-400/90" : "text-primary"
+  const colorClass = type === "bride" ? "text-pink-400/85" : "text-primary"
 
   return (
     <div
@@ -303,7 +308,7 @@ function DraggableStickman({
       <div className="absolute inset-[-24px] sm:inset-[-20px]" />
       <StickmanComponent 
         className={`w-20 sm:w-24 lg:w-28 h-auto ${colorClass} transition-all duration-300 ${
-          position.isDragging ? 'opacity-90 scale-110' : 'opacity-45 hover:opacity-65'
+          position.isDragging ? 'opacity-90 scale-110' : 'opacity-50 hover:opacity-70'
         } ${!position.isDragging && !position.isFalling && !isDancing ? 'animate-sway' : ''} ${
           isDancing ? 'animate-dance' : ''
         }`} 
@@ -336,7 +341,7 @@ function ScrollHint({ text, targetId }: { text: string, targetId?: string }) {
   return (
     <button 
       onClick={handleClick}
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+      className="absolute bottom-8 sm:bottom-8 mt-8 sm:mt-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
     >
       <span className="text-xs text-muted-foreground/70 leading-relaxed">
         {text}
@@ -405,8 +410,8 @@ export function Countdown() {
   ]
 
   const scrollHintText = language === "et" 
-    ? "Vaata kus toimub laulatus ja pidu" 
-    : "See where the ceremony and reception take place"
+    ? "Kinnita osalemine ja tutvu infoga" 
+    : "Confirm attendance and learn more"
 
   return (
     <section 

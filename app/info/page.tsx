@@ -120,6 +120,10 @@ export default function InfoPage() {
                       <div className="w-14 text-sm font-medium text-primary">TBD</div>
                       <div className="text-foreground">{language === "et" ? "Tantsimine & pidu" : "Dancing & party"}</div>
                     </div>
+                    <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
+                      <div className="w-14 text-sm font-medium text-primary">22:00</div>
+                      <div className="text-foreground">{language === "et" ? "Järelpidu" : "Afterparty"}</div>
+                    </div>
                   </div>
                 </div>
               </InfoSection>

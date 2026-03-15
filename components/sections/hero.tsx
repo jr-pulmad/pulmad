@@ -84,12 +84,12 @@ export function Hero() {
             {t.hero.date}
           </p>
 
-          {/* Luxurious RSVP Button - green theme with blur */}
+          {/* Luxurious RSVP Button - green theme with transparency and blur */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
             <Button 
               asChild 
               size="lg" 
-              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-semibold rounded-2xl bg-primary/80 backdrop-blur-2xl border border-primary/40 text-primary-foreground hover:bg-primary/90 hover:border-primary/60 shadow-xl shadow-primary/30 transition-all duration-300"
+              className="min-w-[200px] h-14 sm:h-16 text-sm sm:text-base font-bold rounded-2xl bg-primary/70 backdrop-blur-xl border border-white/20 text-primary-foreground hover:bg-primary/85 shadow-2xl shadow-black/40 transition-all duration-300"
             >
               <Link href="/rsvp">{t.cta.rsvp}</Link>
             </Button>
