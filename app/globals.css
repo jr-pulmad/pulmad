@@ -221,6 +221,82 @@
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* Stickman sway animation */
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(3deg) translateY(-5px);
+  }
+}
+
+@keyframes sway-reverse {
+  0%, 100% {
+    transform: rotate(3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-3deg) translateY(-5px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.4;
+  }
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes success-check {
+  0% {
+    stroke-dashoffset: 50;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-sway {
+  animation: sway 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-sway-reverse {
+  animation: sway-reverse 4s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-success-pop {
+  animation: success-pop 0.5s ease-out forwards;
+}
+
+.animate-success-check {
+  stroke-dasharray: 50;
+  animation: success-check 0.5s ease-out 0.2s forwards;
+}
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
@@ -230,4 +306,11 @@ html {
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
+}
+
+/* Remove focus ring from floating inputs - they use border only */
+input[data-slot="input"]:focus-visible,
+textarea[data-slot="textarea"]:focus-visible {
+  outline: none;
+  box-shadow: none;
 }

@@ -32,7 +32,7 @@ export function CTAGrid() {
   ]
 
   return (
-    <section className="py-16 sm:py-24">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">

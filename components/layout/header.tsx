@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
@@ -14,22 +14,15 @@ export function Header() {
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [hasScrolledOnce, setHasScrolledOnce] = useState(false)
-  const [highlightStyle, setHighlightStyle] = useState({ left: 0, width: 0 })
-  const navRef = useRef<HTMLDivElement>(null)
-  const itemRefs = useRef<(HTMLAnchorElement | null)[]>([])
-  const prevPathRef = useRef(pathname)
   
   const isHomePage = pathname === "/"
-  const showSolidBackground = !isHomePage || isScrolled || hasScrolledOnce
+  // On homepage: only show solid background when scrolled
+  // On other pages: always show solid background
+  const showSolidBackground = !isHomePage || isScrolled
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrolled = window.scrollY > 20
-      setIsScrolled(scrolled)
-      if (scrolled) {
-        setHasScrolledOnce(true)
-      }
+      setIsScrolled(window.scrollY > 20)
     }
     
     handleScroll()
@@ -37,25 +30,15 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Reset scroll state when navigating to homepage
   useEffect(() => {
-    if (pathname !== prevPathRef.current) {
-      if (hasScrolledOnce || !isHomePage) {
-        setHasScrolledOnce(true)
+    if (isHomePage) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 20)
       }
-      prevPathRef.current = pathname
+      handleScroll()
     }
-  }, [pathname, hasScrolledOnce, isHomePage])
-
-  useEffect(() => {
-    if (isHomePage && window.scrollY <= 20) {
-      const timer = setTimeout(() => {
-        if (window.scrollY <= 20) {
-          setHasScrolledOnce(false)
-        }
-      }, 100)
-      return () => clearTimeout(timer)
-    }
-  }, [isHomePage])
+  }, [isHomePage, pathname])
 
   const navItems = [
     { href: "/rsvp", label: t.nav.rsvp, icon: Heart, description: "Confirm attendance" },
@@ -64,31 +47,6 @@ export function Header() {
   ]
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
-
-  // Update highlight position when pathname changes
-  useEffect(() => {
-    const updateHighlight = () => {
-      const activeIndex = navItems.findIndex(item => item.href === pathname)
-      if (activeIndex !== -1 && itemRefs.current[activeIndex] && navRef.current) {
-        const item = itemRefs.current[activeIndex]
-        const nav = navRef.current
-        if (item) {
-          const itemRect = item.getBoundingClientRect()
-          const navRect = nav.getBoundingClientRect()
-          setHighlightStyle({
-            left: itemRect.left - navRect.left,
-            width: itemRect.width,
-          })
-        }
-      } else {
-        setHighlightStyle({ left: 0, width: 0 })
-      }
-    }
-
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(updateHighlight, 50)
-    return () => clearTimeout(timer)
-  }, [pathname, navItems])
 
   return (
     <header
@@ -101,8 +59,8 @@ export function Header() {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo */}
-          <Link href="/" className="group flex flex-col items-start relative">
+          {/* Logo - no micro animations */}
+          <Link href="/" className="flex flex-col items-start relative">
             <span className={cn(
               "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
               showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
@@ -115,24 +73,9 @@ export function Header() {
             )}>Randmäe</span>
           </Link>
 
-          {/* Desktop Journey Navigation */}
+          {/* Desktop Navigation - Simple highlight without slide animation */}
           <nav className="hidden md:flex items-center">
-            <div 
-              ref={navRef}
-              className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30"
-            >
-              {/* Animated highlight background */}
-              {currentNavIndex !== -1 && (
-                <div 
-                  className="absolute top-1.5 h-[calc(100%-12px)] bg-primary rounded-xl shadow-md transition-all duration-300 ease-out"
-                  style={{ 
-                    left: highlightStyle.left, 
-                    width: highlightStyle.width,
-                    opacity: highlightStyle.width > 0 ? 1 : 0 
-                  }}
-                />
-              )}
-              
+            <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
               {navItems.map((item, index) => {
                 const Icon = item.icon
                 const isActive = pathname === item.href
@@ -141,18 +84,20 @@ export function Header() {
                 return (
                   <div key={item.href} className="flex items-center">
                     <Link
-                      ref={el => { itemRefs.current[index] = el }}
                       href={item.href}
                       className={cn(
-                        "relative flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300 z-10",
+                        "group relative flex items-center gap-2 px-4 py-2 h-9 rounded-xl text-sm font-medium transition-all duration-300 z-10",
                         isActive 
-                          ? "text-primary-foreground" 
-                          : "text-muted-foreground hover:text-foreground"
+                          ? "text-foreground bg-primary/10 dark:bg-primary/20" 
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                       )}
                     >
                       <Icon className={cn(
-                        "w-4 h-4 transition-transform",
-                        isRsvp && !isActive && "md:group-hover:animate-none md:hover:animate-heartbeat"
+                        "w-4 h-4 transition-transform duration-200",
+                        // RSVP heart beats continuously on hover (desktop only)
+                        isRsvp && "md:group-hover:animate-heartbeat",
+                        // Other icons scale once on hover (desktop only)
+                        !isRsvp && "md:group-hover:scale-110"
                       )} />
                       <span>{item.label}</span>
                     </Link>
@@ -176,10 +121,9 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button with heartbeat on RSVP */}
-            <Button asChild size="sm" className="hidden sm:inline-flex group">
+            {/* CTA Button - no heart icon */}
+            <Button asChild size="sm" className="hidden sm:inline-flex h-9">
               <Link href="/rsvp">
-                <Heart className="w-4 h-4 md:group-hover:animate-heartbeat" />
                 <span>{t.cta.rsvp}</span>
               </Link>
             </Button>
@@ -188,7 +132,7 @@ export function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                "md:hidden p-2 rounded-xl transition-all duration-300",
+                "md:hidden p-2 rounded-xl transition-all duration-300 h-10 w-10 flex items-center justify-center",
                 showSolidBackground 
                   ? "text-foreground hover:bg-secondary" 
                   : "text-white hover:bg-white/10",
@@ -211,7 +155,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation with journey style */}
+      {/* Mobile Navigation */}
       <div
         className={cn(
           "md:hidden absolute top-full left-0 right-0 bg-background/98 backdrop-blur-xl border-b border-border transition-all duration-300 overflow-hidden",
@@ -278,7 +222,7 @@ export function Header() {
           
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <LanguageSwitcher isMobile />
-            <Button asChild size="sm">
+            <Button asChild size="sm" className="h-9">
               <Link href="/rsvp" onClick={() => setIsMobileMenuOpen(false)}>
                 {t.cta.rsvp}
               </Link>

@@ -57,7 +57,12 @@ export function RSVPMenuForm() {
     setError("")
     setEmailError("")
 
-    if (formData.email && !validateEmail(formData.email)) {
+    if (!formData.email) {
+      setEmailError(language === "et" ? "E-mail on kohustuslik" : "Email is required")
+      return
+    }
+
+    if (!validateEmail(formData.email)) {
       setEmailError(language === "et" ? "Palun sisesta korrektne e-maili aadress" : "Please enter a valid email address")
       return
     }
@@ -140,13 +145,15 @@ export function RSVPMenuForm() {
 
   if (currentStep === "success") {
     return (
-      <Card className="max-w-2xl mx-auto bg-card/50 border-border backdrop-blur-sm">
+      <Card className="max-w-2xl mx-auto bg-card/50 border-border backdrop-blur-sm animate-success-pop">
         <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-6">
-            <CheckCircle2 className="w-8 h-8 text-primary" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6 animate-success-pop" style={{ animationDelay: "0.1s" }}>
+            <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 13l4 4L19 7" className="animate-success-check" />
+            </svg>
           </div>
-          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3">{t.common.success}</h3>
-          <p className="text-muted-foreground max-w-md mx-auto">
+          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3 animate-fade-in-up" style={{ animationDelay: "0.3s", animationFillMode: "both" }}>{t.common.success}</h3>
+          <p className="text-muted-foreground max-w-md mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>
             {showMenuSection ? (
               language === "et" 
                 ? "Aitäh! Sinu osalemine ja menüüvalik on salvestatud." 
@@ -235,15 +242,23 @@ export function RSVPMenuForm() {
 
               {/* Contact fields with floating labels */}
               <div className="grid sm:grid-cols-2 gap-4">
-                <FloatingInput
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  label={t.rsvp.email}
-                  error={emailError}
-                />
+                <div className="space-y-1">
+                  <FloatingInput
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    label={`${t.rsvp.email} *`}
+                    error={emailError}
+                  />
+                  <p className="text-xs text-muted-foreground/70 px-1">
+                    {language === "et" 
+                      ? "Vajalik ürituse uuenduste saamiseks" 
+                      : "Required to receive event updates"}
+                  </p>
+                </div>
                 <FloatingInput
                   id="phone"
                   name="phone"
@@ -302,7 +317,7 @@ export function RSVPMenuForm() {
               )}
 
               {/* Submit button */}
-              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !formData.attendance}>
+              <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !formData.attendance || !formData.email}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />

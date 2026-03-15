@@ -1,11 +1,116 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MapPin, ExternalLink, ChevronDown, Church, PartyPopper } from "lucide-react"
+import { MapPin, ExternalLink, ChevronDown, Church, PartyPopper, Cloud, Sun, CloudRain, CloudSnow, Wind, CloudFog, CloudLightning, Loader2, Droplets } from "lucide-react"
 import { cn } from "@/lib/utils"
+
+interface WeatherData {
+  temperature: number
+  humidity: number
+  windSpeed: number
+  icon: string
+}
+
+// Map weather codes to icons and descriptions
+const getWeatherInfo = (code: number, language: string) => {
+  const weatherMap: Record<number, { icon: React.ComponentType<{ className?: string }>, et: string, en: string }> = {
+    0: { icon: Sun, et: "Selge", en: "Clear" },
+    1: { icon: Sun, et: "Selge", en: "Clear" },
+    2: { icon: Cloud, et: "Pilves", en: "Cloudy" },
+    3: { icon: Cloud, et: "Pilves", en: "Overcast" },
+    45: { icon: CloudFog, et: "Udu", en: "Fog" },
+    48: { icon: CloudFog, et: "Udu", en: "Fog" },
+    51: { icon: CloudRain, et: "Vihm", en: "Drizzle" },
+    53: { icon: CloudRain, et: "Vihm", en: "Drizzle" },
+    55: { icon: CloudRain, et: "Vihm", en: "Drizzle" },
+    61: { icon: CloudRain, et: "Vihm", en: "Rain" },
+    63: { icon: CloudRain, et: "Vihm", en: "Rain" },
+    65: { icon: CloudRain, et: "Vihm", en: "Rain" },
+    71: { icon: CloudSnow, et: "Lumi", en: "Snow" },
+    73: { icon: CloudSnow, et: "Lumi", en: "Snow" },
+    75: { icon: CloudSnow, et: "Lumi", en: "Snow" },
+    80: { icon: CloudRain, et: "Sajuhood", en: "Showers" },
+    81: { icon: CloudRain, et: "Sajuhood", en: "Showers" },
+    82: { icon: CloudRain, et: "Sajuhood", en: "Showers" },
+    95: { icon: CloudLightning, et: "Äike", en: "Storm" },
+  }
+  const info = weatherMap[code] || weatherMap[2]
+  return { Icon: info.icon, description: language === "et" ? info.et : info.en }
+}
+
+function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, location: string }) {
+  const { language } = useI18n()
+  const [weather, setWeather] = useState<WeatherData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Europe%2FTallinn`
+        )
+        if (!response.ok) throw new Error("Weather fetch failed")
+        const data = await response.json()
+        const current = data.current
+        setWeather({
+          temperature: Math.round(current.temperature_2m),
+          humidity: current.relative_humidity_2m,
+          windSpeed: Math.round(current.wind_speed_10m),
+          icon: String(current.weather_code)
+        })
+      } catch {
+        // Silently fail
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchWeather()
+    const interval = setInterval(fetchWeather, 30 * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [lat, lon])
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Loader2 className="w-3 h-3 animate-spin" />
+        <span>{language === "et" ? "Ilm..." : "Weather..."}</span>
+      </div>
+    )
+  }
+
+  if (!weather) return null
+
+  const weatherInfo = getWeatherInfo(parseInt(weather.icon), language)
+  const WeatherIcon = weatherInfo.Icon
+
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary/50 mt-4">
+      <div className="p-2 rounded-lg bg-primary/10">
+        <WeatherIcon className="w-5 h-5 text-primary" />
+      </div>
+      <div className="flex-1">
+        <p className="text-xs text-muted-foreground">{language === "et" ? "Praegune ilm" : "Current weather"}</p>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="font-medium text-foreground">{weather.temperature}°C</span>
+          <span className="text-muted-foreground">{weatherInfo.description}</span>
+        </div>
+      </div>
+      <div className="hidden sm:flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1">
+          <Droplets className="w-3 h-3" />
+          <span>{weather.humidity}%</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <Wind className="w-3 h-3" />
+          <span>{weather.windSpeed} km/h</span>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function VenuePreview() {
   const { t, language } = useI18n()
@@ -15,7 +120,7 @@ export function VenuePreview() {
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
 
   return (
-    <section className="py-16 sm:py-24">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Section header */}
@@ -48,7 +153,7 @@ export function VenuePreview() {
                       </h3>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-muted-foreground mb-3">
                     {language === "et" 
                       ? "Narva mnt 104, 51008 Tartu" 
                       : "Narva mnt 104, 51008 Tartu"}
@@ -57,6 +162,9 @@ export function VenuePreview() {
                     <span className="font-medium">{language === "et" ? "Algus:" : "Start:"}</span>
                     <span>14:00</span>
                   </div>
+                  
+                  {/* Weather widget for Tartu */}
+                  <WeatherWidget lat={58.3776} lon={26.7387} location="Tartu" />
                 </div>
                 <div className="aspect-[16/10] w-full">
                   <iframe
@@ -97,11 +205,14 @@ export function VenuePreview() {
                       <h3 className="font-serif text-xl font-medium text-foreground">Alatskivi Loss</h3>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-4">{t.venue.address}</p>
+                  <p className="text-sm text-muted-foreground mb-3">{t.venue.address}</p>
                   <div className="flex items-center gap-2 text-sm text-foreground">
                     <span className="font-medium">{language === "et" ? "Algus:" : "Start:"}</span>
                     <span>~17:00</span>
                   </div>
+                  
+                  {/* Weather widget for Alatskivi */}
+                  <WeatherWidget lat={58.5997} lon={27.1306} location="Alatskivi" />
                 </div>
                 
                 {/* Castle image and map side by side on larger screens */}
