@@ -312,7 +312,7 @@ export function RSVPMenuForm() {
                   value={formData.firstName}
                   onChange={handleChange}
                   required
-                  label={`${t.rsvp.firstName} *`}
+                  label={<>{t.rsvp.firstName} <span className="text-red-500">*</span></>}
                 />
                 <FloatingInput
                   id="lastName"
@@ -320,7 +320,7 @@ export function RSVPMenuForm() {
                   value={formData.lastName}
                   onChange={handleChange}
                   required
-                  label={`${t.rsvp.lastName} *`}
+                  label={<>{t.rsvp.lastName} <span className="text-red-500">*</span></>}
                 />
               </div>
 
@@ -334,7 +334,7 @@ export function RSVPMenuForm() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    label={`${t.rsvp.email} *`}
+                    label={<>{t.rsvp.email} <span className="text-red-500">*</span></>}
                     error={emailError}
                   />
                   <p className="text-xs text-muted-foreground/70 px-1">
@@ -356,7 +356,7 @@ export function RSVPMenuForm() {
               {/* Attendance */}
               <div className="space-y-3">
                 <Label className="text-sm font-medium">
-                  {t.rsvp.attendance} <span className="text-destructive">*</span>
+                  {t.rsvp.attendance} <span className="text-red-500">*</span>
                 </Label>
                 <RadioGroup
                   value={formData.attendance}
@@ -512,14 +512,14 @@ export function RSVPMenuForm() {
                           value={guest.firstName}
                           onChange={(e) => updateGuest(guest.id, "firstName", e.target.value)}
                           required
-                          label={`${t.rsvp.firstName} *`}
+                          label={<>{t.rsvp.firstName} <span className="text-red-500">*</span></>}
                         />
                         <FloatingInput
                           id={`guest-${guest.id}-lastName`}
                           value={guest.lastName}
                           onChange={(e) => updateGuest(guest.id, "lastName", e.target.value)}
                           required
-                          label={`${t.rsvp.lastName} *`}
+                          label={<>{t.rsvp.lastName} <span className="text-red-500">*</span></>}
                         />
                       </div>
                     </div>
@@ -603,7 +603,7 @@ export function RSVPMenuForm() {
 
                 <div className="space-y-2">
                   <Label htmlFor="mainCourse" className="text-sm font-medium">
-                    {t.menu.mainCourse} <span className="text-destructive">*</span>
+                    {t.menu.mainCourse} <span className="text-red-500">*</span>
                   </Label>
                   <Select
                     value={formData.mainCourseChoice}
@@ -628,7 +628,7 @@ export function RSVPMenuForm() {
                   value={formData.allergiesAndDiet}
                   onChange={handleChange}
                   required
-                  label={`${t.menu.allergies} *`}
+                  label={<>{t.menu.allergies} <span className="text-red-500">*</span></>}
                 />
               </div>
 
@@ -645,7 +645,7 @@ export function RSVPMenuForm() {
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">
-                      {t.menu.mainCourse} <span className="text-destructive">*</span>
+                      {t.menu.mainCourse} <span className="text-red-500">*</span>
                     </Label>
                     <Select
                       value={guest.mainCourseChoice}
@@ -669,7 +669,7 @@ export function RSVPMenuForm() {
                     value={guest.allergiesAndDiet}
                     onChange={(e) => updateGuest(guest.id, "allergiesAndDiet", e.target.value)}
                     required
-                    label={`${t.menu.allergies} *`}
+                    label={<>{t.menu.allergies} <span className="text-red-500">*</span></>}
                   />
                 </div>
               ))}

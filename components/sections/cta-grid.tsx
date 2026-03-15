@@ -5,15 +5,22 @@ import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent } from "@/components/ui/card"
 import { UserCheck, Flower2, Info, ArrowRight, ChevronDown } from "lucide-react"
 
-// Scroll hint component with custom text
+// Scroll hint component with custom text - clickable
 function ScrollHint({ text }: { text: string }) {
+  const handleClick = () => {
+    window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+  }
+
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4">
+    <button 
+      onClick={handleClick}
+      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+    >
       <span className="text-xs text-muted-foreground/70 leading-relaxed">
         {text}
       </span>
       <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
-    </div>
+    </button>
   )
 }
 

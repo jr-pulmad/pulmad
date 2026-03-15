@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Button } from "@/components/ui/button"
@@ -30,7 +30,6 @@ function InfoFilled({ className }: { className?: string }) {
 export function Header() {
   const { t, language } = useI18n()
   const pathname = usePathname()
-  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
@@ -101,15 +100,11 @@ export function Header() {
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Logo - clicks scroll to top on homepage */}
+          {/* Logo - always visible on left */}
           <Link 
             href="/" 
             onClick={handleLogoClick}
-            className={cn(
-              "flex flex-col items-start relative transition-all duration-300",
-              // Center when RSVP button is hidden
-              !showRsvpButton && "sm:absolute sm:left-1/2 sm:-translate-x-1/2"
-            )}
+            className="flex flex-col items-start relative"
           >
             <span className={cn(
               "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
@@ -124,10 +119,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation - centered */}
-          <nav className={cn(
-            "hidden md:flex items-center transition-all duration-300",
-            !showRsvpButton && "flex-1 justify-center"
-          )}>
+          <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
             <div className="relative flex items-center bg-secondary/50 dark:bg-secondary/30 rounded-2xl p-1.5 backdrop-blur-sm border border-border/30">
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href
@@ -169,10 +161,7 @@ export function Header() {
           </nav>
 
           {/* Right side */}
-          <div className={cn(
-            "flex items-center gap-2 sm:gap-3 transition-all duration-300",
-            !showRsvpButton && "sm:absolute sm:right-4 sm:sm:right-6"
-          )}>
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
             {/* CTA Button - hide on homepage hero */}

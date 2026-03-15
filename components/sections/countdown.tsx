@@ -64,33 +64,41 @@ function BrideStickman({ className }: { className?: string }) {
   )
 }
 
-// Groom with modern hairstyle (no hat)
+// Groom with modern hairstyle (larger hair, proper suit)
 function GroomStickman({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 200" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       {/* Head */}
-      <circle cx="50" cy="30" r="15" />
-      {/* Modern styled hair */}
-      <path d="M35 25 Q38 15 50 15 Q62 15 65 25" fill="currentColor" fillOpacity="0.3" />
-      <path d="M38 20 Q42 12 55 14" strokeWidth="1.5" opacity="0.6" />
-      <path d="M40 22 Q45 16 52 18" strokeWidth="1" opacity="0.5" />
-      {/* Side hair */}
-      <path d="M36 28 Q34 25 36 22" strokeWidth="1.5" />
-      <path d="M64 28 Q66 25 64 22" strokeWidth="1.5" />
+      <circle cx="50" cy="32" r="15" />
+      {/* Modern styled hair - larger and fuller */}
+      <path d="M32 28 Q35 10 50 8 Q65 10 68 28" fill="currentColor" fillOpacity="0.4" />
+      <path d="M35 22 Q40 12 50 10 Q60 12 65 22" fill="currentColor" fillOpacity="0.3" />
+      <path d="M38 18 Q45 8 55 10" strokeWidth="2" opacity="0.6" />
+      <path d="M40 20 Q48 12 58 14" strokeWidth="1.5" opacity="0.5" />
+      <path d="M42 22 Q50 16 56 18" strokeWidth="1" opacity="0.4" />
+      {/* Side hair detail */}
+      <path d="M34 30 Q30 25 34 20" strokeWidth="2" />
+      <path d="M66 30 Q70 25 66 20" strokeWidth="2" />
       {/* Body */}
-      <line x1="50" y1="45" x2="50" y2="110" />
-      {/* Suit jacket */}
-      <path d="M35 50 L35 110 L65 110 L65 50" fill="currentColor" fillOpacity="0.15" />
+      <line x1="50" y1="47" x2="50" y2="110" />
+      {/* Suit jacket - proper shape with shoulders */}
+      <path d="M30 55 L30 110 L70 110 L70 55 Q60 50 50 50 Q40 50 30 55" fill="currentColor" fillOpacity="0.12" />
+      {/* Suit shoulders */}
+      <path d="M30 55 Q25 55 22 60" strokeWidth="2" />
+      <path d="M70 55 Q75 55 78 60" strokeWidth="2" />
       {/* Lapels */}
-      <path d="M50 48 L42 60 L42 75" strokeWidth="1.5" />
-      <path d="M50 48 L58 60 L58 75" strokeWidth="1.5" />
+      <path d="M50 50 L40 65 L40 80" strokeWidth="1.5" />
+      <path d="M50 50 L60 65 L60 80" strokeWidth="1.5" />
       {/* Bow tie */}
-      <path d="M44 48 L50 52 L56 48 L50 44 Z" fill="currentColor" fillOpacity="0.5" />
+      <path d="M44 50 L50 54 L56 50 L50 46 Z" fill="currentColor" fillOpacity="0.5" />
       {/* Pocket square */}
-      <path d="M38 65 L42 60 L46 65" fill="currentColor" fillOpacity="0.3" />
-      {/* Arms */}
-      <line x1="50" y1="55" x2="25" y2="85" />
-      <line x1="50" y1="55" x2="75" y2="85" />
+      <path d="M36 70 L40 64 L44 70" fill="currentColor" fillOpacity="0.3" />
+      {/* Arms - from shoulders */}
+      <line x1="22" y1="60" x2="15" y2="95" />
+      <line x1="78" y1="60" x2="85" y2="95" />
+      {/* Hands */}
+      <circle cx="15" cy="97" r="3" fill="currentColor" fillOpacity="0.3" />
+      <circle cx="85" cy="97" r="3" fill="currentColor" fillOpacity="0.3" />
       {/* Legs */}
       <line x1="50" y1="110" x2="35" y2="190" />
       <line x1="50" y1="110" x2="65" y2="190" />
@@ -98,9 +106,9 @@ function GroomStickman({ className }: { className?: string }) {
       <ellipse cx="35" cy="192" rx="6" ry="3" fill="currentColor" fillOpacity="0.4" />
       <ellipse cx="65" cy="192" rx="6" ry="3" fill="currentColor" fillOpacity="0.4" />
       {/* Face */}
-      <path d="M44 32 Q50 38 56 32" />
-      <circle cx="44" cy="28" r="1.5" fill="currentColor" />
-      <circle cx="56" cy="28" r="1.5" fill="currentColor" />
+      <path d="M44 35 Q50 41 56 35" />
+      <circle cx="44" cy="30" r="1.5" fill="currentColor" />
+      <circle cx="56" cy="30" r="1.5" fill="currentColor" />
     </svg>
   )
 }
@@ -311,15 +319,30 @@ function DraggableStickman({
   )
 }
 
-// Scroll hint component with custom text
-function ScrollHint({ text }: { text: string }) {
+// Scroll hint component with custom text - clickable
+function ScrollHint({ text, targetId }: { text: string, targetId?: string }) {
+  const handleClick = () => {
+    if (targetId) {
+      const element = document.getElementById(targetId)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
+    } else {
+      // Scroll one viewport height down
+      window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
+    }
+  }
+
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4">
+    <button 
+      onClick={handleClick}
+      className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+    >
       <span className="text-xs text-muted-foreground/70 leading-relaxed">
         {text}
       </span>
       <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
-    </div>
+    </button>
   )
 }
 
