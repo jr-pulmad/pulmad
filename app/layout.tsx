@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon.png",
   },
   openGraph: {
-    title: "Johanna & Rannar | Randmäe Wedding 2026",
+    title: "Johanna & Rannar | Randmäed",
     description: "Join us for our wedding at Alatskivi Castle on August 19, 2026",
     type: "website",
     locale: "et_EE",
