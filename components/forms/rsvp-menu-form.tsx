@@ -620,8 +620,8 @@ export function RSVPMenuForm() {
                   name="allergiesAndDiet"
                   value={formData.allergiesAndDiet}
                   onChange={handleChange}
-                  required
-                  label={<>{t.menu.allergies} <span className="text-red-500">*</span></>}
+                  className="min-h-[56px] h-14 resize-none"
+                  label={t.menu.allergies}
                 />
               </div>
 
@@ -661,8 +661,8 @@ export function RSVPMenuForm() {
                     id={`guest-${guest.id}-allergies`}
                     value={guest.allergiesAndDiet}
                     onChange={(e) => updateGuest(guest.id, "allergiesAndDiet", e.target.value)}
-                    required
-                    label={<>{t.menu.allergies} <span className="text-red-500">*</span></>}
+                    className="min-h-[56px] h-14 resize-none"
+                    label={t.menu.allergies}
                   />
                 </div>
               ))}
@@ -689,7 +689,7 @@ export function RSVPMenuForm() {
                   type="submit" 
                   className="sm:flex-1" 
                   size="lg" 
-                  disabled={isSubmitting || !formData.mainCourseChoice || !formData.allergiesAndDiet || additionalGuests.some(g => !g.mainCourseChoice || !g.allergiesAndDiet)}
+                  disabled={isSubmitting || !formData.mainCourseChoice || additionalGuests.some(g => !g.mainCourseChoice)}
                 >
                   {isSubmitting ? (
                     <>
