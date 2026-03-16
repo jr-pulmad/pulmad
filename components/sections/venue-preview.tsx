@@ -173,7 +173,7 @@ export function VenuePreview() {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const castleGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
-  const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Peetri+kirik+Estonia"
+  const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Jaani+kirik+Estonia"
 
   const scrollHintText = language === "et" 
     ? "Vaata viimaseid uuendusi" 
@@ -196,7 +196,7 @@ export function VenuePreview() {
 
           {/* Two venue cards */}
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8">
-            {/* Ceremony - Tartu Peetri Church */}
+            {/* Ceremony - Tartu St John's Church */}
             <Card className="overflow-hidden border-border bg-card/50">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
@@ -209,14 +209,12 @@ export function VenuePreview() {
                         {language === "et" ? "Laulatus" : "Ceremony"}
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
-                        {language === "et" ? "Tartu Peetri kirik" : "Tartu St. Peter's Church"}
+                        {language === "et" ? "Tartu Jaani kirik" : "Tartu St. John's Church"}
                       </h3>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-3">
-                    {language === "et" 
-                      ? "Narva mnt 104, 51008 Tartu" 
-                      : "Narva mnt 104, 51008 Tartu"}
+                     Jaani tn 5, 51007 Tartu
                   </p>
                   <div className="flex items-center gap-2 text-sm text-foreground">
                     <span className="font-medium">{language === "et" ? "Algus:" : "Start:"}</span>
@@ -228,14 +226,13 @@ export function VenuePreview() {
                 </div>
                 <div className="aspect-[16/10] w-full">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2100!2d26.7387!3d58.3776!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eb36e3d4e8f5e5%3A0x4b80f7d5c28d0c38!2sTartu%20Peetri%20kirik!5e0!3m2!1sen!2see!4v1234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2099.530577714211!2d26.724997176805846!3d58.38035318791445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eb36df4f0b4d2d%3A0x8f3ec8f5f0a1c1b7!2sTartu%20Jaani%20kirik!5e0!3m2!1sen!2see!4v1234567890"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
-                    loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Tartu Peetri Church location"
+                    title="Tartu Jaani kirik location"
                     className="w-full h-full grayscale dark:invert dark:contrast-90"
                   />
                 </div>
@@ -291,7 +288,6 @@ export function VenuePreview() {
                       height="100%"
                       style={{ border: 0 }}
                       allowFullScreen
-                      loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       title="Alatskivi Castle location"
                       className="w-full h-full min-h-[200px] grayscale dark:invert dark:contrast-90"
