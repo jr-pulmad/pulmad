@@ -682,11 +682,11 @@ export function RSVPMenuForm() {
                   variant="outline" 
                   size="lg"
                   className="sm:flex-1 cursor-pointer"
-                  onClick={() => setCurrentStep("rsvp")}
+                  onClick={() => setCurrentStep("guests")}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   {t.common.back}
-                </Button>  
+                </Button>
                 <Button 
                   type="submit" 
                   className="sm:flex-1" 
