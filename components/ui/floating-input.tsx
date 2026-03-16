@@ -7,6 +7,7 @@ interface FloatingInputProps extends React.ComponentProps<"input"> {
   label: React.ReactNode
   error?: string
   surfaceClassName?: string
+  notchClassName?: string
 }
 
 function FloatingInput({
@@ -15,6 +16,7 @@ function FloatingInput({
   error,
   id,
   surfaceClassName = "bg-card/50",
+  notchClassName = "bg-background",
   ...props
 }: FloatingInputProps) {
   return (
@@ -44,7 +46,7 @@ function FloatingInput({
           "pointer-events-none absolute left-4 z-10 origin-left rounded-sm transition-all duration-200 ease-out",
           "text-muted-foreground",
           "top-0 -translate-y-1/2 px-1 ml-[-4px] text-xs font-medium",
-          surfaceClassName,
+          notchClassName,
           "peer-placeholder-shown:top-1/2 peer-placeholder-shown:translate-y-[-50%] peer-placeholder-shown:bg-transparent peer-placeholder-shown:px-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal",
           "peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:px-1 peer-focus:ml-[-4px] peer-focus:text-xs peer-focus:font-medium peer-focus:text-primary",
           error && "peer-focus:text-destructive"
@@ -64,6 +66,7 @@ interface FloatingTextareaProps extends React.ComponentProps<"textarea"> {
   label: React.ReactNode
   error?: string
   surfaceClassName?: string
+  notchClassName?: string
 }
 
 function FloatingTextarea({
@@ -72,6 +75,7 @@ function FloatingTextarea({
   error,
   id,
   surfaceClassName = "bg-card/50",
+  notchClassName = "bg-background",
   ...props
 }: FloatingTextareaProps) {
   return (
@@ -101,7 +105,7 @@ function FloatingTextarea({
           "pointer-events-none absolute left-4 z-10 origin-left rounded-sm transition-all duration-200 ease-out",
           "text-muted-foreground",
           "top-0 -translate-y-1/2 px-1 ml-[-4px] text-xs font-medium",
-          surfaceClassName,
+          notchClassName,
           "peer-placeholder-shown:top-4 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:bg-transparent peer-placeholder-shown:px-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal",
           "peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:px-1 peer-focus:ml-[-4px] peer-focus:text-xs peer-focus:font-medium peer-focus:text-primary",
           error && "peer-focus:text-destructive"
