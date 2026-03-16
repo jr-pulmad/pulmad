@@ -66,7 +66,7 @@ export default function InfoPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{language === "et" ? "Laulatus" : "Ceremony"}</p>
-                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Tartu Peetri kirik" : "St. Peter's Church"}</p>
+                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Tartu Jaani kirik" : "St. John's Church"}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -96,7 +96,7 @@ export default function InfoPage() {
                         <div className="text-foreground font-medium">{language === "et" ? "Laulatus" : "Ceremony"}</div>
                       </div>
                       <p className="text-sm ml-[68px]">
-                        {language === "et" ? "Tartu Peetri kirik, Narva mnt 104, Tartu" : "St. Peter's Church, Narva mnt 104, Tartu"}
+                        {language === "et" ? "Tartu Jaani kirik, Jaani tn 5, Tartu" : "St. John's Church, Jaani tn 5, Tartu"}
                       </p>
                     </div>
                     {/* Travel */}
@@ -169,7 +169,7 @@ export default function InfoPage() {
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-foreground">{t.info.accommodation.discountCode}:</p>
                     <CopyCodeButton
-                      code="RANDMAE2026"
+                      code="RANDMÄED26"
                       copyLabel={t.info.accommodation.copyCode}
                       copiedLabel={t.info.accommodation.copied}
                     />
@@ -229,7 +229,7 @@ export default function InfoPage() {
                   <p className="mb-4">{t.info.contact.content}</p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
-                      <span className="text-foreground font-medium">Johanna & Rannar</span>
+                      <span className="text-foreground font-medium">kirjaordu@gmail.com</span>
                     </div>
                     <p className="text-sm">
                       {language === "et" ? "Kontaktandmed lisatakse peagi." : "Contact details will be added soon."}
