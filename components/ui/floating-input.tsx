@@ -8,15 +8,17 @@ interface FloatingInputProps extends React.ComponentProps<"input"> {
   error?: string
 }
 
-function FloatingInput({ 
-  className, 
-  label, 
+function FloatingInput({
+  className,
+  label,
   error,
   id,
-  ...props 
+  ...props
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = React.useState(false)
-  const [hasValue, setHasValue] = React.useState(Boolean(props.value) || Boolean(props.defaultValue))
+  const [hasValue, setHasValue] = React.useState(
+    Boolean(props.value) || Boolean(props.defaultValue)
+  )
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true)
@@ -40,15 +42,14 @@ function FloatingInput({
   const isFloating = isFocused || hasValue
 
   return (
-    <div className="relative">
+    <div className="relative rounded-xl bg-card/50">
       <input
         id={id}
         data-slot="input"
         className={cn(
-          "peer h-14 w-full rounded-xl border bg-card/50 px-4 pt-4 pb-2 text-base transition-colors duration-200",
-          "border-input dark:card",
+          "peer h-14 w-full rounded-xl border bg-transparent px-4 pt-4 pb-2 text-base transition-colors duration-200",
+          "border-input",
           "focus:border-primary",
-          // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
           error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
@@ -61,19 +62,21 @@ function FloatingInput({
         aria-invalid={!!error}
         {...props}
       />
+
       <label
         htmlFor={id}
         className={cn(
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
-          isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card/50 px-1 ml-[-4px]" 
+          isFloating
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card px-1 ml-[-4px] rounded-sm"
             : "top-[50%] -translate-y-1/2 text-base",
           error && isFloating && "text-destructive",
         )}
       >
         {label}
       </label>
+
       {error && (
         <p className="mt-1.5 text-sm font-medium text-destructive">{error}</p>
       )}
@@ -86,15 +89,17 @@ interface FloatingTextareaProps extends React.ComponentProps<"textarea"> {
   error?: string
 }
 
-function FloatingTextarea({ 
-  className, 
-  label, 
+function FloatingTextarea({
+  className,
+  label,
   error,
   id,
-  ...props 
+  ...props
 }: FloatingTextareaProps) {
   const [isFocused, setIsFocused] = React.useState(false)
-  const [hasValue, setHasValue] = React.useState(!!props.value || !!props.defaultValue)
+  const [hasValue, setHasValue] = React.useState(
+    !!props.value || !!props.defaultValue
+  )
 
   const handleFocus = (e: React.FocusEvent<HTMLTextAreaElement>) => {
     setIsFocused(true)
@@ -118,15 +123,14 @@ function FloatingTextarea({
   const isFloating = isFocused || hasValue
 
   return (
-    <div className="relative">
+    <div className="relative rounded-xl bg-card/50">
       <textarea
         id={id}
         data-slot="textarea"
         className={cn(
-          "peer min-h-[120px] w-full rounded-xl border bg-card/50 px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
-          "border-input dark:card",
+          "peer min-h-[120px] w-full rounded-xl border bg-transparent px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
+          "border-input",
           "focus:border-primary",
-          // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
           error && "border-destructive focus:border-destructive",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
@@ -139,19 +143,21 @@ function FloatingTextarea({
         aria-invalid={!!error}
         {...props}
       />
+
       <label
         htmlFor={id}
         className={cn(
           "pointer-events-none absolute left-4 transition-all duration-200 ease-out",
           "text-muted-foreground",
-          isFloating 
-            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card/50 px-1 ml-[-4px]" 
+          isFloating
+            ? "top-0 -translate-y-1/2 text-xs font-medium text-primary bg-card px-1 ml-[-4px] rounded-sm"
             : "top-4 text-base",
           error && isFloating && "text-destructive",
         )}
       >
         {label}
       </label>
+
       {error && (
         <p className="mt-1.5 text-sm font-medium text-destructive">{error}</p>
       )}
