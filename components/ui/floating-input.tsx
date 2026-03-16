@@ -16,7 +16,7 @@ function FloatingInput({
   ...props 
 }: FloatingInputProps) {
   const [isFocused, setIsFocused] = React.useState(false)
-  const [hasValue, setHasValue] = React.useState(!!props.value || !!props.defaultValue)
+  const [hasValue, setHasValue] = React.useState(Boolean(props.value) || Boolean(props.defaultValue))
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true)
