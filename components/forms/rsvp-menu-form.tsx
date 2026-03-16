@@ -555,7 +555,8 @@ export function RSVPMenuForm() {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  className="sm:flex-1"
+                  size="lg"
+                  className="sm:flex-1 cursor-pointer"
                   onClick={() => setCurrentStep("rsvp")}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
@@ -679,12 +680,13 @@ export function RSVPMenuForm() {
                 <Button 
                   type="button" 
                   variant="outline" 
-                  className="sm:flex-1"
-                  onClick={() => setCurrentStep("guests")}
+                  size="lg"
+                  className="sm:flex-1 cursor-pointer"
+                  onClick={() => setCurrentStep("rsvp")}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   {t.common.back}
-                </Button>
+                </Button>  
                 <Button 
                   type="submit" 
                   className="sm:flex-1" 
