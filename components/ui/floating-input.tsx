@@ -46,7 +46,7 @@ function FloatingInput({
         data-slot="input"
         className={cn(
           "peer h-14 w-full rounded-xl border bg-card/50 px-4 pt-4 pb-2 text-base transition-colors duration-200",
-          "border-input",
+          "border-input dark:card",
           "focus:border-primary",
           // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
@@ -124,7 +124,7 @@ function FloatingTextarea({
         data-slot="textarea"
         className={cn(
           "peer min-h-[120px] w-full rounded-xl border bg-card/50 px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
-          "border-input",
+          "border-input dark:card",
           "focus:border-primary",
           // Remove all ring and outline styles
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",
