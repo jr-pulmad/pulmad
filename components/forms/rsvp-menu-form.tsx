@@ -284,7 +284,7 @@ export function RSVPMenuForm() {
 
       {/* RSVP Step */}
       {currentStep === "rsvp" && (
-        <Card className="bg-card border-border backdrop-blur-sm shadow-xl">
+        <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
