@@ -40,7 +40,7 @@ function FloatingInput({
         htmlFor={id}
         className={cn(
           "pointer-events-none absolute left-4 z-10 origin-left px-1 ml-[-4px] rounded-sm transition-all duration-200 ease-out",
-          "bg-card text-muted-foreground",
+          "bg-card/50 text-muted-foreground",
           "top-0 -translate-y-1/2 text-xs font-medium",
           "peer-placeholder-shown:top-1/2 peer-placeholder-shown:translate-y-[-50%] peer-placeholder-shown:bg-transparent peer-placeholder-shown:px-0 peer-placeholder-shown:ml-0 peer-placeholder-shown:text-base peer-placeholder-shown:font-normal",
           "peer-focus:top-0 peer-focus:-translate-y-1/2 peer-focus:bg-card peer-focus:px-1 peer-focus:ml-[-4px] peer-focus:text-xs peer-focus:font-medium peer-focus:text-primary",
