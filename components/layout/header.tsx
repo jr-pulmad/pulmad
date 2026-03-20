@@ -198,9 +198,13 @@ export function Header() {
                       href={item.href}
                       className={cn(
                         "group relative flex items-center gap-2 px-4 py-2 h-9 rounded-xl text-sm font-medium transition-all duration-300 z-10",
-                        isActive 
-                          ? "text-foreground bg-primary/10 dark:bg-primary/20" 
-                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                        showSolidBackground
+                          ? isActive
+                            ? "text-foreground bg-primary/10 dark:bg-primary/20"
+                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                          : isActive
+                            ? "text-white bg-white/10"
+                            : "text-white/85 hover:text-white hover:bg-white/10"
                       )}
                     >
                       <Icon className={cn(
