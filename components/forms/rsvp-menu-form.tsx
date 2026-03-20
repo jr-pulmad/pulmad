@@ -364,7 +364,7 @@ export function RSVPMenuForm() {
                 >
                   <label 
                     htmlFor="ceremony_and_reception" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-card-50 hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="ceremony_and_reception" id="ceremony_and_reception" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -373,7 +373,7 @@ export function RSVPMenuForm() {
                   </label>
                   <label 
                     htmlFor="ceremony_only" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-card-50 hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="ceremony_only" id="ceremony_only" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -382,7 +382,7 @@ export function RSVPMenuForm() {
                   </label>
                   <label 
                     htmlFor="cant_attend" 
-                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                    className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-card-50 hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                   >
                     <RadioGroupItem value="cant_attend" id="cant_attend" />
                     <span className="flex-1 font-normal group-hover:text-foreground transition-colors">
@@ -407,7 +407,7 @@ export function RSVPMenuForm() {
                       <label 
                         key={option.value}
                         htmlFor={`transport_${option.value}`}
-                        className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-background hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
+                        className="flex items-center space-x-3 p-4 rounded-xl border border-border bg-card dark:bg-card-50 hover:bg-secondary/50 hover:border-primary/30 transition-all duration-200 cursor-pointer group"
                       >
                         <RadioGroupItem value={option.value} id={`transport_${option.value}`} />
                         <option.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
