@@ -135,20 +135,12 @@
   --roll-dark-color: #3d3629;
   --silver-accent: #a8a8a8;
   --pewter-accent: #6b6b6b;
-  /* Safe areas for scroll rods - content must fit within these bounds.
-     Top/Bottom are dynamically updated from JS as the scroll rolls grow/shrink. */
-  --scroll-safe-top: 98px;
-  --scroll-safe-bottom: 98px;
-  /* Horizontal inset — content must stay inside the paper area between burnt edges */
-  --scroll-safe-x: 82px;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --scroll-safe-top: 72px;
-    --scroll-safe-bottom: 72px;
-    --scroll-safe-x: 46px;
-  }
+  /* Safe areas for scroll rods — default 0 so OTHER pages have normal full-viewport
+     layout (header at top-0, hero at 100dvh, no forced padding).
+     ScrollExperience on the homepage overrides these via JS on mount. */
+  --scroll-safe-top: 0px;
+  --scroll-safe-bottom: 0px;
+  --scroll-safe-x: 0px;
 }
 
 /* Add padding for scroll frame rolls */

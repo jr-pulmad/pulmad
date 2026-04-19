@@ -1,215 +1,110 @@
 "use client"
 
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, type MutableRefObject } from "react"
 import { useThree, useFrame } from "@react-three/fiber"
 import { useTexture } from "@react-three/drei"
 import * as THREE from "three"
 
-interface ScrollRodProps {
-  position: "top" | "bottom"
-  openingProgress: number
-  scrollProgress: number
-  rotationAngle: number
+export interface RodProgressRef {
+  opening: number // 0 → 1 during opening animation
+  scroll: number // 0 → 1 as user scrolls the page
+  rotation: number // accumulated rotation in radians from scroll deltas
 }
 
+interface ScrollRodProps {
+  position: "top" | "bottom"
+  progressRef: MutableRefObject<RodProgressRef>
+}
+
+// Geometry constants (also consumed by the host component for safe-area math)
+export const ROD_WOOD_RADIUS = 0.2
+export const ROD_PAPER_MIN_R = 0.42
+export const ROD_PAPER_MAX_R = 1.0
+export const ROD_PAPER_CLOSED_R = 1.0
+// Rod center sits ROD_CENTER_Y_OFFSET world units from the viewport edge
+// once the scroll is fully open. Tweak in sync with openY below.
+export const ROD_CENTER_Y_OFFSET = 0.85
+
 /**
- * A 3D scroll rod: a wooden cylinder with paper wrapped around it.
- * Rotates around its long axis (world X) so paper visibly wraps open/closed.
+ * A 3D scroll rod: dark wooden core with parchment paper wrapped around it.
+ * Rotates around its long axis (world X) as the page scrolls, so the paper
+ * visibly wraps/unwraps. 2D ornaments are rendered as HTML images by the
+ * host component (ScrollExperience) for reliable visuals.
  */
-export function ScrollRod({
-  position,
-  openingProgress,
-  scrollProgress,
-  rotationAngle,
-}: ScrollRodProps) {
+export function ScrollRod({ position, progressRef }: ScrollRodProps) {
   const { viewport } = useThree()
+  const groupRef = useRef<THREE.Group>(null)
   const spinGroupRef = useRef<THREE.Group>(null)
+  const paperMeshRef = useRef<THREE.Mesh>(null)
 
   const paperTexture = useTexture("/textures/parchment-detailed.jpg")
 
-  // Single continuous wrap around the rod — no repeat, no seam duplication.
-  // RepeatWrapping on S allows clean UV wrap at the back seam.
+  // Single continuous wrap around the rod — no seam duplication.
   useMemo(() => {
     paperTexture.wrapS = THREE.RepeatWrapping
     paperTexture.wrapT = THREE.ClampToEdgeWrapping
     paperTexture.repeat.set(1, 1)
-    paperTexture.offset.set(0, 0)
+    paperTexture.offset.set(position === "top" ? 0 : 0.37, 0)
     paperTexture.rotation = 0
     paperTexture.center.set(0.5, 0.5)
     paperTexture.anisotropy = 16
+    paperTexture.colorSpace = THREE.SRGBColorSpace
     paperTexture.needsUpdate = true
-  }, [paperTexture])
+  }, [paperTexture, position])
 
-  // Geometry constants
-  const woodRadius = 0.2
-  const minPaperRadius = 0.42
-  const maxPaperRadius = 1.0
-  const closedPaperRadius = 1.0
+  const rodLength = Math.min(viewport.width - 1.0, 28)
 
-  // Make rod wider so paper reaches ornaments; ornaments extend further outward.
-  const rodLength = Math.min(viewport.width - 1.4, 26)
-  // Paper covers the FULL rod length so wooden rod isn't visible at the sides.
-  const paperSectionLength = rodLength
-
-  const closedY = position === "top" ? 0.5 : -0.5
-  const openY =
-    position === "top"
-      ? viewport.height / 2 - 0.85
-      : -viewport.height / 2 + 0.85
-
-  const y = THREE.MathUtils.lerp(closedY, openY, openingProgress)
-
-  const openRadius =
-    position === "top"
-      ? THREE.MathUtils.lerp(minPaperRadius, maxPaperRadius, scrollProgress)
-      : THREE.MathUtils.lerp(maxPaperRadius, minPaperRadius, scrollProgress)
-
-  const paperRadius = THREE.MathUtils.lerp(closedPaperRadius, openRadius, openingProgress)
-
+  // Drive all animation directly in useFrame from the ref.
+  // Zero React re-renders during the opening tween -> no lag.
   useFrame(() => {
-    if (!spinGroupRef.current) return
-    const openingSpin = openingProgress * Math.PI * 6
-    const scrollSpin = rotationAngle
+    const p = progressRef.current
+    if (!groupRef.current || !spinGroupRef.current || !paperMeshRef.current) return
+
+    const closedY = position === "top" ? 0.45 : -0.45
+    const openY =
+      position === "top"
+        ? viewport.height / 2 - ROD_CENTER_Y_OFFSET
+        : -viewport.height / 2 + ROD_CENTER_Y_OFFSET
+
+    const y = THREE.MathUtils.lerp(closedY, openY, p.opening)
+    groupRef.current.position.y = y
+
+    const openR =
+      position === "top"
+        ? THREE.MathUtils.lerp(ROD_PAPER_MIN_R, ROD_PAPER_MAX_R, p.scroll)
+        : THREE.MathUtils.lerp(ROD_PAPER_MAX_R, ROD_PAPER_MIN_R, p.scroll)
+    const paperR = THREE.MathUtils.lerp(ROD_PAPER_CLOSED_R, openR, p.opening)
+
+    // Scale the unit-radius cylinder to current paperR (cheaper than rebuilding geometry)
+    paperMeshRef.current.scale.set(paperR / ROD_PAPER_CLOSED_R, 1, paperR / ROD_PAPER_CLOSED_R)
+
+    const openingSpin = p.opening * Math.PI * 6
     const dir = position === "top" ? 1 : -1
-    spinGroupRef.current.rotation.x = dir * openingSpin + dir * scrollSpin
+    spinGroupRef.current.rotation.x = dir * openingSpin + dir * p.rotation
   })
 
   return (
-    <group position={[0, y, 0]}>
-      {/* Spinning core — rod + paper wrap */}
+    <group ref={groupRef}>
       <group ref={spinGroupRef}>
-        {/* Dark wooden core */}
+        {/* Dark wooden core — always behind the paper wrap */}
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[woodRadius, woodRadius, rodLength, 48]} />
+          <cylinderGeometry args={[ROD_WOOD_RADIUS, ROD_WOOD_RADIUS, rodLength, 48]} />
           <meshStandardMaterial color="#1e0f04" roughness={0.75} metalness={0.05} />
         </mesh>
 
-        {/* Paper roll wrapped around rod */}
-        <mesh rotation={[0, 0, Math.PI / 2]}>
+        {/* Paper roll wrapped around the rod (unit radius, scaled via useFrame) */}
+        <mesh ref={paperMeshRef} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry
-            args={[paperRadius, paperRadius, paperSectionLength, 128, 1, false]}
+            args={[ROD_PAPER_CLOSED_R, ROD_PAPER_CLOSED_R, rodLength, 96, 1, false]}
           />
           <meshStandardMaterial
             map={paperTexture}
-            color="#b89870"
-            roughness={0.95}
+            color="#a68862"
+            roughness={0.92}
             metalness={0}
           />
         </mesh>
       </group>
-
-      {/* Stationary dark sandalwood ornaments — do not spin */}
-      <SandalwoodEndCap xOffset={-rodLength / 2} side="left" />
-      <SandalwoodEndCap xOffset={rodLength / 2} side="right" />
-    </group>
-  )
-}
-
-/**
- * Dark sandalwood ornamental end cap with silver accent bands.
- * Shape tapers from narrow (inner, touching paper) to large (outer, rounded bulb).
- * Multiple tiers with carved rings create the neo-gothic engraved look.
- */
-function SandalwoodEndCap({
-  xOffset,
-  side,
-}: {
-  xOffset: number
-  side: "left" | "right"
-}) {
-  const dir = side === "left" ? -1 : 1
-
-  // Dark aged sandalwood materials (reddish-brown, highly detailed)
-  const wood = { color: "#3a1a08", roughness: 0.72, metalness: 0.05 }
-  const woodDark = { color: "#220d03", roughness: 0.82, metalness: 0.05 }
-  const woodMid = { color: "#4a2410", roughness: 0.7, metalness: 0.05 }
-  // Silver engraving accents
-  const silver = { color: "#b8b8b8", roughness: 0.48, metalness: 0.3 }
-  const silverDark = { color: "#6a6a6a", roughness: 0.6, metalness: 0.2 }
-
-  // Shape progression (inner → outer):
-  // Each tier's radius grows toward the outer tip. Outer end is the largest round bulb.
-  return (
-    <group position={[xOffset, 0, 0]}>
-      {/* 1. Narrow inner flange (touches paper) */}
-      <mesh position={[dir * 0.06, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.26, 0.22, 0.12, 32]} />
-        <meshStandardMaterial {...wood} />
-      </mesh>
-
-      {/* 2. Silver inlay ring — engraved groove accent */}
-      <mesh position={[dir * 0.14, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.25, 0.25, 0.035, 32]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-
-      {/* 3. Tier 1 — stepped wood shoulder (larger than inner flange) */}
-      <mesh position={[dir * 0.22, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.32, 0.27, 0.1, 32]} />
-        <meshStandardMaterial {...woodMid} />
-      </mesh>
-
-      {/* 4. Decorative silver beaded torus (gothic bead-work) */}
-      <mesh position={[dir * 0.3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.32, 0.045, 16, 40]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-
-      {/* 5. Carved wood tier — slight cone (neo-gothic tapered shaft) */}
-      <mesh position={[dir * 0.42, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.3, 0.38, 0.16, 32]} />
-        <meshStandardMaterial {...wood} />
-      </mesh>
-
-      {/* 6. Silver carved band with dark shadow groove */}
-      <mesh position={[dir * 0.51, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.4, 0.4, 0.04, 32]} />
-        <meshStandardMaterial {...silverDark} />
-      </mesh>
-      <mesh position={[dir * 0.54, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.42, 0.42, 0.05, 32]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-
-      {/* 7. Wide ornamental shoulder — continues growing outward */}
-      <mesh position={[dir * 0.62, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.46, 0.48, 0.12, 32]} />
-        <meshStandardMaterial {...woodDark} />
-      </mesh>
-
-      {/* 8. Silver engraved collar near bulb */}
-      <mesh position={[dir * 0.7, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.48, 0.04, 16, 40]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-
-      {/* 9. Inner stem supporting the bulb */}
-      <mesh position={[dir * 0.78, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.32, 0.38, 0.08, 32]} />
-        <meshStandardMaterial {...wood} />
-      </mesh>
-
-      {/* 10. Large rounded terminus bulb — OUTER end, biggest element */}
-      <mesh position={[dir * 0.96, 0, 0]}>
-        <sphereGeometry args={[0.52, 48, 48]} />
-        <meshStandardMaterial {...woodMid} />
-      </mesh>
-
-      {/* 11. Silver cross-band engraving on the bulb (neo-gothic) */}
-      <mesh position={[dir * 0.96, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.52, 0.025, 12, 40]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-      <mesh position={[dir * 0.96, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.52, 0.025, 12, 40]} />
-        <meshStandardMaterial {...silver} />
-      </mesh>
-
-      {/* 12. Small decorative final pip at tip — rounded not pointy */}
-      <mesh position={[dir * 1.3, 0, 0]}>
-        <sphereGeometry args={[0.18, 28, 28]} />
-        <meshStandardMaterial {...wood} />
-      </mesh>
     </group>
   )
 }
