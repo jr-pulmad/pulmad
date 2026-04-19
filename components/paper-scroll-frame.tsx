@@ -1,13 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState, type ReactNode } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-// Register ScrollTrigger plugin
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 interface PaperScrollFrameProps {
   children: ReactNode
@@ -16,8 +9,11 @@ interface PaperScrollFrameProps {
 export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
   const topRollRef = useRef<HTMLDivElement>(null)
   const bottomRollRef = useRef<HTMLDivElement>(null)
-  const frameRef = useRef<HTMLDivElement>(null)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const lastScrollY = useRef(0)
+  const scrollDirection = useRef(0)
+  const bounceAnimationRef = useRef<number | null>(null)
 
   useEffect(() => {
     // Check for reduced motion preference
@@ -34,91 +30,60 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
 
   useEffect(() => {
     if (prefersReducedMotion) return
-    if (!topRollRef.current || !bottomRollRef.current) return
 
-    // Create scroll-linked animations
-    const ctx = gsap.context(() => {
-      // Top roll - gets fuller (expands) as you scroll down (paper rolled back up)
-      ScrollTrigger.create({
-        trigger: document.body,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 0.5,
-        onUpdate: (self) => {
-          const progress = self.progress
-          
-          // Top roll: smaller at top, fuller at bottom
-          const topScale = 1 + progress * 0.4
-          const topShadowIntensity = 0.3 + progress * 0.2
-          
-          gsap.to(topRollRef.current, {
-            scaleY: topScale,
-            boxShadow: `0 ${6 + progress * 4}px ${24 + progress * 16}px rgba(0,0,0,${topShadowIntensity}), 0 2px 8px rgba(0,0,0,0.2)`,
-            duration: 0.1,
-            ease: "none",
-          })
-          
-          // Bottom roll: fuller at top, smaller at bottom
-          const bottomScale = 1.4 - progress * 0.4
-          const bottomShadowIntensity = 0.5 - progress * 0.2
-          
-          gsap.to(bottomRollRef.current, {
-            scaleY: bottomScale,
-            boxShadow: `0 -${10 - progress * 4}px ${32 - progress * 16}px rgba(0,0,0,${bottomShadowIntensity}), 0 -2px 8px rgba(0,0,0,0.2)`,
-            duration: 0.1,
-            ease: "none",
-          })
-        }
-      })
-
-      // Subtle bounce on scroll direction change
-      let lastScrollY = window.scrollY
-      let scrollDirection = 0
-      let bounceTimeout: ReturnType<typeof setTimeout>
-
-      const handleScroll = () => {
-        const currentScrollY = window.scrollY
-        const newDirection = currentScrollY > lastScrollY ? 1 : currentScrollY < lastScrollY ? -1 : 0
-        
-        // If direction changed, add a subtle bounce
-        if (newDirection !== 0 && newDirection !== scrollDirection) {
-          clearTimeout(bounceTimeout)
-          
-          const target = newDirection > 0 ? topRollRef.current : bottomRollRef.current
-          
-          gsap.to(target, {
-            y: newDirection > 0 ? -2 : 2,
-            duration: 0.1,
-            ease: "power2.out",
-            onComplete: () => {
-              gsap.to(target, {
-                y: 0,
-                duration: 0.3,
-                ease: "elastic.out(1.2, 0.6)",
-              })
-            }
-          })
-        }
-        
-        scrollDirection = newDirection
-        lastScrollY = currentScrollY
-      }
-
-      window.addEventListener("scroll", handleScroll, { passive: true })
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
+      const currentScrollY = window.scrollY
+      const progress = scrollHeight > 0 ? Math.min(Math.max(currentScrollY / scrollHeight, 0), 1) : 0
       
-      return () => {
-        window.removeEventListener("scroll", handleScroll)
-      }
-    })
+      setScrollProgress(progress)
 
+      // Detect scroll direction change for bounce effect
+      const newDirection = currentScrollY > lastScrollY.current ? 1 : currentScrollY < lastScrollY.current ? -1 : 0
+      
+      if (newDirection !== 0 && newDirection !== scrollDirection.current) {
+        // Direction changed - trigger subtle bounce
+        const target = newDirection > 0 ? topRollRef.current : bottomRollRef.current
+        
+        if (target && bounceAnimationRef.current === null) {
+          // Add bounce class
+          target.style.transform = `scaleY(${newDirection > 0 ? 1 + progress * 0.4 : 1.4 - progress * 0.4}) translateY(${newDirection > 0 ? -2 : 2}px)`
+          
+          bounceAnimationRef.current = window.setTimeout(() => {
+            target.style.transition = "transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)"
+            target.style.transform = `scaleY(${newDirection > 0 ? 1 + progress * 0.4 : 1.4 - progress * 0.4}) translateY(0px)`
+            
+            setTimeout(() => {
+              target.style.transition = ""
+              bounceAnimationRef.current = null
+            }, 300)
+          }, 100)
+        }
+      }
+      
+      scrollDirection.current = newDirection
+      lastScrollY.current = currentScrollY
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll() // Initial call
+    
     return () => {
-      ctx.revert()
-      ScrollTrigger.getAll().forEach(st => st.kill())
+      window.removeEventListener("scroll", handleScroll)
+      if (bounceAnimationRef.current) {
+        clearTimeout(bounceAnimationRef.current)
+      }
     }
   }, [prefersReducedMotion])
 
+  // Calculate dynamic styles based on scroll progress
+  const topScale = 1 + scrollProgress * 0.4
+  const bottomScale = 1.4 - scrollProgress * 0.4
+  const topShadowIntensity = 0.3 + scrollProgress * 0.2
+  const bottomShadowIntensity = 0.5 - scrollProgress * 0.2
+
   return (
-    <div ref={frameRef} className="relative min-h-screen">
+    <div className="relative min-h-screen">
       {/* Top scroll roll - fixed at top */}
       <div
         ref={topRollRef}
@@ -135,9 +100,10 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
               #3d3629 100%
             )
           `,
-          boxShadow: "0 6px 24px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2)",
+          boxShadow: `0 ${6 + scrollProgress * 4}px ${24 + scrollProgress * 16}px rgba(0,0,0,${topShadowIntensity}), 0 2px 8px rgba(0,0,0,0.2)`,
           borderRadius: "0 0 100% 100% / 0 0 20px 20px",
           transformOrigin: "top center",
+          transform: `scaleY(${topScale})`,
         }}
         aria-hidden="true"
       >
@@ -223,10 +189,10 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
               #3d3629 100%
             )
           `,
-          boxShadow: "0 -10px 32px rgba(0,0,0,0.5), 0 -2px 8px rgba(0,0,0,0.2)",
+          boxShadow: `0 -${10 - scrollProgress * 4}px ${32 - scrollProgress * 16}px rgba(0,0,0,${bottomShadowIntensity}), 0 -2px 8px rgba(0,0,0,0.2)`,
           borderRadius: "100% 100% 0 0 / 20px 20px 0 0",
           transformOrigin: "bottom center",
-          transform: "scaleY(1.4)", // Start fuller (more paper remaining at bottom)
+          transform: `scaleY(${bottomScale})`,
         }}
         aria-hidden="true"
       >

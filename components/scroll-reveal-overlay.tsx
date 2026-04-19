@@ -23,27 +23,18 @@ export function ScrollRevealOverlay({ children, onAnimationComplete }: ScrollRev
     const hasPlayed = sessionStorage.getItem("scroll-animation-played")
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     
-    console.log("[v0] ScrollRevealOverlay mount - hasPlayed:", hasPlayed, "prefersReducedMotion:", prefersReducedMotion)
-    
     if (hasPlayed || prefersReducedMotion) {
-      console.log("[v0] Skipping animation, showing content directly")
       setShouldAnimate(false)
       setAnimationComplete(true)
     } else {
-      console.log("[v0] Will play animation")
       setShouldAnimate(true)
     }
   }, [])
 
   // Second effect: Run animation if needed
   useEffect(() => {
-    console.log("[v0] Animation effect - shouldAnimate:", shouldAnimate)
     if (shouldAnimate !== true) return
-    
-    console.log("[v0] Refs check - overlay:", !!overlayRef.current, "topRoll:", !!topRollRef.current, "bottomRoll:", !!bottomRollRef.current, "paper:", !!paperRef.current, "content:", !!contentRef.current)
     if (!overlayRef.current || !topRollRef.current || !bottomRollRef.current || !paperRef.current || !contentRef.current) return
-    
-    console.log("[v0] Starting GSAP animation")
 
     // Lock body scroll during animation
     document.body.style.overflow = "hidden"
