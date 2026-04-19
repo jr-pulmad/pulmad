@@ -31,7 +31,10 @@ export function Hero() {
     : "/alatskivi-castle-hero.jpg"
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
+    <section 
+      className="relative flex items-center justify-center overflow-hidden"
+      style={{ minHeight: "calc(100dvh - var(--scroll-safe-top, 0px) - var(--scroll-safe-bottom, 0px))" }}
+    >
       {/* Video Background - always playing, always muted, no controls */}
       <div className="absolute inset-0 z-0">
         <video
@@ -114,7 +117,8 @@ export function Hero() {
       {/* Scroll indicator */}
       <button
         onClick={scrollToContent}
-        className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-10 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-2"
+        className="absolute left-1/2 -translate-x-1/2 z-10 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-2"
+        style={{ bottom: "1.5rem" }}
         aria-label="Scroll down"
       >
         <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6 text-white/70 group-hover:text-white transition-colors animate-bounce" />

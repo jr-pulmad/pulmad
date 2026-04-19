@@ -135,6 +135,16 @@
   --roll-dark-color: #3d3629;
   --silver-accent: #a8a8a8;
   --pewter-accent: #6b6b6b;
+  /* Safe areas for scroll rods - content must fit within these bounds */
+  --scroll-safe-top: 90px;
+  --scroll-safe-bottom: 90px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --scroll-safe-top: 70px;
+    --scroll-safe-bottom: 70px;
+  }
 }
 
 /* Add padding for scroll frame rolls */

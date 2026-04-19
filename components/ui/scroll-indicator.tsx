@@ -24,11 +24,12 @@ export function ScrollIndicator() {
   return (
     <div 
       className={cn(
-        "fixed bottom-6 right-6 z-40 items-center gap-2 transition-all duration-300",
+        "fixed right-6 z-40 items-center gap-2 transition-all duration-300",
         "text-xs font-mono text-muted-foreground/70",
         "hidden sm:flex", // Hide on mobile
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
       )}
+      style={{ bottom: "calc(var(--scroll-safe-bottom, 0px) + 1.5rem)" }}
     >
       <span className="text-[10px] uppercase tracking-wider opacity-60">scroll</span>
       <div className="relative w-12 h-[2px] bg-border/50 rounded-full overflow-hidden">
