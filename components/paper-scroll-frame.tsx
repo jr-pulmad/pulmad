@@ -6,6 +6,10 @@ interface PaperScrollFrameProps {
   children: ReactNode
 }
 
+// Safe space heights for scroll rods
+const TOP_SAFE_SPACE = 60 // px
+const BOTTOM_SAFE_SPACE = 60 // px
+
 export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
   const topRollRef = useRef<HTMLDivElement>(null)
   const bottomRollRef = useRef<HTMLDivElement>(null)
@@ -13,10 +17,9 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const lastScrollY = useRef(0)
   const scrollDirection = useRef(0)
-  const bounceAnimationRef = useRef<number | null>(null)
+  const bounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    // Check for reduced motion preference
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
@@ -42,22 +45,22 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
       const newDirection = currentScrollY > lastScrollY.current ? 1 : currentScrollY < lastScrollY.current ? -1 : 0
       
       if (newDirection !== 0 && newDirection !== scrollDirection.current) {
-        // Direction changed - trigger subtle bounce
         const target = newDirection > 0 ? topRollRef.current : bottomRollRef.current
         
-        if (target && bounceAnimationRef.current === null) {
-          // Add bounce class
-          target.style.transform = `scaleY(${newDirection > 0 ? 1 + progress * 0.4 : 1.4 - progress * 0.4}) translateY(${newDirection > 0 ? -2 : 2}px)`
+        if (target && !bounceTimeoutRef.current) {
+          target.style.transform = `translateY(${newDirection > 0 ? -3 : 3}px)`
           
-          bounceAnimationRef.current = window.setTimeout(() => {
-            target.style.transition = "transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)"
-            target.style.transform = `scaleY(${newDirection > 0 ? 1 + progress * 0.4 : 1.4 - progress * 0.4}) translateY(0px)`
-            
-            setTimeout(() => {
-              target.style.transition = ""
-              bounceAnimationRef.current = null
-            }, 300)
-          }, 100)
+          bounceTimeoutRef.current = setTimeout(() => {
+            if (target) {
+              target.style.transition = "transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55)"
+              target.style.transform = "translateY(0px)"
+              
+              setTimeout(() => {
+                if (target) target.style.transition = ""
+                bounceTimeoutRef.current = null
+              }, 400)
+            }
+          }, 80)
         }
       }
       
@@ -66,157 +69,266 @@ export function PaperScrollFrame({ children }: PaperScrollFrameProps) {
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll() // Initial call
+    handleScroll()
     
     return () => {
       window.removeEventListener("scroll", handleScroll)
-      if (bounceAnimationRef.current) {
-        clearTimeout(bounceAnimationRef.current)
+      if (bounceTimeoutRef.current) {
+        clearTimeout(bounceTimeoutRef.current)
       }
     }
   }, [prefersReducedMotion])
 
-  // Calculate dynamic styles based on scroll progress
-  const topScale = 1 + scrollProgress * 0.4
-  const bottomScale = 1.4 - scrollProgress * 0.4
-  const topShadowIntensity = 0.3 + scrollProgress * 0.2
-  const bottomShadowIntensity = 0.5 - scrollProgress * 0.2
+  // Calculate dynamic scale based on scroll
+  const topScale = 1 + scrollProgress * 0.3
+  const bottomScale = 1.3 - scrollProgress * 0.3
 
   return (
-    <div className="relative min-h-screen">
-      {/* Top scroll roll - fixed at top */}
+    <div className="relative">
+      {/* Paper texture background overlay */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `url("/textures/old-paper.jpg")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: 0.04,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Top scroll rod with ornaments */}
       <div
         ref={topRollRef}
-        className="fixed top-0 left-0 right-0 h-10 z-[100] pointer-events-none"
-        style={{
-          background: `
-            linear-gradient(180deg, 
-              #3d3629 0%, 
-              #5a5045 15%,
-              #a8a8a8 20%,
-              #6b6b6b 25%,
-              #4a4035 35%,
-              #5a5045 50%,
-              #3d3629 100%
-            )
-          `,
-          boxShadow: `0 ${6 + scrollProgress * 4}px ${24 + scrollProgress * 16}px rgba(0,0,0,${topShadowIntensity}), 0 2px 8px rgba(0,0,0,0.2)`,
-          borderRadius: "0 0 100% 100% / 0 0 20px 20px",
-          transformOrigin: "top center",
-          transform: `scaleY(${topScale})`,
-        }}
+        className="fixed top-0 left-0 right-0 z-[100] pointer-events-none"
+        style={{ height: TOP_SAFE_SPACE }}
         aria-hidden="true"
       >
-        {/* Roll highlight */}
+        {/* Wood rod background */}
         <div 
-          className="absolute top-1 left-4 right-4 h-2 rounded-full opacity-25"
+          className="absolute bottom-0 left-0 right-0"
           style={{
-            background: "linear-gradient(180deg, rgba(168,168,168,0.6) 0%, transparent 100%)",
+            height: 48,
+            backgroundImage: `url("/textures/dark-wood.jpg")`,
+            backgroundSize: "200px 48px",
+            backgroundRepeat: "repeat-x",
+            borderRadius: "0 0 50% 50% / 0 0 12px 12px",
+            boxShadow: `
+              0 8px 32px rgba(0,0,0,0.5), 
+              0 4px 12px rgba(0,0,0,0.3),
+              inset 0 2px 4px rgba(255,255,255,0.1),
+              inset 0 -4px 8px rgba(0,0,0,0.3)
+            `,
+            transform: `scaleY(${topScale})`,
+            transformOrigin: "top center",
           }}
-        />
-        {/* Roll texture lines */}
-        <div className="absolute inset-0 opacity-10 rounded-b-[20px]" style={{
-          backgroundImage: `repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0,0,0,0.1) 3px,
-            rgba(0,0,0,0.1) 4px
-          )`
-        }} />
+        >
+          {/* Silver accent strip */}
+          <div 
+            className="absolute top-2 left-4 right-4 h-1 rounded-full"
+            style={{
+              background: "linear-gradient(90deg, #6b6b6b, #c0c0c0 20%, #a8a8a8 50%, #c0c0c0 80%, #6b6b6b)",
+            }}
+          />
+          {/* Roll texture lines */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 4px,
+                rgba(0,0,0,0.15) 4px,
+                rgba(0,0,0,0.15) 5px
+              )`
+            }}
+          />
+        </div>
+
+        {/* Left ornament */}
+        <div 
+          className="absolute bottom-1 left-2"
+          style={{
+            width: 36,
+            height: 36,
+            background: "radial-gradient(circle at 30% 30%, #5a4a3a, #2d2318)",
+            borderRadius: "50%",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1)",
+            border: "2px solid #a8a8a8",
+          }}
+        >
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{ background: "linear-gradient(135deg, #c0c0c0, #6b6b6b)" }}
+          />
+        </div>
+
+        {/* Right ornament */}
+        <div 
+          className="absolute bottom-1 right-2"
+          style={{
+            width: 36,
+            height: 36,
+            background: "radial-gradient(circle at 30% 30%, #5a4a3a, #2d2318)",
+            borderRadius: "50%",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1)",
+            border: "2px solid #a8a8a8",
+          }}
+        >
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{ background: "linear-gradient(135deg, #c0c0c0, #6b6b6b)" }}
+          />
+        </div>
       </div>
 
-      {/* Left paper edge - subtle deckled effect */}
+      {/* Left burnt edge */}
       <div
-        className="fixed top-10 bottom-10 left-0 w-3 z-[99] pointer-events-none"
+        className="fixed left-0 z-[99] pointer-events-none"
         style={{
+          top: TOP_SAFE_SPACE,
+          bottom: BOTTOM_SAFE_SPACE,
+          width: 20,
           background: `linear-gradient(90deg, 
-            rgba(74, 64, 53, 0.15) 0%,
-            rgba(74, 64, 53, 0.08) 30%,
+            rgba(26, 16, 5, 0.7) 0%,
+            rgba(45, 30, 15, 0.4) 30%,
+            rgba(60, 40, 20, 0.2) 60%,
             transparent 100%
           )`,
         }}
         aria-hidden="true"
       >
-        {/* Deckled edge effect */}
+        {/* Burnt edge texture */}
         <div 
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-80"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='100' viewBox='0 0 12 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 Q3 5 0 10 Q4 15 0 20 Q3 25 0 30 Q5 35 0 40 Q3 45 0 50 Q4 55 0 60 Q3 65 0 70 Q5 75 0 80 Q3 85 0 90 Q4 95 0 100 L12 100 L12 0 Z' fill='%234a4035'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='200' viewBox='0 0 20 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 Q8 10 2 20 Q10 30 3 40 Q12 50 1 60 Q9 70 4 80 Q11 90 2 100 Q8 110 3 120 Q10 130 1 140 Q9 150 4 160 Q12 170 2 180 Q8 190 0 200 L0 0 Z' fill='%231a1005' fill-opacity='0.5'/%3E%3C/svg%3E")`,
             backgroundRepeat: "repeat-y",
-            backgroundSize: "12px 100px",
+            backgroundSize: "20px 200px",
           }}
         />
       </div>
 
-      {/* Right paper edge - subtle deckled effect */}
+      {/* Right burnt edge */}
       <div
-        className="fixed top-10 bottom-10 right-0 w-3 z-[99] pointer-events-none"
+        className="fixed right-0 z-[99] pointer-events-none"
         style={{
+          top: TOP_SAFE_SPACE,
+          bottom: BOTTOM_SAFE_SPACE,
+          width: 20,
           background: `linear-gradient(-90deg, 
-            rgba(74, 64, 53, 0.15) 0%,
-            rgba(74, 64, 53, 0.08) 30%,
+            rgba(26, 16, 5, 0.7) 0%,
+            rgba(45, 30, 15, 0.4) 30%,
+            rgba(60, 40, 20, 0.2) 60%,
             transparent 100%
           )`,
         }}
         aria-hidden="true"
       >
-        {/* Deckled edge effect (mirrored) */}
+        {/* Burnt edge texture */}
         <div 
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-80"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='100' viewBox='0 0 12 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 0 Q9 5 12 10 Q8 15 12 20 Q9 25 12 30 Q7 35 12 40 Q9 45 12 50 Q8 55 12 60 Q9 65 12 70 Q7 75 12 80 Q9 85 12 90 Q8 95 12 100 L0 100 L0 0 Z' fill='%234a4035'/%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='200' viewBox='0 0 20 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 Q12 10 18 20 Q10 30 17 40 Q8 50 19 60 Q11 70 16 80 Q9 90 18 100 Q12 110 17 120 Q10 130 19 140 Q11 150 16 160 Q8 170 18 180 Q12 190 20 200 L20 0 Z' fill='%231a1005' fill-opacity='0.5'/%3E%3C/svg%3E")`,
             backgroundRepeat: "repeat-y",
-            backgroundSize: "12px 100px",
-            backgroundPosition: "right",
+            backgroundSize: "20px 200px",
           }}
         />
       </div>
 
-      {/* Bottom scroll roll - fixed at bottom */}
+      {/* Bottom scroll rod with ornaments */}
       <div
         ref={bottomRollRef}
-        className="fixed bottom-0 left-0 right-0 h-10 z-[100] pointer-events-none"
-        style={{
-          background: `
-            linear-gradient(0deg, 
-              #3d3629 0%, 
-              #5a5045 15%,
-              #a8a8a8 20%,
-              #6b6b6b 25%,
-              #4a4035 35%,
-              #5a5045 50%,
-              #3d3629 100%
-            )
-          `,
-          boxShadow: `0 -${10 - scrollProgress * 4}px ${32 - scrollProgress * 16}px rgba(0,0,0,${bottomShadowIntensity}), 0 -2px 8px rgba(0,0,0,0.2)`,
-          borderRadius: "100% 100% 0 0 / 20px 20px 0 0",
-          transformOrigin: "bottom center",
-          transform: `scaleY(${bottomScale})`,
-        }}
+        className="fixed bottom-0 left-0 right-0 z-[100] pointer-events-none"
+        style={{ height: BOTTOM_SAFE_SPACE }}
         aria-hidden="true"
       >
-        {/* Roll highlight */}
+        {/* Wood rod background */}
         <div 
-          className="absolute bottom-1 left-4 right-4 h-2 rounded-full opacity-25"
+          className="absolute top-0 left-0 right-0"
           style={{
-            background: "linear-gradient(0deg, rgba(168,168,168,0.6) 0%, transparent 100%)",
+            height: 48,
+            backgroundImage: `url("/textures/dark-wood.jpg")`,
+            backgroundSize: "200px 48px",
+            backgroundRepeat: "repeat-x",
+            borderRadius: "50% 50% 0 0 / 12px 12px 0 0",
+            boxShadow: `
+              0 -8px 32px rgba(0,0,0,0.5), 
+              0 -4px 12px rgba(0,0,0,0.3),
+              inset 0 -2px 4px rgba(255,255,255,0.1),
+              inset 0 4px 8px rgba(0,0,0,0.3)
+            `,
+            transform: `scaleY(${bottomScale})`,
+            transformOrigin: "bottom center",
           }}
-        />
-        {/* Roll texture lines */}
-        <div className="absolute inset-0 opacity-10 rounded-t-[20px]" style={{
-          backgroundImage: `repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 3px,
-            rgba(0,0,0,0.1) 3px,
-            rgba(0,0,0,0.1) 4px
-          )`
-        }} />
+        >
+          {/* Silver accent strip */}
+          <div 
+            className="absolute bottom-2 left-4 right-4 h-1 rounded-full"
+            style={{
+              background: "linear-gradient(90deg, #6b6b6b, #c0c0c0 20%, #a8a8a8 50%, #c0c0c0 80%, #6b6b6b)",
+            }}
+          />
+          {/* Roll texture lines */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 4px,
+                rgba(0,0,0,0.15) 4px,
+                rgba(0,0,0,0.15) 5px
+              )`
+            }}
+          />
+        </div>
+
+        {/* Left ornament */}
+        <div 
+          className="absolute top-1 left-2"
+          style={{
+            width: 36,
+            height: 36,
+            background: "radial-gradient(circle at 30% 30%, #5a4a3a, #2d2318)",
+            borderRadius: "50%",
+            boxShadow: "0 -4px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1)",
+            border: "2px solid #a8a8a8",
+          }}
+        >
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{ background: "linear-gradient(135deg, #c0c0c0, #6b6b6b)" }}
+          />
+        </div>
+
+        {/* Right ornament */}
+        <div 
+          className="absolute top-1 right-2"
+          style={{
+            width: 36,
+            height: 36,
+            background: "radial-gradient(circle at 30% 30%, #5a4a3a, #2d2318)",
+            borderRadius: "50%",
+            boxShadow: "0 -4px 12px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.1)",
+            border: "2px solid #a8a8a8",
+          }}
+        >
+          <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full"
+            style={{ background: "linear-gradient(135deg, #c0c0c0, #6b6b6b)" }}
+          />
+        </div>
       </div>
 
-      {/* Main content area - passes children through unchanged */}
-      <div className="relative z-[1]">
+      {/* Main content area with safe space padding */}
+      <div 
+        className="relative z-[1]"
+        style={{
+          paddingTop: TOP_SAFE_SPACE,
+          paddingBottom: BOTTOM_SAFE_SPACE,
+        }}
+      >
         {children}
       </div>
     </div>
