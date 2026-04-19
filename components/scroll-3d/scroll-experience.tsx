@@ -10,6 +10,13 @@ interface ScrollExperienceProps {
   children: ReactNode
 }
 
+// Horizontal inset for burnt edges + paper sheet - must match
+// the paper-on-rod span in 3D (rodLength = viewport.width - 2.6 world units,
+// paperSection = rodLength * 0.96 ≈ viewport.width - 3.4 units).
+// At zoom 50 that's ~85px from each edge to the paper start. We use 70px here
+// and let the burnt edge mask the transition softly.
+const EDGE_INSET_PX = 70
+
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
   const [openingProgress, setOpeningProgress] = useState(0)
@@ -42,15 +49,15 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Run opening animation
+  // Run opening animation - slow and dramatic
   useEffect(() => {
     if (phase !== "opening") return
 
     const obj = { progress: 0 }
     const tween = gsap.to(obj, {
       progress: 1,
-      duration: 5.5,
-      ease: "power3.inOut",
+      duration: 7.2,
+      ease: "power2.inOut",
       onUpdate: () => {
         setOpeningProgress(obj.progress)
       },
@@ -60,7 +67,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         const fade = { o: 0 }
         gsap.to(fade, {
           o: 1,
-          duration: 0.9,
+          duration: 1.1,
           ease: "power2.out",
           onUpdate: () => setContentOpacity(fade.o),
         })
@@ -109,48 +116,84 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     return (
       <div
         className="fixed inset-0 z-[9999]"
-        style={{ background: "#1a1108" }}
+        style={{ background: "#100a04" }}
         aria-hidden
       />
     )
   }
 
+  // Sheet is visually "behind" rods during opening, but expands vertically
+  // along with them. At opening=0 sheet collapses to the center strip; at
+  // opening=1 it spans between the two rods.
+  const sheetInsetY = `calc((100vh / 2 - var(--scroll-safe-top)) * ${1 - openingProgress})`
+
   return (
     <>
-      {/* Parchment background covering entire viewport - behind content */}
+      {/* Dark frame background - the world "outside" the scroll */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          zIndex: -10,
-          backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          zIndex: -20,
+          background:
+            "radial-gradient(ellipse at center, #1c1108 0%, #0a0603 85%)",
         }}
         aria-hidden
       />
 
-      {/* Solid paper bands at top and bottom - behind rods, mask scrolling content */}
+      {/* Central parchment sheet - same width as paper-on-rod section.
+          Hangs between the two rods, with visible cast shadows from rods above/below. */}
       <div
-        className="fixed top-0 left-0 right-0 pointer-events-none"
+        className="fixed pointer-events-none"
         style={{
-          height: "var(--scroll-safe-top)",
-          zIndex: 25,
+          top: `calc(var(--scroll-safe-top) + ${sheetInsetY})`,
+          bottom: `calc(var(--scroll-safe-bottom) + ${sheetInsetY})`,
+          left: `${EDGE_INSET_PX}px`,
+          right: `${EDGE_INSET_PX}px`,
+          zIndex: -10,
           backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
           backgroundSize: "cover",
-          backgroundPosition: "center top",
-          boxShadow: "inset 0 -10px 18px -10px rgba(0,0,0,0.45)",
+          backgroundPosition: "center",
+          // Strong inner shadows from top and bottom rods give the 3D effect
+          // of paper hanging in space behind cylindrical rolls.
+          boxShadow: `
+            inset 0 22px 28px -8px rgba(20, 10, 4, 0.55),
+            inset 0 -22px 28px -8px rgba(20, 10, 4, 0.55),
+            inset 0 60px 80px -60px rgba(0, 0, 0, 0.35),
+            inset 0 -60px 80px -60px rgba(0, 0, 0, 0.35)
+          `,
+          transition: "none",
         }}
         aria-hidden
       />
+
+      {/* Hard cast shadow strip directly under the top rod */}
       <div
-        className="fixed bottom-0 left-0 right-0 pointer-events-none"
+        className="fixed pointer-events-none"
         style={{
-          height: "var(--scroll-safe-bottom)",
-          zIndex: 25,
-          backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center bottom",
-          boxShadow: "inset 0 10px 18px -10px rgba(0,0,0,0.45)",
+          top: `calc(var(--scroll-safe-top) + ${sheetInsetY})`,
+          left: `${EDGE_INSET_PX}px`,
+          right: `${EDGE_INSET_PX}px`,
+          height: "32px",
+          zIndex: 20,
+          background:
+            "linear-gradient(to bottom, rgba(20,10,4,0.55) 0%, rgba(20,10,4,0.25) 50%, rgba(20,10,4,0) 100%)",
+          opacity: openingProgress,
+        }}
+        aria-hidden
+      />
+
+      {/* Hard cast shadow strip directly above the bottom rod */}
+      <div
+        className="fixed pointer-events-none"
+        style={{
+          bottom: `calc(var(--scroll-safe-bottom) + ${sheetInsetY})`,
+          left: `${EDGE_INSET_PX}px`,
+          right: `${EDGE_INSET_PX}px`,
+          height: "32px",
+          zIndex: 20,
+          background:
+            "linear-gradient(to top, rgba(20,10,4,0.55) 0%, rgba(20,10,4,0.25) 50%, rgba(20,10,4,0) 100%)",
+          opacity: openingProgress,
         }}
         aria-hidden
       />
@@ -160,9 +203,9 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         {children}
       </div>
 
-      {/* Burnt edges - SVG-based for reliability and dramatic irregular shapes */}
-      <BurntEdge side="left" />
-      <BurntEdge side="right" />
+      {/* Burnt edges - narrow, realistic, with ember sparks */}
+      <BurntEdge side="left" width={EDGE_INSET_PX} />
+      <BurntEdge side="right" width={EDGE_INSET_PX} />
 
       {/* 3D Canvas with both rods */}
       <div
@@ -177,10 +220,10 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           dpr={[1, 2]}
           style={{ background: "transparent" }}
         >
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[4, 6, 8]} intensity={1.4} />
-          <directionalLight position={[-4, -2, 6]} intensity={0.35} color="#b8a888" />
-          <directionalLight position={[0, 0, 10]} intensity={0.4} />
+          <ambientLight intensity={0.55} />
+          <directionalLight position={[4, 6, 8]} intensity={1.3} />
+          <directionalLight position={[-5, -3, 6]} intensity={0.35} color="#ffffff" />
+          <directionalLight position={[0, 0, 10]} intensity={0.5} color="#ffffff" />
           <Suspense fallback={null}>
             <ScrollRod
               position="top"

@@ -4,72 +4,107 @@ import { useMemo } from "react"
 
 interface BurntEdgeProps {
   side: "left" | "right"
+  width?: number
 }
 
 /**
- * Dramatic burnt paper edge built entirely from SVG.
- * - Jagged irregular profile (procedurally generated zig-zag with random peaks)
- * - Multi-layered darkening: char (near-black), scorch (dark brown), singe (warm brown)
- * - No image assets so we avoid texture glitches / white areas
+ * Realistic burnt paper edge built from SVG.
+ * - Subtle irregular profile (small natural variations, not zigzag)
+ * - Multi-layered darkening: scorch → char → burnt edge
+ * - Sparse ember glow sparks (~1% of area) for realism
+ * - Grain noise for texture
  */
-export function BurntEdge({ side }: BurntEdgeProps) {
+export function BurntEdge({ side, width = 70 }: BurntEdgeProps) {
   const isLeft = side === "left"
 
-  // Generate a jagged path once per mount.
-  // Path is drawn over a 120 × 1000 viewBox, stretched vertically.
-  const { jaggedPath, charPath, embers } = useMemo(() => {
-    const height = 1000
-    const rowCount = 90 // number of jagged points
-    const base = isLeft ? 60 : 60 // middle of 120px wide viewbox for the main burn line
-    const charBase = isLeft ? 28 : 92 // deeper burn (closer to edge)
+  const { scorchPath, charPath, embers, ashSpecks } = useMemo(() => {
+    const VB_H = 1000
+    const VB_W = 120 // viewBox width (the svg scales to the real width)
+    const rowCount = 140 // many small variations instead of few big zigzags
 
-    // Seed from side so left/right look different but stable between renders
+    // Char edge sits near the outer side
+    const charBase = isLeft ? 30 : VB_W - 30 // deeper burn position
+    const scorchBase = isLeft ? 62 : VB_W - 62 // subtler brown transition
+
+    // Deterministic seeded random
     let seed = isLeft ? 1337 : 4711
     const rand = () => {
       seed = (seed * 9301 + 49297) % 233280
       return seed / 233280
     }
 
-    // Main scorched line - wider, softer
-    const points: string[] = []
+    // Scorch (outer, wider, softer) - small natural undulation
+    const scorchPoints: string[] = []
     for (let i = 0; i <= rowCount; i++) {
-      const y = (i / rowCount) * height
-      const noise = (rand() - 0.5) * 60 + Math.sin(i * 0.7) * 18 + Math.sin(i * 0.19) * 28
-      const x = isLeft ? Math.max(10, base + noise) : Math.min(110, base - noise)
-      points.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+      const y = (i / rowCount) * VB_H
+      const noise =
+        (rand() - 0.5) * 14 +
+        Math.sin(i * 0.11) * 10 +
+        Math.sin(i * 0.53) * 5
+      const x = isLeft ? scorchBase + noise : scorchBase - noise
+      scorchPoints.push(`${x.toFixed(2)},${y.toFixed(2)}`)
     }
 
-    // Reset seed for the char layer so it doesn't align exactly with outer
+    // Char (inner, smaller, darker) - slightly more irregular
     seed = isLeft ? 91 : 271
     const charPoints: string[] = []
     for (let i = 0; i <= rowCount; i++) {
-      const y = (i / rowCount) * height
-      const noise = (rand() - 0.5) * 40 + Math.sin(i * 0.9 + 1) * 16 + Math.sin(i * 0.27) * 20
-      const x = isLeft ? Math.max(2, charBase + noise) : Math.min(118, charBase - noise)
-      charPoints.push(`${x.toFixed(1)},${y.toFixed(1)}`)
+      const y = (i / rowCount) * VB_H
+      const noise =
+        (rand() - 0.5) * 10 +
+        Math.sin(i * 0.17 + 1) * 6 +
+        Math.sin(i * 0.61) * 3
+      const x = isLeft ? charBase + noise : charBase - noise
+      charPoints.push(`${x.toFixed(2)},${y.toFixed(2)}`)
     }
 
-    // Ember holes: small irregular black patches away from the edge that look like burn-through
+    // Ember sparks - tiny warm glowing dots near the char (~1% of the edge area)
     seed = isLeft ? 5555 : 7777
-    const emberList: Array<{ cx: number; cy: number; r: number; rx: number; ry: number }> = []
-    for (let i = 0; i < 8; i++) {
-      const cy = rand() * height
-      const offset = rand() * 35 + 15
-      const cx = isLeft ? offset : 120 - offset
-      const rx = rand() * 10 + 4
-      const ry = rand() * 14 + 5
-      emberList.push({ cx, cy, r: rx, rx, ry })
+    const emberList: Array<{ cx: number; cy: number; r: number; color: string }> = []
+    const emberCount = 10
+    for (let i = 0; i < emberCount; i++) {
+      const cy = rand() * VB_H
+      const xOffset = rand() * 16 + 8
+      const cx = isLeft ? xOffset + charBase - 12 : VB_W - (xOffset + (VB_W - charBase) - 12)
+      // Mix of hot orange, red, and yellow-orange
+      const colorRoll = rand()
+      const color =
+        colorRoll < 0.5
+          ? "#ff7a20" // bright orange
+          : colorRoll < 0.85
+          ? "#ffc040" // yellow-orange
+          : "#ff3a10" // deep red
+      emberList.push({
+        cx,
+        cy,
+        r: rand() * 1.2 + 0.6,
+        color,
+      })
     }
 
-    const outerEdge = isLeft
-      ? `M0,0 L${points.join(" L")} L0,${height} Z`
-      : `M120,0 L${points.join(" L")} L120,${height} Z`
+    // Tiny ash specks (grey) inside the char area for grain
+    seed = isLeft ? 3321 : 9813
+    const ashList: Array<{ cx: number; cy: number; r: number }> = []
+    for (let i = 0; i < 40; i++) {
+      const cy = rand() * VB_H
+      const xOffset = rand() * 26
+      const cx = isLeft ? xOffset : VB_W - xOffset
+      ashList.push({ cx, cy, r: rand() * 0.5 + 0.2 })
+    }
 
+    const scorchEdge = isLeft
+      ? `M0,0 L${scorchPoints.join(" L")} L0,${VB_H} Z`
+      : `M${VB_W},0 L${scorchPoints.join(" L")} L${VB_W},${VB_H} Z`
     const charEdge = isLeft
-      ? `M0,0 L${charPoints.join(" L")} L0,${height} Z`
-      : `M120,0 L${charPoints.join(" L")} L120,${height} Z`
+      ? `M0,0 L${charPoints.join(" L")} L0,${VB_H} Z`
+      : `M${VB_W},0 L${charPoints.join(" L")} L${VB_W},${VB_H} Z`
 
-    return { jaggedPath: outerEdge, charPath: charEdge, embers: emberList }
+    return {
+      scorchPath: scorchEdge,
+      charPath: charEdge,
+      embers: emberList,
+      ashSpecks: ashList,
+    }
   }, [isLeft])
 
   const positionStyle = isLeft ? { left: 0 } : { right: 0 }
@@ -79,7 +114,7 @@ export function BurntEdge({ side }: BurntEdgeProps) {
       className="fixed top-0 bottom-0 pointer-events-none"
       style={{
         ...positionStyle,
-        width: "120px",
+        width: `${width}px`,
         zIndex: 30,
       }}
       aria-hidden
@@ -101,9 +136,9 @@ export function BurntEdge({ side }: BurntEdgeProps) {
             y2="0"
           >
             <stop offset="0" stopColor="#1a0a02" stopOpacity="1" />
-            <stop offset="0.25" stopColor="#3a1f0c" stopOpacity="0.98" />
-            <stop offset="0.55" stopColor="#5c3418" stopOpacity="0.85" />
-            <stop offset="0.8" stopColor="#7a4a24" stopOpacity="0.45" />
+            <stop offset="0.35" stopColor="#3a1f0c" stopOpacity="0.95" />
+            <stop offset="0.65" stopColor="#6a3a18" stopOpacity="0.65" />
+            <stop offset="0.88" stopColor="#8a5a30" stopOpacity="0.22" />
             <stop offset="1" stopColor="#8a5a30" stopOpacity="0" />
           </linearGradient>
 
@@ -116,48 +151,75 @@ export function BurntEdge({ side }: BurntEdgeProps) {
             y2="0"
           >
             <stop offset="0" stopColor="#000000" stopOpacity="1" />
-            <stop offset="0.6" stopColor="#0a0502" stopOpacity="0.95" />
+            <stop offset="0.6" stopColor="#0a0502" stopOpacity="0.9" />
             <stop offset="1" stopColor="#1a0a02" stopOpacity="0" />
           </linearGradient>
 
-          {/* Subtle noise filter for texture on char */}
+          {/* Subtle noise filter for char texture */}
           <filter id={`noise-${side}`} x="0" y="0" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={isLeft ? 3 : 9} />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.95"
+              numOctaves="2"
+              seed={isLeft ? 3 : 9}
+            />
             <feColorMatrix
               values="0 0 0 0 0
                       0 0 0 0 0
                       0 0 0 0 0
-                      0 0 0 0.55 0"
+                      0 0 0 0.5 0"
             />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
+
+          {/* Radial glow for embers */}
+          <radialGradient id={`ember-glow-${side}`}>
+            <stop offset="0" stopColor="#ffdc60" stopOpacity="1" />
+            <stop offset="0.3" stopColor="#ff7a20" stopOpacity="0.9" />
+            <stop offset="1" stopColor="#ff3a10" stopOpacity="0" />
+          </radialGradient>
         </defs>
 
-        {/* Outer scorched zone - wide, jagged */}
-        <path d={jaggedPath} fill={`url(#scorch-${side})`} />
+        {/* Outer scorched zone - warm brown transition */}
+        <path d={scorchPath} fill={`url(#scorch-${side})`} />
 
-        {/* Inner deep char zone - smaller, darker */}
+        {/* Inner deep char zone - blackest part */}
         <path d={charPath} fill={`url(#char-${side})`} />
 
-        {/* Noise overlay on char for grainy texture */}
+        {/* Noise grain over char */}
         <path
           d={charPath}
           fill="#000"
-          opacity="0.6"
+          opacity="0.55"
           filter={`url(#noise-${side})`}
         />
 
-        {/* Ember burn holes for extra irregularity */}
-        {embers.map((e, idx) => (
-          <ellipse
-            key={idx}
-            cx={e.cx}
-            cy={e.cy}
-            rx={e.rx}
-            ry={e.ry}
-            fill="#0a0502"
-            opacity="0.85"
+        {/* Ash specks inside the char area */}
+        {ashSpecks.map((a, idx) => (
+          <circle
+            key={`ash-${idx}`}
+            cx={a.cx}
+            cy={a.cy}
+            r={a.r}
+            fill="#6a5a48"
+            opacity="0.6"
           />
+        ))}
+
+        {/* Ember sparks with glow - small hot dots (~1%) */}
+        {embers.map((e, idx) => (
+          <g key={`ember-${idx}`}>
+            {/* Soft outer glow */}
+            <circle
+              cx={e.cx}
+              cy={e.cy}
+              r={e.r * 4}
+              fill={`url(#ember-glow-${side})`}
+              opacity="0.65"
+            />
+            {/* Hot core */}
+            <circle cx={e.cx} cy={e.cy} r={e.r} fill={e.color} opacity="0.95" />
+          </g>
         ))}
       </svg>
     </div>
