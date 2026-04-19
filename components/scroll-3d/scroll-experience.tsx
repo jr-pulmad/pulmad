@@ -1,9 +1,10 @@
 "use client"
 
-import { Suspense, useEffect, useRef, useState, type ReactNode } from "react"
+import { Suspense, useEffect, useState, type ReactNode } from "react"
 import { Canvas } from "@react-three/fiber"
 import { gsap } from "gsap"
 import { ScrollRod } from "./scroll-rod"
+import { BurntEdge } from "./burnt-edge"
 
 interface ScrollExperienceProps {
   children: ReactNode
@@ -56,7 +57,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       onComplete: () => {
         sessionStorage.setItem("scroll-animation-played", "true")
         setPhase("open")
-        // Smoothly fade in HTML content
         const fade = { o: 0 }
         gsap.to(fade, {
           o: 1,
@@ -86,8 +86,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       setScrollProgress(progress)
 
       const dy = window.scrollY - lastY
-      // Rotation amount tied to scroll delta - feels like the paper is rolling
-      accRotation += dy * 0.012
+      accRotation += dy * 0.014
       setRotationAngle(accRotation)
       lastY = window.scrollY
     }
@@ -105,7 +104,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Loading state - show solid dark color to avoid flash
+  // Loading state - show dark background to avoid flash
   if (phase === "loading") {
     return (
       <div
@@ -118,7 +117,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
 
   return (
     <>
-      {/* Paper background covering entire viewport - sits behind content */}
+      {/* Parchment background covering entire viewport - behind content */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -130,7 +129,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         aria-hidden
       />
 
-      {/* Solid paper bands at top and bottom (behind rods) - mask scrolling content */}
+      {/* Solid paper bands at top and bottom - behind rods, mask scrolling content */}
       <div
         className="fixed top-0 left-0 right-0 pointer-events-none"
         style={{
@@ -139,7 +138,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center top",
-          boxShadow: "inset 0 -8px 16px -8px rgba(0,0,0,0.4)",
+          boxShadow: "inset 0 -10px 18px -10px rgba(0,0,0,0.45)",
         }}
         aria-hidden
       />
@@ -151,68 +150,19 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center bottom",
-          boxShadow: "inset 0 8px 16px -8px rgba(0,0,0,0.4)",
+          boxShadow: "inset 0 10px 18px -10px rgba(0,0,0,0.45)",
         }}
         aria-hidden
       />
 
-      {/* HTML content - fades in after opening */}
+      {/* HTML page content - fades in after opening */}
       <div style={{ opacity: contentOpacity, transition: "none" }}>
         {children}
       </div>
 
-      {/* Burnt left edge */}
-      <div
-        className="fixed top-0 bottom-0 left-0 pointer-events-none"
-        style={{
-          width: "70px",
-          zIndex: 30,
-          backgroundImage: "url(/textures/burnt-edge-left.jpg)",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-          mixBlendMode: "multiply",
-        }}
-        aria-hidden
-      />
-      {/* Burnt left edge - solid overlay for the very black charred bit */}
-      <div
-        className="fixed top-0 bottom-0 left-0 pointer-events-none"
-        style={{
-          width: "30px",
-          zIndex: 31,
-          backgroundImage: "url(/textures/burnt-edge-left.jpg)",
-          backgroundSize: "233% 100%",
-          backgroundPosition: "left center",
-          backgroundRepeat: "no-repeat",
-        }}
-        aria-hidden
-      />
-
-      {/* Burnt right edge */}
-      <div
-        className="fixed top-0 bottom-0 right-0 pointer-events-none"
-        style={{
-          width: "70px",
-          zIndex: 30,
-          backgroundImage: "url(/textures/burnt-edge-right.jpg)",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-          mixBlendMode: "multiply",
-        }}
-        aria-hidden
-      />
-      <div
-        className="fixed top-0 bottom-0 right-0 pointer-events-none"
-        style={{
-          width: "30px",
-          zIndex: 31,
-          backgroundImage: "url(/textures/burnt-edge-right.jpg)",
-          backgroundSize: "233% 100%",
-          backgroundPosition: "right center",
-          backgroundRepeat: "no-repeat",
-        }}
-        aria-hidden
-      />
+      {/* Burnt edges - SVG-based for reliability and dramatic irregular shapes */}
+      <BurntEdge side="left" />
+      <BurntEdge side="right" />
 
       {/* 3D Canvas with both rods */}
       <div
@@ -227,9 +177,10 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           dpr={[1, 2]}
           style={{ background: "transparent" }}
         >
-          <ambientLight intensity={0.65} />
+          <ambientLight intensity={0.6} />
           <directionalLight position={[4, 6, 8]} intensity={1.4} />
           <directionalLight position={[-4, -2, 6]} intensity={0.35} color="#b8a888" />
+          <directionalLight position={[0, 0, 10]} intensity={0.4} />
           <Suspense fallback={null}>
             <ScrollRod
               position="top"
