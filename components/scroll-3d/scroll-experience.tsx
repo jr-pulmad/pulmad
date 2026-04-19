@@ -15,28 +15,51 @@ interface ScrollExperienceProps {
   children: ReactNode
 }
 
-/**
- * Module-level flag: persists across in-app navigations within the same tab
- * (because the JS module stays resident), but is reset on full reload / new tab.
- * Matches the spec: "play on each reload, but not during client-side nav".
- */
+/** Persists across in-app nav in the same tab, resets on reload / new tab. */
 let hasPlayedInMemory = false
 
 const CAMERA_ZOOM = 50
-// Vertical extent of an ornament image in screen pixels — the ornament
-// always stays fully within the viewport and is centered on the rod.
 const ORNAMENT_HEIGHT_PX = 110
-const ORNAMENT_WIDTH_PX = 130
+const ORNAMENT_WIDTH_PX = 140
+
+// Horizontal content padding: paper extends edge-to-edge; ornaments sit on top.
+// Content starts just after where the ornament bulb ends visually.
+const SAFE_X_DESKTOP = 72
+const SAFE_X_MOBILE = 42
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
-  // isOpen drives the CSS fade-in of children + shadows. It flips once at the
-  // end of the opening animation — no per-frame state updates ⇒ no lag.
-  const [isOpen, setIsOpen] = useState(false)
-
-  // Shared animation state consumed directly by the 3D scene via useFrame
   const progressRef = useRef<RodProgressRef>({ opening: 0, scroll: 0, rotation: 0 })
 
+  // Compute safe-area pixels from the current opening progress + scroll position.
+  // Also writes --scroll-opening so ornaments can interpolate their positions in CSS.
+  const applyCSSVars = (opening: number, scroll: number) => {
+    // Rod center Y (in pixels from top/bottom edge)
+    const rodCenterOpen = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET // e.g. 42.5
+    const viewportCenterY = window.innerHeight / 2
+    // During opening: rods move from viewport center (closed) to rodCenterOpen from edge
+    const topRodCenterPxFromTop = (1 - opening) * viewportCenterY + opening * rodCenterOpen
+    const bottomRodCenterPxFromBottom = topRodCenterPxFromTop
+
+    // Paper radius for top rod: MAX when closed (opening=0), interpolates to
+    // (MIN + (MAX - MIN) * scroll) when fully open.
+    const openTopR = ROD_PAPER_MIN_R + (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
+    const openBottomR = ROD_PAPER_MAX_R - (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
+    const topR = ROD_PAPER_MAX_R + (openTopR - ROD_PAPER_MAX_R) * opening
+    const bottomR = ROD_PAPER_MAX_R + (openBottomR - ROD_PAPER_MAX_R) * opening
+
+    const safeTopPx = Math.round(topRodCenterPxFromTop + topR * CAMERA_ZOOM)
+    const safeBottomPx = Math.round(bottomRodCenterPxFromBottom + bottomR * CAMERA_ZOOM)
+    const safeX = window.innerWidth < 640 ? SAFE_X_MOBILE : SAFE_X_DESKTOP
+
+    const root = document.documentElement
+    root.style.setProperty("--scroll-safe-top", `${safeTopPx}px`)
+    root.style.setProperty("--scroll-safe-bottom", `${safeBottomPx}px`)
+    root.style.setProperty("--scroll-safe-x", `${safeX}px`)
+    root.style.setProperty("--scroll-opening", `${opening}`)
+  }
+
+  // Phase transitions: decide on mount whether to play
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -44,27 +67,17 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
 
     if (hasPlayedInMemory || prefersReducedMotion) {
       progressRef.current.opening = 1
+      applyCSSVars(1, 0)
       setPhase("open")
-      setIsOpen(true)
     } else {
+      // Start at closed so the very first frame shows the stacked-scroll
+      applyCSSVars(0, 0)
       setPhase("opening")
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Lock page scroll during the opening animation
-  useEffect(() => {
-    if (phase === "opening") {
-      const original = document.body.style.overflow
-      document.body.style.overflow = "hidden"
-      return () => {
-        document.body.style.overflow = original
-      }
-    }
-  }, [phase])
-
-  // Keep html/body neutral while the scroll is active so our fixed parchment
-  // and dark frame render correctly. Restore on unmount so other pages get
-  // their normal background back.
+  // Keep html/body neutral while scroll experience is active
   useEffect(() => {
     if (phase === "loading") return
     const body = document.body
@@ -79,7 +92,17 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Opening tween — writes directly to the ref on every frame (NO React renders)
+  // Lock page scroll during opening
+  useEffect(() => {
+    if (phase !== "opening") return
+    const original = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = original
+    }
+  }, [phase])
+
+  // Opening tween — writes to ref + CSS vars every frame. Zero React renders.
   useEffect(() => {
     if (phase !== "opening") return
 
@@ -90,47 +113,29 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       ease: "power2.inOut",
       onUpdate: () => {
         progressRef.current.opening = obj.v
+        applyCSSVars(obj.v, 0)
       },
       onComplete: () => {
         hasPlayedInMemory = true
         progressRef.current.opening = 1
+        applyCSSVars(1, 0)
         setPhase("open")
-        setIsOpen(true)
       },
     })
 
     return () => {
       tween.kill()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase])
 
-  // Scroll handler — updates ref + CSS custom properties (no React state churn).
-  // Also computes live safe areas so Header / Footer margins track the rod size
-  // exactly (zero gap between rod and content).
+  // Scroll + resize handler in "open" phase. Updates CSS vars and ref values.
   useEffect(() => {
     if (phase !== "open") return
 
     let raf = 0
     let lastY = window.scrollY
     let acc = 0
-
-    const applySafeAreas = (scroll: number) => {
-      const topR = ROD_PAPER_MIN_R + (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
-      const bottomR = ROD_PAPER_MAX_R - (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
-
-      const centerPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET // 42.5px
-      // No buffer → content touches the rolls with the cast shadow overlapping it
-      const safeTopPx = Math.round(centerPx + topR * CAMERA_ZOOM)
-      const safeBottomPx = Math.round(centerPx + bottomR * CAMERA_ZOOM)
-
-      const root = document.documentElement
-      root.style.setProperty("--scroll-safe-top", `${safeTopPx}px`)
-      root.style.setProperty("--scroll-safe-bottom", `${safeBottomPx}px`)
-      // Horizontal inset equals the burnt-edge overlay width so content never
-      // falls under the burnt edges.
-      const safeX = window.innerWidth < 640 ? 36 : 52
-      root.style.setProperty("--scroll-safe-x", `${safeX}px`)
-    }
 
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight
@@ -142,7 +147,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       progressRef.current.rotation = acc
       lastY = window.scrollY
 
-      applySafeAreas(s)
+      applyCSSVars(1, s)
     }
 
     const onScroll = () => {
@@ -157,26 +162,13 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       window.removeEventListener("scroll", onScroll)
       window.removeEventListener("resize", update)
       cancelAnimationFrame(raf)
-      // Restore default safe areas (0) so other routes are unaffected
+      // Clean up so other routes have a normal layout
       const root = document.documentElement
       root.style.removeProperty("--scroll-safe-top")
       root.style.removeProperty("--scroll-safe-bottom")
       root.style.removeProperty("--scroll-safe-x")
+      root.style.removeProperty("--scroll-opening")
     }
-  }, [phase])
-
-  // Also apply safe areas during the OPENING animation so that Header / sections
-  // lay out correctly even while content is faded out. Use the "closed" values
-  // (max paper radius both rods) — matches the visual stacked-in-center state.
-  useEffect(() => {
-    if (phase !== "opening") return
-    const centerPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
-    const closedPx = Math.round(centerPx + ROD_PAPER_MAX_R * CAMERA_ZOOM)
-    const root = document.documentElement
-    root.style.setProperty("--scroll-safe-top", `${closedPx}px`)
-    root.style.setProperty("--scroll-safe-bottom", `${closedPx}px`)
-    const safeX = window.innerWidth < 640 ? 36 : 52
-    root.style.setProperty("--scroll-safe-x", `${safeX}px`)
   }, [phase])
 
   if (phase === "loading") {
@@ -191,66 +183,67 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
 
   return (
     <>
-      {/* Dark outer frame — everything "outside" the scroll */}
+      {/* Viewport-level parchment — NOT inside any stacking context, so it's
+          actually fixed to the viewport and never splits. The parchment is
+          visible as ONE continuous sheet across the entire page regardless
+          of how tall content becomes. */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          zIndex: -30,
-          background:
-            "radial-gradient(ellipse at center, #150b05 0%, #080402 85%)",
+          zIndex: -10,
+          backgroundImage: "url(/textures/parchment-detailed.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#9d7b55",
+          backgroundBlendMode: "multiply",
         }}
         aria-hidden
       />
 
-      {/* Page content (parchment + burnt edges wrap this in page.tsx).
-          Fades in over ~1s once the opening animation completes. */}
+      {/* Dark outer frame — fallback for anywhere that might slip through */}
       <div
-        data-scroll-content
+        className="fixed inset-0 pointer-events-none"
         style={{
-          opacity: isOpen ? 1 : 0,
-          transition: "opacity 1s ease-out",
-        }}
-      >
-        {children}
-      </div>
-
-      {/* Cast shadow projected DOWN onto content, from under the top rod.
-          Sits just below var(--scroll-safe-top) so it visibly darkens the top
-          of the content instead of floating above it. */}
-      <div
-        className="fixed pointer-events-none"
-        style={{
-          top: "var(--scroll-safe-top)",
-          left: 0,
-          right: 0,
-          height: "38px",
-          zIndex: 20,
-          background:
-            "linear-gradient(to bottom, rgba(15,8,3,0.72) 0%, rgba(15,8,3,0.35) 50%, rgba(15,8,3,0) 100%)",
-          opacity: isOpen ? 1 : 0,
-          transition: "opacity 0.8s ease-out",
+          zIndex: -20,
+          background: "radial-gradient(ellipse at center, #150b05 0%, #050200 85%)",
         }}
         aria-hidden
       />
 
-      {/* Cast shadow projected UP onto content, from above the bottom rod */}
+      {/* Content — rendered at opacity 1 from the start. The dark mask strips
+          below hide the "outside the scroll" portions; content is revealed
+          naturally as the mask strips shrink. */}
+      {children}
+
+      {/* Dark top mask — covers everything above var(--scroll-safe-top).
+          When rods are stacked in the center (opening=0), the mask is HUGE
+          and covers the entire top half of viewport. As rods separate, the
+          mask shrinks, exposing content underneath. */}
       <div
-        className="fixed pointer-events-none"
+        className="fixed top-0 left-0 right-0 pointer-events-none"
         style={{
-          bottom: "var(--scroll-safe-bottom)",
-          left: 0,
-          right: 0,
-          height: "38px",
-          zIndex: 20,
-          background:
-            "linear-gradient(to top, rgba(15,8,3,0.72) 0%, rgba(15,8,3,0.35) 50%, rgba(15,8,3,0) 100%)",
-          opacity: isOpen ? 1 : 0,
-          transition: "opacity 0.8s ease-out",
+          height: "var(--scroll-safe-top)",
+          background: "radial-gradient(ellipse at center bottom, #1a0d05 0%, #050200 75%)",
+          zIndex: 35,
+          boxShadow: "0 12px 24px -6px rgba(0,0,0,0.75), 0 4px 10px rgba(0,0,0,0.55)",
         }}
         aria-hidden
       />
 
-      {/* 3D Canvas with both rods. pointerEvents:none so clicks pass through. */}
+      {/* Dark bottom mask */}
+      <div
+        className="fixed bottom-0 left-0 right-0 pointer-events-none"
+        style={{
+          height: "var(--scroll-safe-bottom)",
+          background: "radial-gradient(ellipse at center top, #1a0d05 0%, #050200 75%)",
+          zIndex: 35,
+          boxShadow: "0 -12px 24px -6px rgba(0,0,0,0.75), 0 -4px 10px rgba(0,0,0,0.55)",
+        }}
+        aria-hidden
+      />
+
+      {/* 3D canvas with both rods */}
       <div
         className="fixed inset-0"
         style={{ zIndex: 40, pointerEvents: "none" }}
@@ -274,43 +267,43 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         </Canvas>
       </div>
 
-      {/* Static photorealistic ornaments — one per rod end (4 total). 
-          Positioned precisely on the rod center (42.5px from viewport edge) and
-          the outer screen edge. During the opening animation both rods are 
-          stacked in the center of the viewport, so the ornaments fade in with 
-          the content once the scroll has opened. */}
-      <Ornament corner="top-left" visible={isOpen} />
-      <Ornament corner="top-right" visible={isOpen} />
-      <Ornament corner="bottom-left" visible={isOpen} />
-      <Ornament corner="bottom-right" visible={isOpen} />
+      {/* SVG ornaments at each rod end — positions track the opening progress
+          via CSS calc, so they're visually attached to the rods throughout
+          the animation. */}
+      <Ornament corner="top-left" />
+      <Ornament corner="top-right" />
+      <Ornament corner="bottom-left" />
+      <Ornament corner="bottom-right" />
     </>
   )
 }
 
+/** Inline SVG ornament — no external assets, true transparency, detailed wood + silver. */
 function Ornament({
   corner,
-  visible,
 }: {
   corner: "top-left" | "top-right" | "bottom-left" | "bottom-right"
-  visible: boolean
 }) {
   const isTop = corner.startsWith("top")
   const isLeft = corner.endsWith("left")
+  const rodCenterOpenPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET // 42.5
 
-  // Rod center is CAMERA_ZOOM * ROD_CENTER_Y_OFFSET = 42.5px from the edge.
-  const rodCenterOffsetPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
+  // Position: at opening=0 both rods are at viewport center, at opening=1
+  // they're at rodCenterOpenPx from the edge. Subtract half ornament height
+  // so it's centered on the rod.
+  // Using calc lets the browser interpolate smoothly via --scroll-opening.
+  const verticalExpr = isTop
+    ? `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
+    : `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
 
-  const vertical = isTop
-    ? { top: `${rodCenterOffsetPx - ORNAMENT_HEIGHT_PX / 2}px` }
-    : { bottom: `${rodCenterOffsetPx - ORNAMENT_HEIGHT_PX / 2}px` }
-
+  const vertical = isTop ? { top: verticalExpr } : { bottom: verticalExpr }
   const horizontal = isLeft ? { left: 0 } : { right: 0 }
-
-  // Our ornament image is authored with the narrow shaft on the RIGHT and
-  // the big bulb on the LEFT. For a left-rod-end this is correct (bulb at
-  // outer screen edge). For a right-rod-end we mirror horizontally so the
-  // bulb still sits at the outer screen edge.
   const mirror = isLeft ? "scaleX(1)" : "scaleX(-1)"
+
+  const gradId = `ornWood-${corner}`
+  const bulbGradId = `ornBulb-${corner}`
+  const silverGradId = `ornSilver-${corner}`
+  const shadowId = `ornShadow-${corner}`
 
   return (
     <div
@@ -321,25 +314,104 @@ function Ornament({
         width: `${ORNAMENT_WIDTH_PX}px`,
         height: `${ORNAMENT_HEIGHT_PX}px`,
         zIndex: 50,
-        opacity: visible ? 1 : 0,
-        transition: "opacity 0.8s ease-out",
         transform: mirror,
-        filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.6))",
       }}
       aria-hidden
     >
-      <img
-        src="/textures/scroll-ornament.jpg"
-        alt=""
-        className="w-full h-full object-contain"
-        style={{
-          // The JPG has a pure black background; `screen`/`multiply` would not help.
-          // Instead we use `mix-blend-mode: lighten` so anything at or below the
-          // dark outer-frame color vanishes, keeping only the ornament itself.
-          mixBlendMode: "lighten",
-        }}
-        draggable={false}
-      />
+      <svg
+        viewBox="0 0 140 110"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ width: "100%", height: "100%", display: "block" }}
+      >
+        <defs>
+          <linearGradient id={gradId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#3d1f0a" />
+            <stop offset="30%" stopColor="#5a2e14" />
+            <stop offset="60%" stopColor="#4a2410" />
+            <stop offset="100%" stopColor="#1a0a04" />
+          </linearGradient>
+          <radialGradient id={bulbGradId} cx="32%" cy="32%" r="70%">
+            <stop offset="0%" stopColor="#7a4424" />
+            <stop offset="45%" stopColor="#4d2410" />
+            <stop offset="85%" stopColor="#22100a" />
+            <stop offset="100%" stopColor="#0a0402" />
+          </radialGradient>
+          <linearGradient id={silverGradId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#eee6d4" />
+            <stop offset="45%" stopColor="#9c968a" />
+            <stop offset="85%" stopColor="#4a4540" />
+            <stop offset="100%" stopColor="#1f1c18" />
+          </linearGradient>
+          <filter id={shadowId} x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="2" dy="4" stdDeviation="3" floodOpacity="0.65" />
+          </filter>
+        </defs>
+
+        <g filter={`url(#${shadowId})`}>
+          {/* Shaft attaching to rod (rightmost) */}
+          <rect x="120" y="48" width="20" height="14" fill={`url(#${gradId})`} />
+          {/* Inner silver collar */}
+          <ellipse cx="120" cy="55" rx="3" ry="11" fill={`url(#${silverGradId})`} />
+          {/* First wood bead */}
+          <ellipse cx="114" cy="55" rx="4" ry="14" fill={`url(#${gradId})`} />
+          {/* Silver ring */}
+          <ellipse cx="108" cy="55" rx="2.5" ry="17" fill={`url(#${silverGradId})`} />
+          {/* Tier 1 - wider wood */}
+          <ellipse cx="100" cy="55" rx="6" ry="22" fill={`url(#${gradId})`} />
+          {/* Silver engraved band */}
+          <ellipse cx="92" cy="55" rx="2.5" ry="25" fill={`url(#${silverGradId})`} />
+          {/* Tier 2 - wood approaching bulb */}
+          <ellipse cx="82" cy="55" rx="7" ry="30" fill={`url(#${gradId})`} />
+          {/* Silver collar */}
+          <ellipse cx="72" cy="55" rx="2.5" ry="34" fill={`url(#${silverGradId})`} />
+          {/* Main bulb — rounded, large */}
+          <ellipse cx="38" cy="55" rx="34" ry="44" fill={`url(#${bulbGradId})`} />
+          {/* Gothic cross carving */}
+          <path
+            d="M 38 24 L 38 86"
+            stroke="#a89d8a"
+            strokeWidth="0.8"
+            opacity="0.35"
+            fill="none"
+          />
+          <path
+            d="M 14 55 L 58 55"
+            stroke="#a89d8a"
+            strokeWidth="0.8"
+            opacity="0.35"
+            fill="none"
+          />
+          <circle
+            cx="38"
+            cy="55"
+            r="5"
+            fill="none"
+            stroke="#b8b0a0"
+            strokeWidth="0.7"
+            opacity="0.4"
+          />
+          {/* Decorative silver ring on bulb */}
+          <ellipse
+            cx="54"
+            cy="55"
+            rx="2"
+            ry="42"
+            fill={`url(#${silverGradId})`}
+            opacity="0.9"
+          />
+          {/* Bulb specular highlight */}
+          <ellipse
+            cx="26"
+            cy="38"
+            rx="11"
+            ry="15"
+            fill="white"
+            opacity="0.08"
+          />
+          {/* Outer silver cap (tiny bead at very end) */}
+          <circle cx="6" cy="55" r="5" fill={`url(#${silverGradId})`} />
+        </g>
+      </svg>
     </div>
   )
 }

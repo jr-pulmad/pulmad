@@ -12,12 +12,10 @@ import { BurntEdge } from "@/components/scroll-3d/burnt-edge"
 export default function HomePage() {
   return (
     <ScrollExperience>
-      {/* Content wrapper. The parchment is `background-attachment: fixed` so we
-          get ONE continuous visible sheet of paper across the whole page — it
-          never tiles and never shows horizontal/vertical seams as the user
-          scrolls. Content scrolls OVER the fixed sheet, which matches how a
-          reader sees a physical scroll: the visible portion of the parchment
-          stays the same while the writing on it moves. */}
+      {/* Content wrapper — transparent; the parchment renders behind as a
+          viewport-fixed layer in ScrollExperience so it's truly continuous.
+          Horizontal padding matches the ornament bulb's inner edge so content
+          width = paper width between the ornamented knobs. */}
       <div
         className="relative flex flex-col"
         style={{
@@ -26,20 +24,13 @@ export default function HomePage() {
           paddingBottom: "var(--scroll-safe-bottom)",
           paddingLeft: "var(--scroll-safe-x)",
           paddingRight: "var(--scroll-safe-x)",
-          backgroundImage: "url(/textures/parchment-detailed.jpg)",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundAttachment: "fixed",
-          backgroundColor: "#a68862",
-          backgroundBlendMode: "multiply",
         }}
       >
-        {/* Burnt edges — absolute inside this wrapper, so they scroll with the
-            content and are confined to the paper area (never overlap the 3D
-            rods or the outer dark frame). */}
-        <BurntEdge side="left" width={52} />
-        <BurntEdge side="right" width={52} />
+        {/* Burnt edges — fixed to viewport so they visually anchor to the paper
+            (which is also viewport-fixed). Dark top/bottom masks cover them in
+            the outer regions, so they only show in the visible paper band. */}
+        <BurntEdge side="left" width={56} />
+        <BurntEdge side="right" width={56} />
 
         <Header />
         <main className="flex-1 flex flex-col">

@@ -141,6 +141,8 @@
   --scroll-safe-top: 0px;
   --scroll-safe-bottom: 0px;
   --scroll-safe-x: 0px;
+  /* Opening animation progress 0→1. Default 1 = fully open on non-home pages. */
+  --scroll-opening: 1;
 }
 
 /* Add padding for scroll frame rolls */
