@@ -126,6 +126,34 @@
   }
 }
 
+/* Paper scroll frame custom properties */
+:root {
+  --scroll-roll-height: 40px;
+  --paper-color: #f5f0e6;
+  --paper-color-dark: #e8e0d0;
+  --roll-shadow-color: #4a4035;
+  --roll-dark-color: #3d3629;
+  --silver-accent: #a8a8a8;
+  --pewter-accent: #6b6b6b;
+}
+
+/* Add padding for scroll frame rolls */
+.scroll-frame-padding {
+  padding-top: var(--scroll-roll-height);
+  padding-bottom: var(--scroll-roll-height);
+}
+
+/* Paper texture background that can be applied to content */
+.paper-texture {
+  background: linear-gradient(135deg, 
+    var(--paper-color) 0%, 
+    var(--paper-color-dark) 25%, 
+    #f0e8da 50%, 
+    #e5ddd0 75%, 
+    #f2ebe0 100%
+  );
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -6,20 +6,26 @@ import { CTAGrid } from "@/components/sections/cta-grid"
 import { Updates } from "@/components/sections/updates"
 import { VenuePreview } from "@/components/sections/venue-preview"
 import { ScrollIndicator } from "@/components/ui/scroll-indicator"
+import { ScrollRevealOverlay } from "@/components/scroll-reveal-overlay"
+import { PaperScrollFrame } from "@/components/paper-scroll-frame"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
-      <main className="flex-1 flex flex-col">
-        <Hero />
-        <Countdown />
-        <CTAGrid />
-        <VenuePreview />
-        <Updates />
-      </main>
-      <Footer />
-      <ScrollIndicator />
-    </div>
+    <ScrollRevealOverlay>
+      <PaperScrollFrame>
+        <div className="min-h-screen flex flex-col bg-background">
+          <Header />
+          <main className="flex-1 flex flex-col">
+            <Hero />
+            <Countdown />
+            <CTAGrid />
+            <VenuePreview />
+            <Updates />
+          </main>
+          <Footer />
+          <ScrollIndicator />
+        </div>
+      </PaperScrollFrame>
+    </ScrollRevealOverlay>
   )
 }
