@@ -19,30 +19,26 @@ interface ScrollExperienceProps {
 let hasPlayedInMemory = false
 
 const CAMERA_ZOOM = 50
-const ORNAMENT_HEIGHT_PX = 110
-const ORNAMENT_WIDTH_PX = 140
+// Ornament dimensions — smaller than before so knobs stay inside the viewport.
+const ORNAMENT_HEIGHT_PX = 78
+const ORNAMENT_WIDTH_PX = 96
 
-// Horizontal content padding: paper extends edge-to-edge; ornaments sit on top.
-// Content starts just after where the ornament bulb ends visually.
-const SAFE_X_DESKTOP = 72
-const SAFE_X_MOBILE = 42
+// Horizontal safe area — matches the inner edge of the ornament bulb.
+// Content, header, footer, burnt edges, and background paper all span
+// exactly this inset from the viewport edges.
+const SAFE_X_DESKTOP = 58
+const SAFE_X_MOBILE = 34
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
   const progressRef = useRef<RodProgressRef>({ opening: 0, scroll: 0, rotation: 0 })
 
-  // Compute safe-area pixels from the current opening progress + scroll position.
-  // Also writes --scroll-opening so ornaments can interpolate their positions in CSS.
   const applyCSSVars = (opening: number, scroll: number) => {
-    // Rod center Y (in pixels from top/bottom edge)
-    const rodCenterOpen = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET // e.g. 42.5
+    const rodCenterOpen = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
     const viewportCenterY = window.innerHeight / 2
-    // During opening: rods move from viewport center (closed) to rodCenterOpen from edge
     const topRodCenterPxFromTop = (1 - opening) * viewportCenterY + opening * rodCenterOpen
     const bottomRodCenterPxFromBottom = topRodCenterPxFromTop
 
-    // Paper radius for top rod: MAX when closed (opening=0), interpolates to
-    // (MIN + (MAX - MIN) * scroll) when fully open.
     const openTopR = ROD_PAPER_MIN_R + (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
     const openBottomR = ROD_PAPER_MAX_R - (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
     const topR = ROD_PAPER_MAX_R + (openTopR - ROD_PAPER_MAX_R) * opening
@@ -59,7 +55,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     root.style.setProperty("--scroll-opening", `${opening}`)
   }
 
-  // Phase transitions: decide on mount whether to play
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -70,14 +65,12 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       applyCSSVars(1, 0)
       setPhase("open")
     } else {
-      // Start at closed so the very first frame shows the stacked-scroll
       applyCSSVars(0, 0)
       setPhase("opening")
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Keep html/body neutral while scroll experience is active
   useEffect(() => {
     if (phase === "loading") return
     const body = document.body
@@ -92,7 +85,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Lock page scroll during opening
   useEffect(() => {
     if (phase !== "opening") return
     const original = document.body.style.overflow
@@ -102,7 +94,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Opening tween — writes to ref + CSS vars every frame. Zero React renders.
   useEffect(() => {
     if (phase !== "opening") return
 
@@ -129,7 +120,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase])
 
-  // Scroll + resize handler in "open" phase. Updates CSS vars and ref values.
   useEffect(() => {
     if (phase !== "open") return
 
@@ -162,7 +152,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       window.removeEventListener("scroll", onScroll)
       window.removeEventListener("resize", update)
       cancelAnimationFrame(raf)
-      // Clean up so other routes have a normal layout
       const root = document.documentElement
       root.style.removeProperty("--scroll-safe-top")
       root.style.removeProperty("--scroll-safe-bottom")
@@ -183,25 +172,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
 
   return (
     <>
-      {/* Viewport-level parchment — NOT inside any stacking context, so it's
-          actually fixed to the viewport and never splits. The parchment is
-          visible as ONE continuous sheet across the entire page regardless
-          of how tall content becomes. */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          zIndex: -10,
-          backgroundImage: "url(/textures/parchment-detailed.jpg)",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "#9d7b55",
-          backgroundBlendMode: "multiply",
-        }}
-        aria-hidden
-      />
-
-      {/* Dark outer frame — fallback for anywhere that might slip through */}
+      {/* Dark outer frame covering entire viewport — shows outside the paper band */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -211,15 +182,30 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         aria-hidden
       />
 
-      {/* Content — rendered at opacity 1 from the start. The dark mask strips
-          below hide the "outside the scroll" portions; content is revealed
-          naturally as the mask strips shrink. */}
+      {/* Parchment — fills ONLY the band between the two ornamented knobs.
+          Width = content width = header width = footer width = paper-on-rod width. */}
+      <div
+        className="fixed pointer-events-none"
+        style={{
+          top: 0,
+          bottom: 0,
+          left: "var(--scroll-safe-x, 0)",
+          right: "var(--scroll-safe-x, 0)",
+          zIndex: -10,
+          backgroundImage: "url(/textures/parchment-clean.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#b69272",
+          backgroundBlendMode: "multiply",
+        }}
+        aria-hidden
+      />
+
+      {/* Content rendered at opacity 1 from mount */}
       {children}
 
-      {/* Dark top mask — covers everything above var(--scroll-safe-top).
-          When rods are stacked in the center (opening=0), the mask is HUGE
-          and covers the entire top half of viewport. As rods separate, the
-          mask shrinks, exposing content underneath. */}
+      {/* Dark top mask — covers the portion above the top rod */}
       <div
         className="fixed top-0 left-0 right-0 pointer-events-none"
         style={{
@@ -243,7 +229,15 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
         aria-hidden
       />
 
-      {/* 3D canvas with both rods */}
+      {/* SVG ornaments — z:38 so they sit BELOW the canvas paper scroll (z:40).
+          The inner edge of each ornament tucks under the rotating paper roll. */}
+      <Ornament corner="top-left" />
+      <Ornament corner="top-right" />
+      <Ornament corner="bottom-left" />
+      <Ornament corner="bottom-right" />
+
+      {/* 3D canvas with both rods — rendered above ornaments so paper covers
+          the ornament's inner edge visually */}
       <div
         className="fixed inset-0"
         style={{ zIndex: 40, pointerEvents: "none" }}
@@ -266,19 +260,11 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           </Suspense>
         </Canvas>
       </div>
-
-      {/* SVG ornaments at each rod end — positions track the opening progress
-          via CSS calc, so they're visually attached to the rods throughout
-          the animation. */}
-      <Ornament corner="top-left" />
-      <Ornament corner="top-right" />
-      <Ornament corner="bottom-left" />
-      <Ornament corner="bottom-right" />
     </>
   )
 }
 
-/** Inline SVG ornament — no external assets, true transparency, detailed wood + silver. */
+/** Inline SVG ornament — pure wood carving, no silver, clean shapes. */
 function Ornament({
   corner,
 }: {
@@ -286,15 +272,9 @@ function Ornament({
 }) {
   const isTop = corner.startsWith("top")
   const isLeft = corner.endsWith("left")
-  const rodCenterOpenPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET // 42.5
+  const rodCenterOpenPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
 
-  // Position: at opening=0 both rods are at viewport center, at opening=1
-  // they're at rodCenterOpenPx from the edge. Subtract half ornament height
-  // so it's centered on the rod.
-  // Using calc lets the browser interpolate smoothly via --scroll-opening.
-  const verticalExpr = isTop
-    ? `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
-    : `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
+  const verticalExpr = `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
 
   const vertical = isTop ? { top: verticalExpr } : { bottom: verticalExpr }
   const horizontal = isLeft ? { left: 0 } : { right: 0 }
@@ -302,7 +282,6 @@ function Ornament({
 
   const gradId = `ornWood-${corner}`
   const bulbGradId = `ornBulb-${corner}`
-  const silverGradId = `ornSilver-${corner}`
   const shadowId = `ornShadow-${corner}`
 
   return (
@@ -313,103 +292,102 @@ function Ornament({
         ...horizontal,
         width: `${ORNAMENT_WIDTH_PX}px`,
         height: `${ORNAMENT_HEIGHT_PX}px`,
-        zIndex: 50,
+        zIndex: 38,
         transform: mirror,
       }}
       aria-hidden
     >
       <svg
-        viewBox="0 0 140 110"
+        viewBox="0 0 96 78"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", height: "100%", display: "block" }}
+        style={{ width: "100%", height: "100%", display: "block", overflow: "visible" }}
+        preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#3d1f0a" />
-            <stop offset="30%" stopColor="#5a2e14" />
-            <stop offset="60%" stopColor="#4a2410" />
+          {/* Wood grain — subtle gradient from top to bottom */}
+          <linearGradient id={gradId} x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="#4a2a14" />
+            <stop offset="50%" stopColor="#5c3620" />
+            <stop offset="100%" stopColor="#2a1608" />
+          </linearGradient>
+          {/* Bulb — 3D lit radial gradient */}
+          <radialGradient id={bulbGradId} cx="30%" cy="28%" r="78%">
+            <stop offset="0%" stopColor="#7d4a2a" />
+            <stop offset="38%" stopColor="#5a3018" />
+            <stop offset="78%" stopColor="#2e160a" />
             <stop offset="100%" stopColor="#1a0a04" />
-          </linearGradient>
-          <radialGradient id={bulbGradId} cx="32%" cy="32%" r="70%">
-            <stop offset="0%" stopColor="#7a4424" />
-            <stop offset="45%" stopColor="#4d2410" />
-            <stop offset="85%" stopColor="#22100a" />
-            <stop offset="100%" stopColor="#0a0402" />
           </radialGradient>
-          <linearGradient id={silverGradId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#eee6d4" />
-            <stop offset="45%" stopColor="#9c968a" />
-            <stop offset="85%" stopColor="#4a4540" />
-            <stop offset="100%" stopColor="#1f1c18" />
-          </linearGradient>
-          <filter id={shadowId} x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="2" dy="4" stdDeviation="3" floodOpacity="0.65" />
+          <filter id={shadowId} x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="2" dy="3" stdDeviation="2.5" floodOpacity="0.7" />
           </filter>
         </defs>
 
         <g filter={`url(#${shadowId})`}>
-          {/* Shaft attaching to rod (rightmost) */}
-          <rect x="120" y="48" width="20" height="14" fill={`url(#${gradId})`} />
-          {/* Inner silver collar */}
-          <ellipse cx="120" cy="55" rx="3" ry="11" fill={`url(#${silverGradId})`} />
-          {/* First wood bead */}
-          <ellipse cx="114" cy="55" rx="4" ry="14" fill={`url(#${gradId})`} />
-          {/* Silver ring */}
-          <ellipse cx="108" cy="55" rx="2.5" ry="17" fill={`url(#${silverGradId})`} />
-          {/* Tier 1 - wider wood */}
-          <ellipse cx="100" cy="55" rx="6" ry="22" fill={`url(#${gradId})`} />
-          {/* Silver engraved band */}
-          <ellipse cx="92" cy="55" rx="2.5" ry="25" fill={`url(#${silverGradId})`} />
-          {/* Tier 2 - wood approaching bulb */}
-          <ellipse cx="82" cy="55" rx="7" ry="30" fill={`url(#${gradId})`} />
-          {/* Silver collar */}
-          <ellipse cx="72" cy="55" rx="2.5" ry="34" fill={`url(#${silverGradId})`} />
-          {/* Main bulb — rounded, large */}
-          <ellipse cx="38" cy="55" rx="34" ry="44" fill={`url(#${bulbGradId})`} />
-          {/* Gothic cross carving */}
+          {/* Inner shaft attaching to rod (at right edge, will be covered by paper) */}
+          <rect x="86" y="35" width="10" height="8" fill={`url(#${gradId})`} />
+
+          {/* Narrow inner neck */}
+          <rect x="78" y="33" width="10" height="12" fill={`url(#${gradId})`} rx="1" />
+
+          {/* Carved ring detail — very thin darker band (not silver) */}
+          <ellipse cx="76" cy="39" rx="1.5" ry="7" fill="#1a0a04" opacity="0.7" />
+
+          {/* Tier 1 - widening wood */}
+          <ellipse cx="68" cy="39" rx="8" ry="14" fill={`url(#${gradId})`} />
+
+          {/* Carved detail ring */}
+          <ellipse cx="60" cy="39" rx="1.5" ry="17" fill="#1a0a04" opacity="0.6" />
+
+          {/* Tier 2 - approach to bulb */}
+          <ellipse cx="52" cy="39" rx="7" ry="22" fill={`url(#${gradId})`} />
+
+          {/* Carved neck detail */}
+          <ellipse cx="44" cy="39" rx="2" ry="24" fill="#1a0a04" opacity="0.55" />
+
+          {/* Main bulb — large rounded end */}
+          <ellipse cx="22" cy="39" rx="24" ry="30" fill={`url(#${bulbGradId})`} />
+
+          {/* Carved gothic line on bulb — horizontal */}
           <path
-            d="M 38 24 L 38 86"
-            stroke="#a89d8a"
-            strokeWidth="0.8"
-            opacity="0.35"
-            fill="none"
-          />
-          <path
-            d="M 14 55 L 58 55"
-            stroke="#a89d8a"
-            strokeWidth="0.8"
-            opacity="0.35"
-            fill="none"
-          />
-          <circle
-            cx="38"
-            cy="55"
-            r="5"
-            fill="none"
-            stroke="#b8b0a0"
-            strokeWidth="0.7"
+            d="M 4 39 L 46 39"
+            stroke="#1a0a04"
+            strokeWidth="0.5"
             opacity="0.4"
+            fill="none"
           />
-          {/* Decorative silver ring on bulb */}
-          <ellipse
-            cx="54"
-            cy="55"
-            rx="2"
-            ry="42"
-            fill={`url(#${silverGradId})`}
-            opacity="0.9"
+
+          {/* Carved gothic line on bulb — vertical */}
+          <path
+            d="M 22 11 L 22 67"
+            stroke="#1a0a04"
+            strokeWidth="0.5"
+            opacity="0.35"
+            fill="none"
           />
-          {/* Bulb specular highlight */}
+
+          {/* Small decorative carved circle center */}
+          <circle
+            cx="22"
+            cy="39"
+            r="3.5"
+            fill="none"
+            stroke="#1a0a04"
+            strokeWidth="0.5"
+            opacity="0.5"
+          />
+
+          {/* Specular highlight — wood sheen */}
           <ellipse
-            cx="26"
-            cy="38"
-            rx="11"
-            ry="15"
+            cx="14"
+            cy="26"
+            rx="8"
+            ry="11"
             fill="white"
-            opacity="0.08"
+            opacity="0.07"
           />
-          {/* Outer silver cap (tiny bead at very end) */}
-          <circle cx="6" cy="55" r="5" fill={`url(#${silverGradId})`} />
+
+          {/* Outer tip — small rounded wood cap */}
+          <circle cx="2" cy="39" r="4" fill={`url(#${gradId})`} />
         </g>
       </svg>
     </div>

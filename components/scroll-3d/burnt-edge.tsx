@@ -107,7 +107,11 @@ export function BurntEdge({ side, width = 70 }: BurntEdgeProps) {
     }
   }, [isLeft])
 
-  const positionStyle = isLeft ? { left: 0 } : { right: 0 }
+  // Anchor at the INNER edge of the ornament knobs, not the viewport edge,
+  // so burnt edges sit on the paper (between the knobs) as an overlay.
+  const positionStyle = isLeft
+    ? { left: "var(--scroll-safe-x, 0)" }
+    : { right: "var(--scroll-safe-x, 0)" }
 
   return (
     <div
