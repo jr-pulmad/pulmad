@@ -111,11 +111,11 @@ export function BurntEdge({ side, width = 70 }: BurntEdgeProps) {
 
   return (
     <div
-      className="fixed top-0 bottom-0 pointer-events-none"
+      className="absolute top-0 bottom-0 pointer-events-none"
       style={{
         ...positionStyle,
         width: `${width}px`,
-        zIndex: 30,
+        zIndex: 2,
       }}
       aria-hidden
     >

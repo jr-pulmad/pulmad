@@ -10,11 +10,9 @@ interface ScrollExperienceProps {
   children: ReactNode
 }
 
-// Horizontal inset for burnt edges + paper sheet - must match
-// the paper-on-rod span in 3D (rodLength = viewport.width - 2.6 world units,
-// paperSection = rodLength * 0.96 ≈ viewport.width - 3.4 units).
-// At zoom 50 that's ~85px from each edge to the paper start. We use 70px here
-// and let the burnt edge mask the transition softly.
+// Must match the paper-on-rod horizontal span in 3D.
+// rodLength = viewport.width - 2.6 world units, paper = 96% of that,
+// at zoom 50 → ~70px inset from each edge.
 const EDGE_INSET_PX = 70
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
@@ -24,7 +22,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [rotationAngle, setRotationAngle] = useState(0)
   const [contentOpacity, setContentOpacity] = useState(0)
 
-  // Determine initial phase
   useEffect(() => {
     const hasPlayed = sessionStorage.getItem("scroll-animation-played")
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -38,7 +35,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [])
 
-  // Lock body scroll during opening animation
   useEffect(() => {
     if (phase === "opening") {
       const original = document.body.style.overflow
@@ -49,7 +45,21 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Run opening animation - slow and dramatic
+  // Make body transparent so our fixed parchment sheet is visible behind content.
+  useEffect(() => {
+    if (phase === "loading") return
+    const body = document.body
+    const html = document.documentElement
+    const prevBodyBg = body.style.backgroundColor
+    const prevHtmlBg = html.style.backgroundColor
+    body.style.backgroundColor = "transparent"
+    html.style.backgroundColor = "#080402"
+    return () => {
+      body.style.backgroundColor = prevBodyBg
+      html.style.backgroundColor = prevHtmlBg
+    }
+  }, [phase])
+
   useEffect(() => {
     if (phase !== "opening") return
 
@@ -79,7 +89,6 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Track page scroll for scroll-reactive rolling
   useEffect(() => {
     if (phase !== "open") return
 
@@ -111,103 +120,103 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     }
   }, [phase])
 
-  // Loading state - show dark background to avoid flash
   if (phase === "loading") {
     return (
       <div
         className="fixed inset-0 z-[9999]"
-        style={{ background: "#100a04" }}
+        style={{ background: "#0f0a04" }}
         aria-hidden
       />
     )
   }
 
-  // Sheet is visually "behind" rods during opening, but expands vertically
-  // along with them. At opening=0 sheet collapses to the center strip; at
-  // opening=1 it spans between the two rods.
+  // Parchment sheet grows from the center stripe outward as the scroll opens.
   const sheetInsetY = `calc((100vh / 2 - var(--scroll-safe-top)) * ${1 - openingProgress})`
 
   return (
     <>
-      {/* Dark frame background - the world "outside" the scroll */}
+      {/* Dark frame - the world "outside" the scroll */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
-          zIndex: -20,
+          zIndex: -30,
           background:
-            "radial-gradient(ellipse at center, #1c1108 0%, #0a0603 85%)",
+            "radial-gradient(ellipse at center, #150b05 0%, #080402 85%)",
         }}
         aria-hidden
       />
 
-      {/* Central parchment sheet - same width as paper-on-rod section.
-          Hangs between the two rods, with visible cast shadows from rods above/below. */}
+      {/* Central parchment sheet — darker, textured, with burnt edges on its sides.
+          Burnt edges live INSIDE this sheet, not globally across the viewport. */}
       <div
-        className="fixed pointer-events-none"
+        className="fixed pointer-events-none overflow-hidden"
         style={{
           top: `calc(var(--scroll-safe-top) + ${sheetInsetY})`,
           bottom: `calc(var(--scroll-safe-bottom) + ${sheetInsetY})`,
           left: `${EDGE_INSET_PX}px`,
           right: `${EDGE_INSET_PX}px`,
-          zIndex: -10,
-          backgroundImage: "url(/textures/parchment-paper-v2.jpg)",
+          zIndex: -20,
+          backgroundImage: "url(/textures/parchment-detailed.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          // Strong inner shadows from top and bottom rods give the 3D effect
-          // of paper hanging in space behind cylindrical rolls.
+          backgroundColor: "#b89870",
+          backgroundBlendMode: "multiply",
           boxShadow: `
-            inset 0 22px 28px -8px rgba(20, 10, 4, 0.55),
-            inset 0 -22px 28px -8px rgba(20, 10, 4, 0.55),
-            inset 0 60px 80px -60px rgba(0, 0, 0, 0.35),
-            inset 0 -60px 80px -60px rgba(0, 0, 0, 0.35)
+            inset 0 22px 28px -8px rgba(15, 8, 3, 0.55),
+            inset 0 -22px 28px -8px rgba(15, 8, 3, 0.55),
+            inset 0 60px 90px -60px rgba(0, 0, 0, 0.45),
+            inset 0 -60px 90px -60px rgba(0, 0, 0, 0.45)
           `,
           transition: "none",
         }}
         aria-hidden
-      />
+      >
+        {/* Burnt edges scoped to this sheet only */}
+        <BurntEdge side="left" width={56} />
+        <BurntEdge side="right" width={56} />
+      </div>
 
-      {/* Hard cast shadow strip directly under the top rod */}
+      {/* Cast shadow directly under the top rod - across the paper only */}
       <div
         className="fixed pointer-events-none"
         style={{
           top: `calc(var(--scroll-safe-top) + ${sheetInsetY})`,
           left: `${EDGE_INSET_PX}px`,
           right: `${EDGE_INSET_PX}px`,
-          height: "32px",
+          height: "36px",
           zIndex: 20,
           background:
-            "linear-gradient(to bottom, rgba(20,10,4,0.55) 0%, rgba(20,10,4,0.25) 50%, rgba(20,10,4,0) 100%)",
+            "linear-gradient(to bottom, rgba(15,8,3,0.65) 0%, rgba(15,8,3,0.3) 50%, rgba(15,8,3,0) 100%)",
           opacity: openingProgress,
         }}
         aria-hidden
       />
 
-      {/* Hard cast shadow strip directly above the bottom rod */}
+      {/* Cast shadow directly above the bottom rod */}
       <div
         className="fixed pointer-events-none"
         style={{
           bottom: `calc(var(--scroll-safe-bottom) + ${sheetInsetY})`,
           left: `${EDGE_INSET_PX}px`,
           right: `${EDGE_INSET_PX}px`,
-          height: "32px",
+          height: "36px",
           zIndex: 20,
           background:
-            "linear-gradient(to top, rgba(20,10,4,0.55) 0%, rgba(20,10,4,0.25) 50%, rgba(20,10,4,0) 100%)",
+            "linear-gradient(to top, rgba(15,8,3,0.65) 0%, rgba(15,8,3,0.3) 50%, rgba(15,8,3,0) 100%)",
           opacity: openingProgress,
         }}
         aria-hidden
       />
 
-      {/* HTML page content - fades in after opening */}
-      <div style={{ opacity: contentOpacity, transition: "none" }}>
+      {/* Page content - transparent so the parchment sheet shows through */}
+      <div
+        data-scroll-content
+        style={{ opacity: contentOpacity, transition: "none", position: "relative", zIndex: 1 }}
+      >
         {children}
       </div>
 
-      {/* Burnt edges - narrow, realistic, with ember sparks */}
-      <BurntEdge side="left" width={EDGE_INSET_PX} />
-      <BurntEdge side="right" width={EDGE_INSET_PX} />
-
-      {/* 3D Canvas with both rods */}
+      {/* 3D Canvas with both rods - above sheet, above content bg */}
       <div
         className="fixed inset-0 pointer-events-none"
         style={{ zIndex: 40 }}
@@ -220,10 +229,10 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           dpr={[1, 2]}
           style={{ background: "transparent" }}
         >
-          <ambientLight intensity={0.55} />
-          <directionalLight position={[4, 6, 8]} intensity={1.3} />
-          <directionalLight position={[-5, -3, 6]} intensity={0.35} color="#ffffff" />
-          <directionalLight position={[0, 0, 10]} intensity={0.5} color="#ffffff" />
+          <ambientLight intensity={0.7} />
+          <directionalLight position={[4, 6, 8]} intensity={1.2} />
+          <directionalLight position={[-5, -3, 6]} intensity={0.45} color="#ffffff" />
+          <directionalLight position={[0, 0, 10]} intensity={0.6} color="#ffffff" />
           <Suspense fallback={null}>
             <ScrollRod
               position="top"

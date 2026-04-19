@@ -11,11 +11,14 @@ import { ScrollExperience } from "@/components/scroll-3d/scroll-experience"
 export default function HomePage() {
   return (
     <ScrollExperience>
+      {/* Transparent wrapper so parchment sheet shows behind content.
+          min-height fills exactly the safe area between the two rods. */}
       <div
-        className="min-h-screen flex flex-col"
+        className="flex flex-col bg-transparent"
         style={{
           paddingTop: "var(--scroll-safe-top)",
           paddingBottom: "var(--scroll-safe-bottom)",
+          minHeight: "100vh",
         }}
       >
         <Header />
