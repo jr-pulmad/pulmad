@@ -412,9 +412,15 @@
   animation: success-check 0.5s ease-out 0.2s forwards;
 }
 
-/* Smooth scroll */
+/* Smooth scroll + lock horizontal overflow so the scroll experience can't
+   create a sideways scroll bar from canvas/SVG/burnt-edge overlays. */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* Focus visible styles */

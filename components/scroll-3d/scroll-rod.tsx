@@ -52,7 +52,11 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
     paperTexture.needsUpdate = true
   }, [paperTexture, position])
 
-  const rodLength = Math.min(viewport.width - 1.0, 28)
+  // Rod length must match the parchment band width (between the two ornament
+  // knobs). SAFE_X = 58px desktop / 34px mobile in screen pixels; converted to
+  // world units (CAMERA_ZOOM=50): 58/50 = 1.16 per side. Add a small extra
+  // inset (0.3 per side) so the rod is visibly NARROWER than the paper.
+  const rodLength = Math.min(viewport.width - 2.92, 28)
 
   // Drive all animation directly in useFrame from the ref.
   // Zero React re-renders during the opening tween -> no lag.
