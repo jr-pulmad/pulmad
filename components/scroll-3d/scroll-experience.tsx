@@ -192,7 +192,7 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
           left: "var(--scroll-safe-x, 0)",
           right: "var(--scroll-safe-x, 0)",
           zIndex: -10,
-          backgroundImage: "url(/textures/parchment-clean.jpg)",
+          backgroundImage: "url(/textures/old-paper.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
