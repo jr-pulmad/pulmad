@@ -37,7 +37,7 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
   const spinGroupRef = useRef<THREE.Group>(null)
   const paperMeshRef = useRef<THREE.Mesh>(null)
 
-  const paperTexture = useTexture("/textures/parchment-detailed.jpg")
+  const paperTexture = useTexture("/textures/old-paper.jpg")
 
   // Single continuous wrap around the rod — no seam duplication.
   useMemo(() => {
