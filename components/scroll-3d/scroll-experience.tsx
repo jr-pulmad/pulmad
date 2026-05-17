@@ -21,12 +21,11 @@ let hasPlayedInMemory = false
 const CAMERA_ZOOM = 50
 // Ornament dimensions — smaller than before so knobs stay inside the viewport.
 const ORNAMENT_HEIGHT_PX = 70
-const ORNAMENT_WIDTH_PX = 88
-
-// SAFE_X must equal ORNAMENT_WIDTH_PX so the paper + content start exactly
-// at the inner edge of the ornament knob. Keep these in sync.
-const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX       // 88px
-const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.6) // 53px on mobile
+// Ornament is narrower now — the bulb takes 56px wide, inner shaft hidden under paper.
+// SAFE_X must equal ORNAMENT_WIDTH_PX so content starts at the knob inner edge.
+const ORNAMENT_WIDTH_PX = 60
+const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX        // 60px
+const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.65) // ~39px on mobile
 
 // Extra breathing room above/below the rods from the viewport edge (px).
 // Must equal ROD_EXTRA_EDGE_MARGIN * CAMERA_ZOOM in scroll-rod.tsx.
@@ -312,20 +311,19 @@ function Ornament({
       }}
       aria-hidden
     >
+      {/* viewBox width 64 to match narrower 60px rendered width, height 78 unchanged */}
       <svg
-        viewBox="0 0 96 78"
+        viewBox="0 0 64 78"
         xmlns="http://www.w3.org/2000/svg"
         style={{ width: "100%", height: "100%", display: "block", overflow: "hidden" }}
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          {/* Wood grain — subtle gradient from top to bottom */}
           <linearGradient id={gradId} x1="50%" y1="0%" x2="50%" y2="100%">
             <stop offset="0%" stopColor="#4a2a14" />
             <stop offset="50%" stopColor="#5c3620" />
             <stop offset="100%" stopColor="#2a1608" />
           </linearGradient>
-          {/* Bulb — 3D lit radial gradient */}
           <radialGradient id={bulbGradId} cx="30%" cy="28%" r="78%">
             <stop offset="0%" stopColor="#7d4a2a" />
             <stop offset="38%" stopColor="#5a3018" />
@@ -333,76 +331,38 @@ function Ornament({
             <stop offset="100%" stopColor="#1a0a04" />
           </radialGradient>
           <filter id={shadowId} x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="2" dy="3" stdDeviation="2.5" floodOpacity="0.7" />
+            <feDropShadow dx="1" dy="2" stdDeviation="2" floodOpacity="0.65" />
           </filter>
         </defs>
 
         <g filter={`url(#${shadowId})`}>
-          {/* Inner shaft attaching to rod (at right edge, will be covered by paper) */}
-          <rect x="86" y="35" width="10" height="8" fill={`url(#${gradId})`} />
+          {/* Inner shaft — right edge, hidden under rolling paper */}
+          <rect x="56" y="35" width="8" height="8" fill={`url(#${gradId})`} />
+          {/* Narrow neck */}
+          <rect x="48" y="33" width="10" height="12" fill={`url(#${gradId})`} rx="1" />
+          {/* Carved ring */}
+          <ellipse cx="46" cy="39" rx="1.5" ry="7" fill="#1a0a04" opacity="0.7" />
+          {/* Widening tier */}
+          <ellipse cx="39" cy="39" rx="7" ry="14" fill={`url(#${gradId})`} />
+          {/* Ring detail */}
+          <ellipse cx="33" cy="39" rx="1.5" ry="17" fill="#1a0a04" opacity="0.6" />
+          {/* Approach to bulb */}
+          <ellipse cx="27" cy="39" rx="6" ry="21" fill={`url(#${gradId})`} />
+          {/* Neck before bulb */}
+          <ellipse cx="21" cy="39" rx="1.8" ry="23" fill="#1a0a04" opacity="0.5" />
+          {/* Main bulb — same 24×30 size as before, just shifted left */}
+          <ellipse cx="14" cy="39" rx="16" ry="30" fill={`url(#${bulbGradId})`} />
 
-          {/* Narrow inner neck */}
-          <rect x="78" y="33" width="10" height="12" fill={`url(#${gradId})`} rx="1" />
-
-          {/* Carved ring detail — very thin darker band (not silver) */}
-          <ellipse cx="76" cy="39" rx="1.5" ry="7" fill="#1a0a04" opacity="0.7" />
-
-          {/* Tier 1 - widening wood */}
-          <ellipse cx="68" cy="39" rx="8" ry="14" fill={`url(#${gradId})`} />
-
-          {/* Carved detail ring */}
-          <ellipse cx="60" cy="39" rx="1.5" ry="17" fill="#1a0a04" opacity="0.6" />
-
-          {/* Tier 2 - approach to bulb */}
-          <ellipse cx="52" cy="39" rx="7" ry="22" fill={`url(#${gradId})`} />
-
-          {/* Carved neck detail */}
-          <ellipse cx="44" cy="39" rx="2" ry="24" fill="#1a0a04" opacity="0.55" />
-
-          {/* Main bulb — large rounded end */}
-          <ellipse cx="22" cy="39" rx="24" ry="30" fill={`url(#${bulbGradId})`} />
-
-          {/* Carved gothic line on bulb — horizontal */}
-          <path
-            d="M 4 39 L 46 39"
-            stroke="#1a0a04"
-            strokeWidth="0.5"
-            opacity="0.4"
-            fill="none"
-          />
-
-          {/* Carved gothic line on bulb — vertical */}
-          <path
-            d="M 22 11 L 22 67"
-            stroke="#1a0a04"
-            strokeWidth="0.5"
-            opacity="0.35"
-            fill="none"
-          />
-
-          {/* Small decorative carved circle center */}
-          <circle
-            cx="22"
-            cy="39"
-            r="3.5"
-            fill="none"
-            stroke="#1a0a04"
-            strokeWidth="0.5"
-            opacity="0.5"
-          />
-
-          {/* Specular highlight — wood sheen */}
-          <ellipse
-            cx="14"
-            cy="26"
-            rx="8"
-            ry="11"
-            fill="white"
-            opacity="0.07"
-          />
-
-          {/* Outer tip — small rounded wood cap */}
-          <circle cx="2" cy="39" r="4" fill={`url(#${gradId})`} />
+          {/* Gothic cross on bulb — horizontal */}
+          <path d="M 0 39 L 30 39" stroke="#1a0a04" strokeWidth="0.5" opacity="0.4" fill="none" />
+          {/* Gothic cross on bulb — vertical */}
+          <path d="M 14 11 L 14 67" stroke="#1a0a04" strokeWidth="0.5" opacity="0.35" fill="none" />
+          {/* Carved circle at center */}
+          <circle cx="14" cy="39" r="3.5" fill="none" stroke="#1a0a04" strokeWidth="0.5" opacity="0.5" />
+          {/* Specular highlight */}
+          <ellipse cx="8" cy="26" rx="6" ry="9" fill="white" opacity="0.07" />
+          {/* Outer tip cap */}
+          <circle cx="2" cy="39" r="3" fill={`url(#${gradId})`} />
         </g>
       </svg>
     </div>

@@ -56,10 +56,9 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
     paperTexture.needsUpdate = true
   }, [paperTexture, position])
 
-  // SAFE_X = 88px per side at CAMERA_ZOOM=50 → 1.76 world units per side.
-  // Subtract 3.52 (both sides) plus 0.3 buffer each side so rod clearly sits
-  // inside the paper band and cannot bleed past the viewport edge.
-  const rodLength = Math.min(viewport.width - 4.12, 24)
+  // SAFE_X = 60px per side at CAMERA_ZOOM=50 → 1.2 world units per side.
+  // Subtract 2.4 (both sides) plus 0.3 buffer each side = 3.0 total inset.
+  const rodLength = Math.min(viewport.width - 3.0, 22)
 
   // Drive all animation directly in useFrame from the ref.
   // Zero React re-renders during the opening tween -> no lag.

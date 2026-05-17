@@ -33,17 +33,14 @@ function AnimatedLogo({ showSolidBackground }: { showSolidBackground: boolean })
   const containerRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div 
+      <div 
       ref={containerRef}
       className="hidden md:flex flex-col items-start relative cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-baseline overflow-hidden">
-        <span className={cn(
-          "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
-          showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
-        )}>
+        <span className="font-script text-2xl sm:text-3xl font-normal text-foreground drop-shadow-sm">
           <span className="inline-flex overflow-hidden">
             <span>J</span>
             <span 
@@ -71,28 +68,19 @@ function AnimatedLogo({ showSolidBackground }: { showSolidBackground: boolean })
           </span>
         </span>
       </div>
-      <span className={cn(
-        "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
-        showSolidBackground ? "text-muted-foreground" : "text-white/80"
-      )}>Randmäe</span>
+      <span className="text-[10px] sm:text-xs tracking-widest uppercase text-muted-foreground">Randmäe</span>
     </div>
   )
 }
 
 // Mobile logo (no animation)
-function MobileLogo({ showSolidBackground }: { showSolidBackground: boolean }) {
+function MobileLogo({ showSolidBackground: _ }: { showSolidBackground: boolean }) {
   return (
     <div className="flex md:hidden flex-col items-start relative">
-      <span className={cn(
-        "font-serif text-lg sm:text-xl font-medium tracking-wide transition-colors duration-300",
-        showSolidBackground ? "text-foreground" : "text-white drop-shadow-md"
-      )}>
+      <span className="font-script text-2xl sm:text-3xl font-normal text-foreground drop-shadow-sm">
         J & R
       </span>
-      <span className={cn(
-        "text-[10px] sm:text-xs tracking-widest uppercase transition-colors duration-300",
-        showSolidBackground ? "text-muted-foreground" : "text-white/80"
-      )}>Randmäe</span>
+      <span className="text-[10px] sm:text-xs tracking-widest uppercase text-muted-foreground">Randmäe</span>
     </div>
   )
 }
@@ -161,12 +149,7 @@ export function Header() {
 
   return (
     <header
-      className={cn(
-        "fixed z-50 transition-all duration-500",
-        showSolidBackground 
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-sm" 
-          : "bg-transparent",
-      )}
+      className="fixed z-50 bg-transparent"
       style={{ 
         top: "var(--header-top, var(--scroll-safe-top, 0px))",
         left: "var(--scroll-safe-x, 0px)",
@@ -203,13 +186,9 @@ export function Header() {
                       href={item.href}
                       className={cn(
                         "group relative flex items-center gap-2 px-4 py-2 h-9 rounded-xl text-sm font-medium transition-all duration-300 z-10",
-                        showSolidBackground
-                          ? isActive
-                            ? "text-foreground bg-primary/10 dark:bg-primary/20"
-                            : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                          : isActive
-                            ? "text-white bg-white/10"
-                            : "text-white/85 hover:text-white hover:bg-white/10"
+                        isActive
+                          ? "text-foreground bg-primary/10 dark:bg-primary/20"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                       )}
                     >
                       <Icon className={cn(
@@ -257,10 +236,7 @@ export function Header() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={cn(
-                "md:hidden p-2 rounded-xl transition-all duration-300 h-10 w-10 flex items-center justify-center",
-                showSolidBackground 
-                  ? "text-foreground hover:bg-secondary" 
-                  : "text-white hover:bg-white/10",
+                "md:hidden p-2 rounded-xl transition-all duration-300 h-10 w-10 flex items-center justify-center text-foreground hover:bg-secondary",
                 isMobileMenuOpen && "bg-secondary"
               )}
               aria-label="Toggle menu"

@@ -78,6 +78,7 @@
   --font-sans: "Manrope", "Manrope Fallback", system-ui, sans-serif;
   --font-serif: "Playfair Display", "Playfair Display Fallback", Georgia, serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
+  --font-script: "Dancing Script", cursive;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
