@@ -1,23 +1,72 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FloatingInput } from "@/components/ui/floating-input"
-import { Flower2, Loader2, CheckCircle2 } from "lucide-react"
+import { Flower2, ExternalLink, Copy, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const PRESET_AMOUNTS = [35, 50]
+
+// ─── Bank configuration ────────────────────────────────────────────────────
+// Each bank's payment link accepts a pre-filled amount and recipient details.
+// Replace PLACEHOLDER_IBAN and PLACEHOLDER_REFERENCE with the real values
+// before going live. The beneficiary name and reference text are also editable.
+
+const BENEFICIARY_NAME = "Johanna ja Rannar Randmäe"
+const IBAN = "PLACEHOLDER_IBAN"                 // e.g. EE382200221020145685
+const REFERENCE = "PLACEHOLDER_REFERENCE"       // e.g. 1234567890
+
+/**
+ * Build a payment link for a given Estonian bank.
+ * Most Estonian banks accept an internet-bank payment URL with pre-filled fields.
+ * Formats based on publicly documented deep-link schemes (2024).
+ */
+function buildBankUrl(bank: string, amount: number): string {
+  const cents = Math.round(amount * 100)
+  const amountStr = amount.toFixed(2)
+  const encodedName = encodeURIComponent(BENEFICIARY_NAME)
+  const encodedIban = encodeURIComponent(IBAN)
+  const encodedRef = encodeURIComponent(REFERENCE)
+  const description = encodeURIComponent("Pulmalilled – Johanna & Rannar")
+
+  switch (bank) {
+    case "swedbank":
+      // Swedbank Estonia internet bank payment initiation
+      return `https://www.swedbank.ee/private/home/main/confirm?lang=et&recvName=${encodedName}&recvIBAN=${encodedIban}&amount=${amountStr}&refNum=${encodedRef}&payComment=${description}`
+    case "seb":
+      // SEB Estonia payment link
+      return `https://e.seb.ee/web/init.do?lang=est&recvName=${encodedName}&recvAccount=${encodedIban}&amount=${amountStr}&comment=${description}`
+    case "lhv":
+      // LHV internet bank
+      return `https://www.lhv.ee/ibank/login?lang=et&to=${encodedIban}&toName=${encodedName}&sum=${amountStr}&ref=${encodedRef}&description=${description}`
+    case "coop":
+      // Coop Pank
+      return `https://i.cooppank.ee/pay?lang=et&toName=${encodedName}&toIBAN=${encodedIban}&amount=${amountStr}&ref=${encodedRef}`
+    case "luminor":
+      // Luminor Estonia
+      return `https://luminor.ee/et/private/payment?toIBAN=${encodedIban}&toName=${encodedName}&amount=${amountStr}&details=${description}`
+    default:
+      return "#"
+  }
+}
+
+const BANKS = [
+  { id: "swedbank", label: "Swedbank" },
+  { id: "seb",      label: "SEB" },
+  { id: "lhv",      label: "LHV" },
+  { id: "coop",     label: "Coop Pank" },
+  { id: "luminor",  label: "Luminor" },
+]
 
 export function DonationForm() {
   const { t, language } = useI18n()
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
   const [customAmount, setCustomAmount] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [copiedIban, setCopiedIban] = useState(false)
   const [error, setError] = useState("")
 
   const handlePresetClick = (amount: number) => {
@@ -35,161 +84,173 @@ export function DonationForm() {
 
   const getFinalAmount = (): number => {
     if (selectedAmount) return selectedAmount
-    if (customAmount) return Number.parseFloat(customAmount)
+    if (customAmount) return parseFloat(customAmount)
     return 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleBankClick = (bankId: string) => {
     const amount = getFinalAmount()
-
     if (amount < 1) {
       setError(t.flowers.minAmount)
       return
     }
+    const url = buildBankUrl(bankId, amount)
+    window.open(url, "_blank", "noopener,noreferrer")
+  }
 
-    setIsSubmitting(true)
-    setError("")
-
+  const copyIban = async () => {
     try {
-      const response = await fetch("/api/flowers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          language,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setIsSuccess(true)
-      } else {
-        setError(data.error || t.flowers.cancel)
-      }
+      await navigator.clipboard.writeText(IBAN)
+      setCopiedIban(true)
+      setTimeout(() => setCopiedIban(false), 2000)
     } catch {
-      setError(t.flowers.cancel)
-    } finally {
-      setIsSubmitting(false)
+      // fallback: select text
     }
   }
 
-  if (isSuccess) {
-    return (
-      <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm animate-success-pop">
-        <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6 animate-success-pop" style={{ animationDelay: "0.1s" }}>
-            <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 13l4 4L19 7" className="animate-success-check" />
-            </svg>
-          </div>
-          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3 animate-fade-in-up" style={{ animationDelay: "0.3s", animationFillMode: "both" }}>{t.common.success}</h3>
-          <p className="text-muted-foreground max-w-md mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>{t.flowers.success}</p>
-          <p className="text-sm text-muted-foreground/60 mt-4 animate-fade-in-up" style={{ animationDelay: "0.5s", animationFillMode: "both" }}>
-            {language === "et" ? "Makse integratsioon tuleb peagi." : "Payment integration coming soon."}
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
+  const hasAmount = getFinalAmount() >= 1
 
   return (
-    <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm shadow-xl">
+    <Card className="max-w-xl mx-auto bg-card/40 border-border shadow-xl">
       <CardHeader className="text-center pb-2">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 mb-4 mx-auto">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/15 mb-4 mx-auto">
           <Flower2 className="w-7 h-7 text-primary" />
         </div>
-        <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.flowers.title}</CardTitle>
+        <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">
+          {t.flowers.title}
+        </CardTitle>
         <CardDescription className="text-muted-foreground mt-2 max-w-md mx-auto">
           {t.flowers.description}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Preset amounts - regular button style */}
-          <div className="space-y-3">
-            <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
-            <div className="grid grid-cols-2 gap-4">
-              {PRESET_AMOUNTS.map((amount) => (
+
+      <CardContent className="pt-6 space-y-6">
+        {/* 1. Amount selection */}
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
+          <div className="grid grid-cols-2 gap-4">
+            {PRESET_AMOUNTS.map((amount) => (
+              <button
+                key={amount}
+                type="button"
+                onClick={() => handlePresetClick(amount)}
+                className={cn(
+                  "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-200 border-2",
+                  selectedAmount === amount
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card/60 border-border text-foreground hover:border-primary/60 hover:bg-card/80",
+                )}
+              >
+                {amount}{t.flowers.currency}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Custom amount */}
+        <div className="relative">
+          <FloatingInput
+            id="customAmount"
+            type="text"
+            inputMode="decimal"
+            value={customAmount}
+            onChange={handleCustomChange}
+            label={t.flowers.customAmount}
+            className={cn("pr-12 text-lg h-16", customAmount && "border-primary")}
+          />
+          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
+            {t.flowers.currency}
+          </span>
+        </div>
+
+        {/* Selected amount display */}
+        {hasAmount && (
+          <div className="text-center py-4 rounded-2xl bg-card/60 border border-border">
+            <p className="text-xs text-muted-foreground mb-1">
+              {language === "et" ? "Valitud summa" : "Selected amount"}
+            </p>
+            <p className="font-serif text-4xl font-medium text-primary">
+              {getFinalAmount()}{t.flowers.currency}
+            </p>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && (
+          <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/30 text-destructive text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        {/* 2. Bank buttons */}
+        <div className="space-y-3">
+          <p className="text-sm font-medium text-muted-foreground">
+            {language === "et" ? "Vali oma pank" : "Choose your bank"}
+          </p>
+          <div className="grid grid-cols-1 gap-2">
+            {BANKS.map((bank) => (
+              <Button
+                key={bank.id}
+                variant="outline"
+                className={cn(
+                  "w-full justify-between h-12 text-base font-medium border-border bg-card/40 hover:bg-card/70 hover:border-foreground/30",
+                  !hasAmount && "opacity-50 cursor-not-allowed"
+                )}
+                onClick={() => handleBankClick(bank.id)}
+                disabled={!hasAmount}
+              >
+                <span>{bank.label}</span>
+                <ExternalLink className="w-4 h-4 text-muted-foreground" />
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. Manual bank transfer fallback */}
+        <div className="pt-2 border-t border-border space-y-3">
+          <p className="text-xs text-muted-foreground text-center">
+            {language === "et"
+              ? "Või tee ülekanne käsitsi:"
+              : "Or transfer manually:"}
+          </p>
+          <div className="rounded-xl bg-card/60 border border-border p-4 space-y-2 text-sm">
+            <div className="flex justify-between gap-2">
+              <span className="text-muted-foreground">
+                {language === "et" ? "Saaja" : "Recipient"}
+              </span>
+              <span className="font-medium text-foreground text-right">{BENEFICIARY_NAME}</span>
+            </div>
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-muted-foreground">IBAN</span>
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-medium text-foreground">{IBAN}</span>
                 <button
-                  key={amount}
-                  type="button"
-                  onClick={() => handlePresetClick(amount)}
-                  className={cn(
-                    "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-200",
-                    selectedAmount === amount
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-secondary/50",
-                  )}
+                  onClick={copyIban}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Copy IBAN"
                 >
-                  {amount}{t.flowers.currency}
+                  {copiedIban
+                    ? <Check className="w-4 h-4 text-primary" />
+                    : <Copy className="w-4 h-4" />}
                 </button>
-              ))}
+              </div>
+            </div>
+            <div className="flex justify-between gap-2">
+              <span className="text-muted-foreground">
+                {language === "et" ? "Viitenumber" : "Reference"}
+              </span>
+              <span className="font-mono font-medium text-foreground">{REFERENCE}</span>
+            </div>
+            <div className="flex justify-between gap-2">
+              <span className="text-muted-foreground">
+                {language === "et" ? "Selgitus" : "Description"}
+              </span>
+              <span className="font-medium text-foreground text-right">
+                Pulmalilled – J&R
+              </span>
             </div>
           </div>
-
-          {/* Custom amount with floating label */}
-          <div className="relative">
-            <FloatingInput
-              id="customAmount"
-              type="text"
-              inputMode="decimal"
-              value={customAmount}
-              onChange={handleCustomChange}
-              label={t.flowers.customAmount}
-              className={cn(
-                "pr-12 text-lg h-16",
-                customAmount && "border-primary"
-              )}
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
-              {t.flowers.currency}
-            </span>
-          </div>
-
-          {/* Selected amount display */}
-          {getFinalAmount() > 0 && (
-            <div className="text-center py-5 rounded-2xl bg-secondary/30 border border-border">
-              <p className="text-sm text-muted-foreground mb-1">
-                {language === "et" ? "Valitud summa" : "Selected amount"}
-              </p>
-              <p className="font-serif text-4xl font-medium text-primary">
-                {getFinalAmount()}{t.flowers.currency}
-              </p>
-            </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-              {error}
-            </div>
-          )}
-
-          {/* Apple Pay note */}
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/60">
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M17.72 12.63c-.03-2.37 1.95-3.52 2.04-3.58-1.11-1.61-2.84-1.83-3.45-1.86-1.47-.15-2.87.86-3.62.86-.75 0-1.9-.84-3.12-.82-1.61.02-3.09.93-3.92 2.37-1.67 2.89-.43 7.17 1.2 9.52.8 1.15 1.75 2.44 3 2.39 1.2-.05 1.65-.77 3.1-.77 1.45 0 1.86.77 3.13.75 1.29-.02 2.11-1.17 2.9-2.33.91-1.34 1.29-2.63 1.31-2.7-.03-.01-2.52-1-2.57-3.83zM15.36 5.23c.66-.8 1.11-1.91.99-3.02-1 .04-2.18.66-2.89 1.49-.64.74-1.2 1.92-1.05 3.05 1.11.09 2.24-.56 2.95-1.52z" />
-            </svg>
-            <span>Apple Pay {language === "et" ? "toetatud" : "supported"}</span>
-          </div>
-
-          {/* Submit button */}
-          <Button type="submit" className="w-full" size="xl" disabled={isSubmitting || getFinalAmount() < 1}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                {t.flowers.processing}
-              </>
-            ) : (
-              <>
-                {t.flowers.donate}
-                {getFinalAmount() > 0 && ` ${getFinalAmount()}${t.flowers.currency}`}
-              </>
-            )}
-          </Button>
-        </form>
+        </div>
       </CardContent>
     </Card>
   )

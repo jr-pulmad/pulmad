@@ -168,7 +168,7 @@ function ScrollHint({ text }: { text: string }) {
   )
 }
 
-export function VenuePreview() {
+export function VenuePreview({ ceremonyOnly = false }: { ceremonyOnly?: boolean }) {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -194,10 +194,10 @@ export function VenuePreview() {
             </h2>
           </div>
 
-          {/* Two venue cards */}
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8">
+          {/* Two venue cards (reception card hidden in ceremony-only view) */}
+          <div className={`grid gap-6 sm:gap-8 mb-8 ${ceremonyOnly ? "max-w-lg mx-auto" : "md:grid-cols-2"}`}>
             {/* Ceremony - Tartu St John's Church */}
-            <Card className="overflow-hidden border-border bg-card/50">
+            <Card className="overflow-hidden border-border bg-card/40">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
                   <div className="flex items-center gap-3 mb-3">
@@ -247,8 +247,8 @@ export function VenuePreview() {
               </CardContent>
             </Card>
 
-            {/* Reception - Alatskivi Castle */}
-            <Card className="overflow-hidden border-border bg-card/50">
+            {/* Reception - Alatskivi Castle (hidden for ceremony-only visitors) */}
+            {!ceremonyOnly && <Card className="overflow-hidden border-border bg-card/40">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
                   <div className="flex items-center gap-3 mb-3">
@@ -344,7 +344,7 @@ export function VenuePreview() {
                   </Button>
                 </div>
               </CardContent>
-            </Card>
+            </Card>}
           </div>
         </div>
       </div>

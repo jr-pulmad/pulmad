@@ -63,7 +63,7 @@ export function Updates() {
   }
 
   return (
-    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 bg-card/30">
+    <section className="min-h-[100dvh] flex items-center py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           {/* Section header */}
@@ -82,7 +82,7 @@ export function Updates() {
             <div className="space-y-4">
               {sampleUpdates.length > 0 ? (
                 sampleUpdates.map((update) => (
-                  <Card key={update.id} className="bg-secondary/30 border-border">
+                  <Card key={update.id} className="bg-card/40 border-border">
                     <CardHeader className="pb-2">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
                         <Clock className="w-3 h-3" />
@@ -112,7 +112,7 @@ export function Updates() {
             </div>
 
             {/* Subscribe form */}
-            <Card className="bg-secondary/30 border-border h-fit">
+            <Card className="bg-card/40 border-border h-fit">
               <CardHeader>
                 <CardTitle className="font-serif text-xl font-medium text-foreground">
                   {t.updates.subscribeTitle}

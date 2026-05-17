@@ -1,8 +1,9 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
-import { Manrope, Playfair_Display, Geist_Mono, Dancing_Script } from "next/font/google"
+import { Manrope, Playfair_Display, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { I18nProvider } from "@/lib/i18n/context"
+import { ViewModeProvider } from "@/lib/view-mode/context"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
@@ -22,13 +23,6 @@ const _geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 })
 
-// Sloop Script Pro is an Adobe Fonts exclusive. Dancing Script is the closest
-// freely-available calligraphic script with similar flowing strokes.
-const _dancingScript = Dancing_Script({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-script",
-})
 
 export const metadata: Metadata = {
   title: "Johanna & Rannar | Randmäed",
@@ -72,9 +66,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="et" suppressHydrationWarning>
-      <body className={`${_dancingScript.variable} font-sans antialiased min-h-screen bg-background`}>
+      <body className="font-sans antialiased min-h-screen bg-background">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <I18nProvider>{children}</I18nProvider>
+          <I18nProvider>
+            <ViewModeProvider>{children}</ViewModeProvider>
+          </I18nProvider>
         </ThemeProvider>
         <Analytics />
       </body>

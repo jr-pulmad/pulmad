@@ -63,25 +63,25 @@ export function CTAGrid() {
             {cards.map((card, index) => (
               <Link key={index} href={card.href} className="group">
                 {/* Mobile: Compact horizontal button style */}
-                <div className="sm:hidden flex items-center gap-4 p-4 rounded-2xl border border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 shadow-sm">
-                  <div className="p-2.5 rounded-xl bg-primary/15 text-primary shrink-0">
+                <div className="sm:hidden flex items-center gap-4 p-4 rounded-xl border border-border bg-card/40 hover:bg-card/60 hover:border-foreground/30 transition-all duration-300 shadow-sm">
+                  <div className="p-2.5 rounded-lg bg-primary/15 text-primary shrink-0">
                     <card.icon className="w-5 h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-foreground text-sm">{card.title}</h3>
+                    <h3 className="font-serif font-medium text-foreground text-sm">{card.title}</h3>
                     <p className="text-xs text-muted-foreground truncate">{card.description}</p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-foreground/50 shrink-0 group-hover:translate-x-1 transition-transform" />
                 </div>
                 
                 {/* Desktop: Full card style */}
-                <Card className="hidden sm:block h-full bg-card/50 border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+                <Card className="hidden sm:block h-full bg-card/40 border-border hover:border-foreground/30 hover:bg-card/60 transition-all duration-300 hover:shadow-lg">
                   <CardContent className="p-6 sm:p-8 flex flex-col h-full">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <div className="p-3 rounded-xl bg-primary/15 text-primary">
                         <card.icon className="w-6 h-6" />
                       </div>
-                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
                     </div>
                     <h3 className="font-serif text-xl sm:text-2xl font-medium text-foreground mb-2">{card.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2">{card.description}</p>

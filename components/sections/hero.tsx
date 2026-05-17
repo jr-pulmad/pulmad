@@ -74,7 +74,7 @@ export function Hero() {
           </div>
 
           {/* Names - & symbol in white */}
-          <h1 className="font-script text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-normal tracking-normal text-white mb-3 sm:mb-4 text-balance drop-shadow-lg">
+          <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-3 sm:mb-4 text-balance drop-shadow-lg">
             <span className="inline-block animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>Johanna</span>
             {" "}
             <span className="inline-block text-white animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "both" }}>&</span>

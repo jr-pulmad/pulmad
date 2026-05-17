@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
+import { useViewMode } from "@/lib/view-mode/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Flower2, Info, Heart, FlowerIcon as Flower2Filled } from "lucide-react"
@@ -40,7 +41,7 @@ function AnimatedLogo({ showSolidBackground }: { showSolidBackground: boolean })
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-baseline overflow-hidden">
-        <span className="font-script text-2xl sm:text-3xl font-normal text-foreground drop-shadow-sm">
+        <span className="font-serif text-xl sm:text-2xl font-medium tracking-wide text-foreground drop-shadow-sm">
           <span className="inline-flex overflow-hidden">
             <span>J</span>
             <span 
@@ -77,7 +78,7 @@ function AnimatedLogo({ showSolidBackground }: { showSolidBackground: boolean })
 function MobileLogo({ showSolidBackground: _ }: { showSolidBackground: boolean }) {
   return (
     <div className="flex md:hidden flex-col items-start relative">
-      <span className="font-script text-2xl sm:text-3xl font-normal text-foreground drop-shadow-sm">
+      <span className="font-serif text-xl sm:text-2xl font-medium tracking-wide text-foreground drop-shadow-sm">
         J & R
       </span>
       <span className="text-[10px] sm:text-xs tracking-widest uppercase text-muted-foreground">Randmäe</span>
@@ -87,14 +88,16 @@ function MobileLogo({ showSolidBackground: _ }: { showSolidBackground: boolean }
 
 export function Header() {
   const { t, language } = useI18n()
+  const { viewMode } = useViewMode()
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
+
+  const isCeremonyOnly = viewMode === "ceremony"
   const isHomePage = pathname === "/"
   const showSolidBackground = !isHomePage || isScrolled
-  // Hide RSVP button on homepage when at top (hero section visible)
-  const showRsvpButton = !isHomePage || isScrolled
+  // Hide RSVP button on homepage hero, and always for ceremony-only visitors
+  const showRsvpButton = (!isHomePage || isScrolled) && !isCeremonyOnly
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,14 +121,15 @@ export function Header() {
     }
   }
 
-  const navItems = [
+  const allNavItems = [
     { 
       href: "/rsvp", 
       label: t.nav.rsvp,
       mobileLabel: language === "et" ? "Kinnita osalemine" : "RSVP",
       icon: Heart, 
       iconFilled: HeartFilled,
-      description: language === "et" ? "Kinnita osalemine" : "Confirm attendance" 
+      description: language === "et" ? "Kinnita osalemine" : "Confirm attendance",
+      hideInCeremonyMode: true,
     },
     { 
       href: "/flowers", 
@@ -133,7 +137,8 @@ export function Header() {
       mobileLabel: language === "et" ? "Lilled" : "Flowers",
       icon: Flower2, 
       iconFilled: Flower2Filled,
-      description: language === "et" ? "Kingi lilli" : "Gift flowers" 
+      description: language === "et" ? "Kingi lilli" : "Gift flowers",
+      hideInCeremonyMode: true,
     },
     { 
       href: "/info", 
@@ -141,19 +146,29 @@ export function Header() {
       mobileLabel: language === "et" ? "Info" : "Info",
       icon: Info, 
       iconFilled: InfoFilled,
-      description: language === "et" ? "Kasulik info" : "Useful info" 
+      description: language === "et" ? "Kasulik info" : "Useful info",
+      hideInCeremonyMode: false,
     },
   ]
+
+  const navItems = isCeremonyOnly
+    ? allNavItems.filter((item) => !item.hideInCeremonyMode)
+    : allNavItems
 
   const currentNavIndex = navItems.findIndex(item => item.href === pathname)
 
   return (
     <header
-      className="fixed z-50 bg-transparent"
+      className={cn(
+        "fixed z-50",
+        isHomePage
+          ? "bg-transparent"
+          : "bg-background/90 backdrop-blur-md border-b border-border/40"
+      )}
       style={{ 
-        top: "var(--header-top, var(--scroll-safe-top, 0px))",
-        left: "var(--scroll-safe-x, 0px)",
-        right: "var(--scroll-safe-x, 0px)",
+        top: isHomePage ? "var(--header-top, var(--scroll-safe-top, 0px))" : "0px",
+        left: isHomePage ? "var(--scroll-safe-x, 0px)" : "0px",
+        right: isHomePage ? "var(--scroll-safe-x, 0px)" : "0px",
       }}
     >
       <div className="container mx-auto px-10 sm:px-16">

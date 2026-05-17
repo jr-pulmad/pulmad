@@ -21,18 +21,16 @@ let hasPlayedInMemory = false
 const CAMERA_ZOOM = 50
 // Ornament dimensions — smaller than before so knobs stay inside the viewport.
 const ORNAMENT_HEIGHT_PX = 70
-// Ornament is narrower now — the bulb takes 56px wide, inner shaft hidden under paper.
-// SAFE_X must equal ORNAMENT_WIDTH_PX so content starts at the knob inner edge.
-const ORNAMENT_WIDTH_PX = 60
-const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX        // 60px
-const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.65) // ~39px on mobile
+// Ornament visible width. SAFE_X matches so paper/content start at knob inner edge.
+const ORNAMENT_WIDTH_PX = 52
+const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX        // 52px
+const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.65) // ~34px on mobile
 
-// Extra breathing room above/below the rods from the viewport edge (px).
-// Must equal ROD_EXTRA_EDGE_MARGIN * CAMERA_ZOOM in scroll-rod.tsx.
-const EXTRA_EDGE_MARGIN = 6 // 0.12 * 50
+// No extra breathing room — rods go to the very viewport edges.
+const EXTRA_EDGE_MARGIN = 0
 
 // Buffer between the bottom of the top scroll roll and the top of the header.
-const HEADER_GAP = 14
+const HEADER_GAP = 8
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")

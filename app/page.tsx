@@ -1,10 +1,6 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { Hero } from "@/components/sections/hero"
-import { Countdown } from "@/components/sections/countdown"
-import { CTAGrid } from "@/components/sections/cta-grid"
-import { Updates } from "@/components/sections/updates"
-import { VenuePreview } from "@/components/sections/venue-preview"
+import { HomeContent } from "@/components/home-content"
 import { ScrollIndicator } from "@/components/ui/scroll-indicator"
 import { ScrollExperience } from "@/components/scroll-3d/scroll-experience"
 import { BurntEdge } from "@/components/scroll-3d/burnt-edge"
@@ -33,13 +29,7 @@ export default function HomePage() {
         <BurntEdge side="right" width={56} />
 
         <Header />
-        <main className="flex-1 flex flex-col">
-          <Hero />
-          <Countdown />
-          <CTAGrid />
-          <VenuePreview />
-          <Updates />
-        </main>
+        <HomeContent />
         <Footer />
         <ScrollIndicator />
       </div>
