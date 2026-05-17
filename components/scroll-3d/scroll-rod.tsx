@@ -24,6 +24,10 @@ export const ROD_PAPER_CLOSED_R = 1.0
 // Rod center sits ROD_CENTER_Y_OFFSET world units from the viewport edge
 // once the scroll is fully open. Tweak in sync with openY below.
 export const ROD_CENTER_Y_OFFSET = 0.85
+// Extra inward push (world units) so the open scroll keeps a small margin
+// from the very edge of the viewport. Must match EXTRA_EDGE_MARGIN/CAMERA_ZOOM
+// in scroll-experience.tsx.
+export const ROD_EXTRA_EDGE_MARGIN = 0.36 // ≈ 18px / 50 zoom
 
 /**
  * A 3D scroll rod: dark wooden core with parchment paper wrapped around it.
@@ -67,17 +71,16 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
     const closedY = position === "top" ? 0.45 : -0.45
     const openY =
       position === "top"
-        ? viewport.height / 2 - ROD_CENTER_Y_OFFSET
-        : -viewport.height / 2 + ROD_CENTER_Y_OFFSET
+        ? viewport.height / 2 - ROD_CENTER_Y_OFFSET - ROD_EXTRA_EDGE_MARGIN
+        : -viewport.height / 2 + ROD_CENTER_Y_OFFSET + ROD_EXTRA_EDGE_MARGIN
 
     const y = THREE.MathUtils.lerp(closedY, openY, p.opening)
     groupRef.current.position.y = y
 
-    const openR =
-      position === "top"
-        ? THREE.MathUtils.lerp(ROD_PAPER_MIN_R, ROD_PAPER_MAX_R, p.scroll)
-        : THREE.MathUtils.lerp(ROD_PAPER_MAX_R, ROD_PAPER_MIN_R, p.scroll)
-    const paperR = THREE.MathUtils.lerp(ROD_PAPER_CLOSED_R, openR, p.opening)
+    // Paper radius is fixed at the midpoint between min and max — same height
+    // for top and bottom rod, no grow/shrink on scroll.
+    const FIXED_OPEN_R = (ROD_PAPER_MIN_R + ROD_PAPER_MAX_R) / 2
+    const paperR = THREE.MathUtils.lerp(ROD_PAPER_CLOSED_R, FIXED_OPEN_R, p.opening)
 
     // Scale the unit-radius cylinder to current paperR (cheaper than rebuilding geometry)
     paperMeshRef.current.scale.set(paperR / ROD_PAPER_CLOSED_R, 1, paperR / ROD_PAPER_CLOSED_R)

@@ -29,20 +29,25 @@ const ORNAMENT_WIDTH_PX = 96
 const SAFE_X_DESKTOP = 58
 const SAFE_X_MOBILE = 34
 
+// Extra breathing room above the top rod and below the bottom rod, so the
+// scroll doesn't run to the very edge of the viewport.
+const EXTRA_EDGE_MARGIN = 18
+
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
   const progressRef = useRef<RodProgressRef>({ opening: 0, scroll: 0, rotation: 0 })
 
   const applyCSSVars = (opening: number, scroll: number) => {
-    const rodCenterOpen = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
+    const rodCenterOpen = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET + EXTRA_EDGE_MARGIN
     const viewportCenterY = window.innerHeight / 2
     const topRodCenterPxFromTop = (1 - opening) * viewportCenterY + opening * rodCenterOpen
     const bottomRodCenterPxFromBottom = topRodCenterPxFromTop
 
-    const openTopR = ROD_PAPER_MIN_R + (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
-    const openBottomR = ROD_PAPER_MAX_R - (ROD_PAPER_MAX_R - ROD_PAPER_MIN_R) * scroll
-    const topR = ROD_PAPER_MAX_R + (openTopR - ROD_PAPER_MAX_R) * opening
-    const bottomR = ROD_PAPER_MAX_R + (openBottomR - ROD_PAPER_MAX_R) * opening
+    // FIXED paper height when open: always 50% of the previous max radius.
+    // No more growing/shrinking on scroll.
+    const FIXED_OPEN_R = (ROD_PAPER_MIN_R + ROD_PAPER_MAX_R) / 2
+    const topR = ROD_PAPER_MAX_R + (FIXED_OPEN_R - ROD_PAPER_MAX_R) * opening
+    const bottomR = ROD_PAPER_MAX_R + (FIXED_OPEN_R - ROD_PAPER_MAX_R) * opening
 
     const safeTopPx = Math.round(topRodCenterPxFromTop + topR * CAMERA_ZOOM)
     const safeBottomPx = Math.round(bottomRodCenterPxFromBottom + bottomR * CAMERA_ZOOM)
@@ -272,7 +277,7 @@ function Ornament({
 }) {
   const isTop = corner.startsWith("top")
   const isLeft = corner.endsWith("left")
-  const rodCenterOpenPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET
+  const rodCenterOpenPx = CAMERA_ZOOM * ROD_CENTER_Y_OFFSET + EXTRA_EDGE_MARGIN
 
   const verticalExpr = `calc((1 - var(--scroll-opening, 1)) * 50vh + var(--scroll-opening, 1) * ${rodCenterOpenPx}px - ${ORNAMENT_HEIGHT_PX / 2}px)`
 
@@ -300,7 +305,7 @@ function Ornament({
       <svg
         viewBox="0 0 96 78"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", height: "100%", display: "block", overflow: "visible" }}
+        style={{ width: "100%", height: "100%", display: "block", overflow: "hidden" }}
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
