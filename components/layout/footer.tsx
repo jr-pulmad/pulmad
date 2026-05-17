@@ -8,8 +8,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-border/40 bg-transparent mt-auto">
-      {/* Footer with safe area padding */}
-      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="flex flex-col items-center gap-4 sm:gap-6">
           {/* Logo */}
           <div className="flex flex-col items-center">
@@ -39,8 +38,7 @@ export function Footer() {
           <p className="text-xs text-muted-foreground/60">© 2026 Randmäed. {t.footer.allRights}.</p>
         </div>
       </div>
-      
-      <div className="h-[env(safe-area-inset-bottom,0px)]" />
+
     </footer>
   )
 }

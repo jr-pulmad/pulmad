@@ -18,16 +18,12 @@ interface ScrollRodProps {
 
 // Geometry constants (also consumed by the host component for safe-area math)
 export const ROD_WOOD_RADIUS = 0.2
-export const ROD_PAPER_MIN_R = 0.42
-export const ROD_PAPER_MAX_R = 1.0
-export const ROD_PAPER_CLOSED_R = 1.0
-// Rod center sits ROD_CENTER_Y_OFFSET world units from the viewport edge
-// once the scroll is fully open. Tweak in sync with openY below.
-export const ROD_CENTER_Y_OFFSET = 0.85
-// Extra inward push (world units) so the open scroll keeps a small margin
-// from the very edge of the viewport. Must match EXTRA_EDGE_MARGIN/CAMERA_ZOOM
-// in scroll-experience.tsx.
-export const ROD_EXTRA_EDGE_MARGIN = 0.0 // no margin — rods go to viewport edge
+export const ROD_PAPER_MIN_R = 0.34
+export const ROD_PAPER_MAX_R = 0.80   // 20% smaller than the previous 1.0
+export const ROD_PAPER_CLOSED_R = 0.80
+// Rod center Y from viewport edge when fully open.
+export const ROD_CENTER_Y_OFFSET = 0.68  // was 0.85 — closer to the edge
+export const ROD_EXTRA_EDGE_MARGIN = 0.0
 
 /**
  * A 3D scroll rod: dark wooden core with parchment paper wrapped around it.
@@ -56,9 +52,9 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
     paperTexture.needsUpdate = true
   }, [paperTexture, position])
 
-  // SAFE_X = 52px per side at CAMERA_ZOOM=50 → 1.04 world units per side.
-  // Paper must slightly overlap ornament inner edge, so use a small buffer only.
-  const rodLength = Math.min(viewport.width - 2.0, 26)
+  // SAFE_X = 52px per side → 1.04 world units per side.
+  // Use 1.4 total inset so the paper roll slightly overlaps the ornament knobs.
+  const rodLength = Math.min(viewport.width - 1.4, 28)
 
   // Drive all animation directly in useFrame from the ref.
   // Zero React re-renders during the opening tween -> no lag.

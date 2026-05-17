@@ -21,16 +21,14 @@ let hasPlayedInMemory = false
 const CAMERA_ZOOM = 50
 // Ornament dimensions — smaller than before so knobs stay inside the viewport.
 const ORNAMENT_HEIGHT_PX = 70
-// Ornament visible width. SAFE_X matches so paper/content start at knob inner edge.
-const ORNAMENT_WIDTH_PX = 52
-const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX        // 52px
-const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.65) // ~34px on mobile
+const ORNAMENT_WIDTH_PX = 48
+const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX        // 48px — paper overlaps ornament slightly
+const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.65) // ~31px on mobile
 
-// No extra breathing room — rods go to the very viewport edges.
 const EXTRA_EDGE_MARGIN = 0
 
-// Buffer between the bottom of the top scroll roll and the top of the header.
-const HEADER_GAP = 8
+// Very small gap between the bottom of the top roll and the header top.
+const HEADER_GAP = 4
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
@@ -90,9 +88,12 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     const prevHtmlBg = html.style.backgroundColor
     body.style.backgroundColor = "transparent"
     html.style.backgroundColor = "#0a0604"
+    // Activate parchment colour palette for the home page only
+    html.setAttribute("data-page", "home")
     return () => {
       body.style.backgroundColor = prevBodyBg
       html.style.backgroundColor = prevHtmlBg
+      html.removeAttribute("data-page")
     }
   }, [phase])
 

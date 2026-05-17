@@ -481,7 +481,7 @@ export function Countdown() {
   return (
     <section 
       ref={containerRef}
-      className="min-h-[100dvh] flex items-center justify-center bg-card/30 relative overflow-hidden"
+      className="min-h-[100dvh] flex items-center justify-center relative overflow-hidden"
     >
       {/* Floating hearts background */}
       <FloatingHearts />
@@ -520,7 +520,7 @@ export function Countdown() {
             {timeUnits.map((unit, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div className="relative w-full max-w-[120px] sm:max-w-[160px] aspect-square flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border border-border bg-secondary/30 backdrop-blur-sm shadow-lg" />
+                  <div className="absolute inset-0 parchment-card" />
                   <span className="relative font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-foreground tabular-nums">
                     {unit.value.toString().padStart(2, "0")}
                   </span>

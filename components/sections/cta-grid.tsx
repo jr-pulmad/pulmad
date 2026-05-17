@@ -63,7 +63,7 @@ export function CTAGrid() {
             {cards.map((card, index) => (
               <Link key={index} href={card.href} className="group">
                 {/* Mobile: Compact horizontal button style */}
-                <div className="sm:hidden flex items-center gap-4 p-4 rounded-xl border border-border bg-card/40 hover:bg-card/60 hover:border-foreground/30 transition-all duration-300 shadow-sm">
+                <div className="sm:hidden parchment-card flex items-center gap-4 p-4 hover:opacity-90 transition-all duration-300">
                   <div className="p-2.5 rounded-lg bg-primary/15 text-primary shrink-0">
                     <card.icon className="w-5 h-5" />
                   </div>
@@ -75,7 +75,7 @@ export function CTAGrid() {
                 </div>
                 
                 {/* Desktop: Full card style */}
-                <Card className="hidden sm:block h-full bg-card/40 border-border hover:border-foreground/30 hover:bg-card/60 transition-all duration-300 hover:shadow-lg">
+                <Card className="hidden sm:block h-full parchment-card border-0 hover:opacity-90 transition-all duration-300 hover:shadow-lg">
                   <CardContent className="p-6 sm:p-8 flex flex-col h-full">
                     <div className="flex items-start justify-between mb-4">
                       <div className="p-3 rounded-xl bg-primary/15 text-primary">
