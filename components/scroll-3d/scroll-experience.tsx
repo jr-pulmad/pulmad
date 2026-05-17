@@ -26,12 +26,16 @@ const ORNAMENT_WIDTH_PX = 96
 // Horizontal safe area — matches the inner edge of the ornament bulb.
 // Content, header, footer, burnt edges, and background paper all span
 // exactly this inset from the viewport edges.
-const SAFE_X_DESKTOP = 58
-const SAFE_X_MOBILE = 34
+const SAFE_X_DESKTOP = 44
+const SAFE_X_MOBILE = 26
 
 // Extra breathing room above the top rod and below the bottom rod, so the
-// scroll doesn't run to the very edge of the viewport.
-const EXTRA_EDGE_MARGIN = 18
+// scroll doesn't run to the very edge of the viewport. Small, since the rolls
+// are now fixed-height and don't need to clear large variable rolls.
+const EXTRA_EDGE_MARGIN = 6
+
+// Buffer between the bottom of the top scroll roll and the top of the header.
+const HEADER_GAP = 14
 
 export function ScrollExperience({ children }: ScrollExperienceProps) {
   const [phase, setPhase] = useState<"loading" | "opening" | "open">("loading")
@@ -53,11 +57,18 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
     const safeBottomPx = Math.round(bottomRodCenterPxFromBottom + bottomR * CAMERA_ZOOM)
     const safeX = window.innerWidth < 640 ? SAFE_X_MOBILE : SAFE_X_DESKTOP
 
+    // STATIC header top — based on the OPEN-state safe area only, so the
+    // header doesn't move during the opening animation or scroll.
+    const openTopR = FIXED_OPEN_R
+    const openSafeTopPx = Math.round(rodCenterOpen + openTopR * CAMERA_ZOOM)
+    const headerTopPx = openSafeTopPx + HEADER_GAP
+
     const root = document.documentElement
     root.style.setProperty("--scroll-safe-top", `${safeTopPx}px`)
     root.style.setProperty("--scroll-safe-bottom", `${safeBottomPx}px`)
     root.style.setProperty("--scroll-safe-x", `${safeX}px`)
     root.style.setProperty("--scroll-opening", `${opening}`)
+    root.style.setProperty("--header-top", `${headerTopPx}px`)
   }
 
   useEffect(() => {
