@@ -168,9 +168,9 @@ export function Header() {
           : "bg-transparent",
       )}
       style={{ 
-        top: "var(--scroll-safe-top, 0)",
-        left: "var(--scroll-safe-x, 0)",
-        right: "var(--scroll-safe-x, 0)",
+        top: "var(--header-top, var(--scroll-safe-top, 0px))",
+        left: "var(--scroll-safe-x, 0px)",
+        right: "var(--scroll-safe-x, 0px)",
       }}
     >
       <div className="container mx-auto px-10 sm:px-16">

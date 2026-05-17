@@ -20,19 +20,17 @@ let hasPlayedInMemory = false
 
 const CAMERA_ZOOM = 50
 // Ornament dimensions — smaller than before so knobs stay inside the viewport.
-const ORNAMENT_HEIGHT_PX = 78
-const ORNAMENT_WIDTH_PX = 96
+const ORNAMENT_HEIGHT_PX = 70
+const ORNAMENT_WIDTH_PX = 88
 
-// Horizontal safe area — matches the inner edge of the ornament bulb.
-// Content, header, footer, burnt edges, and background paper all span
-// exactly this inset from the viewport edges.
-const SAFE_X_DESKTOP = 44
-const SAFE_X_MOBILE = 26
+// SAFE_X must equal ORNAMENT_WIDTH_PX so the paper + content start exactly
+// at the inner edge of the ornament knob. Keep these in sync.
+const SAFE_X_DESKTOP = ORNAMENT_WIDTH_PX       // 88px
+const SAFE_X_MOBILE = Math.round(ORNAMENT_WIDTH_PX * 0.6) // 53px on mobile
 
-// Extra breathing room above the top rod and below the bottom rod, so the
-// scroll doesn't run to the very edge of the viewport. Small, since the rolls
-// are now fixed-height and don't need to clear large variable rolls.
-const EXTRA_EDGE_MARGIN = 6
+// Extra breathing room above/below the rods from the viewport edge (px).
+// Must equal ROD_EXTRA_EDGE_MARGIN * CAMERA_ZOOM in scroll-rod.tsx.
+const EXTRA_EDGE_MARGIN = 6 // 0.12 * 50
 
 // Buffer between the bottom of the top scroll roll and the top of the header.
 const HEADER_GAP = 14
@@ -253,10 +251,11 @@ export function ScrollExperience({ children }: ScrollExperienceProps) {
       <Ornament corner="bottom-right" />
 
       {/* 3D canvas with both rods — rendered above ornaments so paper covers
-          the ornament's inner edge visually */}
+          the ornament's inner edge visually. overflow:hidden is critical to
+          prevent the canvas/WebGL from contributing to scrollWidth. */}
       <div
         className="fixed inset-0"
-        style={{ zIndex: 40, pointerEvents: "none" }}
+        style={{ zIndex: 40, pointerEvents: "none", overflow: "hidden" }}
         aria-hidden
       >
         <Canvas

@@ -27,7 +27,7 @@ export const ROD_CENTER_Y_OFFSET = 0.85
 // Extra inward push (world units) so the open scroll keeps a small margin
 // from the very edge of the viewport. Must match EXTRA_EDGE_MARGIN/CAMERA_ZOOM
 // in scroll-experience.tsx.
-export const ROD_EXTRA_EDGE_MARGIN = 0.36 // ≈ 18px / 50 zoom
+export const ROD_EXTRA_EDGE_MARGIN = 0.12 // ≈ 6px / 50 zoom — small breathing room at top/bottom
 
 /**
  * A 3D scroll rod: dark wooden core with parchment paper wrapped around it.
@@ -56,11 +56,10 @@ export function ScrollRod({ position, progressRef }: ScrollRodProps) {
     paperTexture.needsUpdate = true
   }, [paperTexture, position])
 
-  // Rod length must match the parchment band width (between the two ornament
-  // knobs). SAFE_X = 58px desktop / 34px mobile in screen pixels; converted to
-  // world units (CAMERA_ZOOM=50): 58/50 = 1.16 per side. Add a small extra
-  // inset (0.3 per side) so the rod is visibly NARROWER than the paper.
-  const rodLength = Math.min(viewport.width - 2.92, 28)
+  // SAFE_X = 88px per side at CAMERA_ZOOM=50 → 1.76 world units per side.
+  // Subtract 3.52 (both sides) plus 0.3 buffer each side so rod clearly sits
+  // inside the paper band and cannot bleed past the viewport edge.
+  const rodLength = Math.min(viewport.width - 4.12, 24)
 
   // Drive all animation directly in useFrame from the ref.
   // Zero React re-renders during the opening tween -> no lag.
