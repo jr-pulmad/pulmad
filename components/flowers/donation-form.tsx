@@ -1,97 +1,123 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { FloatingInput } from "@/components/ui/floating-input"
-import { Flower2, Loader2, CheckCircle2 } from "lucide-react"
+import { Flower2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-const PRESET_AMOUNTS = [35, 50]
+// 3 fixed donation amounts with flower previews
+// Estonian flower prices: roses ~3-5€, tulips ~2-3€, mixed bouquet ~25-50€
+const DONATION_OPTIONS = [
+  {
+    amount: 25,
+    flowerCount: 8,
+    description_et: "Väike kimp tulpe ja roose",
+    description_en: "Small bouquet of tulips and roses",
+    envKey: "FLOWERS_PAYMENT_URL_25",
+  },
+  {
+    amount: 50,
+    flowerCount: 18,
+    description_et: "Keskmine kimp segatud lilledega",
+    description_en: "Medium bouquet with mixed flowers",
+    envKey: "FLOWERS_PAYMENT_URL_50",
+  },
+  {
+    amount: 100,
+    flowerCount: 35,
+    description_et: "Suur luksuslillede kimp",
+    description_en: "Large luxury flower arrangement",
+    envKey: "FLOWERS_PAYMENT_URL_100",
+  },
+]
+
+// Payment URLs from environment variables (will be set later)
+const getPaymentUrl = (envKey: string): string => {
+  const urls: Record<string, string | undefined> = {
+    FLOWERS_PAYMENT_URL_25: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_25,
+    FLOWERS_PAYMENT_URL_50: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_50,
+    FLOWERS_PAYMENT_URL_100: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_100,
+  }
+  return urls[envKey] || "#"
+}
+
+function FlowerIcon({ className }: { className?: string }) {
+  return (
+    <svg 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="1.5" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2a3 3 0 0 0 0 6 3 3 0 0 0 0-6z" />
+      <path d="M19 9a3 3 0 0 0-4.5 2.5M5 9a3 3 0 0 1 4.5 2.5" />
+      <path d="M19 15a3 3 0 0 1-4.5-2.5M5 15a3 3 0 0 0 4.5-2.5" />
+      <path d="M12 22a3 3 0 0 1 0-6 3 3 0 0 1 0 6z" />
+      <path d="M12 22v-6" />
+    </svg>
+  )
+}
+
+function FlowerPreview({ count, description }: { count: number; description: string }) {
+  // Show flowers in rows, max 7 per row
+  const rows = []
+  let remaining = count
+  const rowSizes = [Math.min(remaining, 5)]
+  remaining -= rowSizes[0]
+  if (remaining > 0) {
+    rowSizes.push(Math.min(remaining, 7))
+    remaining -= rowSizes[1]
+  }
+  if (remaining > 0) {
+    rowSizes.push(Math.min(remaining, 9))
+    remaining -= rowSizes[2]
+  }
+  if (remaining > 0) {
+    rowSizes.push(Math.min(remaining, 11))
+    remaining -= rowSizes[3]
+  }
+  if (remaining > 0) {
+    rowSizes.push(remaining)
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-1">
+        {rowSizes.map((size, rowIndex) => (
+          <div key={rowIndex} className="flex items-center justify-center gap-0.5">
+            {Array.from({ length: size }).map((_, i) => (
+              <FlowerIcon 
+                key={i} 
+                className={cn(
+                  "w-4 h-4",
+                  i % 3 === 0 && "text-rose-400",
+                  i % 3 === 1 && "text-pink-400",
+                  i % 3 === 2 && "text-primary"
+                )}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-muted-foreground text-center leading-tight mt-1">
+        ~{count} {count === 1 ? "lill" : "lille"} • {description}
+      </p>
+    </div>
+  )
+}
 
 export function DonationForm() {
   const { t, language } = useI18n()
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
-  const [customAmount, setCustomAmount] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [error, setError] = useState("")
 
-  const handlePresetClick = (amount: number) => {
-    setSelectedAmount(amount)
-    setCustomAmount("")
-    setError("")
-  }
-
-  const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9.]/g, "")
-    setCustomAmount(value)
-    setSelectedAmount(null)
-    setError("")
-  }
-
-  const getFinalAmount = (): number => {
-    if (selectedAmount) return selectedAmount
-    if (customAmount) return Number.parseFloat(customAmount)
-    return 0
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const amount = getFinalAmount()
-
-    if (amount < 1) {
-      setError(t.flowers.minAmount)
-      return
+  const handleDonationClick = (envKey: string) => {
+    const url = getPaymentUrl(envKey)
+    if (url && url !== "#") {
+      window.open(url, "_blank", "noopener,noreferrer")
     }
-
-    setIsSubmitting(true)
-    setError("")
-
-    try {
-      const response = await fetch("/api/flowers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount,
-          language,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setIsSuccess(true)
-      } else {
-        setError(data.error || t.flowers.cancel)
-      }
-    } catch {
-      setError(t.flowers.cancel)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  if (isSuccess) {
-    return (
-      <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm animate-success-pop">
-        <CardContent className="py-12 sm:py-16 text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-6 animate-success-pop" style={{ animationDelay: "0.1s" }}>
-            <svg className="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 13l4 4L19 7" className="animate-success-check" />
-            </svg>
-          </div>
-          <h3 className="font-serif text-2xl sm:text-3xl font-medium text-foreground mb-3 animate-fade-in-up" style={{ animationDelay: "0.3s", animationFillMode: "both" }}>{t.common.success}</h3>
-          <p className="text-muted-foreground max-w-md mx-auto animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>{t.flowers.success}</p>
-          <p className="text-sm text-muted-foreground/60 mt-4 animate-fade-in-up" style={{ animationDelay: "0.5s", animationFillMode: "both" }}>
-            {language === "et" ? "Makse integratsioon tuleb peagi." : "Payment integration coming soon."}
-          </p>
-        </CardContent>
-      </Card>
-    )
   }
 
   return (
@@ -106,90 +132,54 @@ export function DonationForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Preset amounts - regular button style */}
+        <div className="space-y-6">
+          {/* Preset amounts */}
           <div className="space-y-3">
             <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
-            <div className="grid grid-cols-2 gap-4">
-              {PRESET_AMOUNTS.map((amount) => (
+            <div className="grid grid-cols-1 gap-4">
+              {DONATION_OPTIONS.map((option) => (
                 <button
-                  key={amount}
+                  key={option.amount}
                   type="button"
-                  onClick={() => handlePresetClick(amount)}
-                  className={cn(
-                    "py-5 px-6 rounded-2xl font-semibold text-xl transition-all duration-200",
-                    selectedAmount === amount
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-card border-2 border-border text-foreground hover:border-primary/50 hover:bg-secondary/50",
-                  )}
+                  onClick={() => handleDonationClick(option.envKey)}
+                  className="group relative py-6 px-6 rounded-2xl font-semibold text-xl transition-all duration-300 bg-card border-2 border-border text-foreground hover:border-primary hover:bg-primary/5 hover:shadow-lg overflow-hidden"
                 >
-                  {amount}{t.flowers.currency}
+                  {/* Default state - just the amount */}
+                  <div className="transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-[-10px]">
+                    {option.amount}{t.flowers.currency}
+                  </div>
+                  
+                  {/* Hover state - flower preview */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 translate-y-[10px] transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 p-4">
+                    <div className="text-lg font-semibold text-primary mb-2">
+                      {option.amount}{t.flowers.currency}
+                    </div>
+                    <FlowerPreview 
+                      count={option.flowerCount} 
+                      description={language === "et" ? option.description_et : option.description_en}
+                    />
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Custom amount with floating label */}
-          <div className="relative">
-            <FloatingInput
-              id="customAmount"
-              type="text"
-              inputMode="decimal"
-              value={customAmount}
-              onChange={handleCustomChange}
-              label={t.flowers.customAmount}
-              className={cn(
-                "pr-12 text-lg h-16",
-                customAmount && "border-primary"
-              )}
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
-              {t.flowers.currency}
-            </span>
+          {/* Info text */}
+          <div className="text-center py-4 rounded-2xl bg-secondary/30 border border-border">
+            <p className="text-sm text-muted-foreground">
+              {language === "et" 
+                ? "Klõpsates suunatakse teid turvalisele makselehele" 
+                : "Clicking will redirect you to a secure payment page"}
+            </p>
           </div>
 
-          {/* Selected amount display */}
-          {getFinalAmount() > 0 && (
-            <div className="text-center py-5 rounded-2xl bg-secondary/30 border border-border">
-              <p className="text-sm text-muted-foreground mb-1">
-                {language === "et" ? "Valitud summa" : "Selected amount"}
-              </p>
-              <p className="font-serif text-4xl font-medium text-primary">
-                {getFinalAmount()}{t.flowers.currency}
-              </p>
-            </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm font-medium">
-              {error}
-            </div>
-          )}
-
-          {/* Apple Pay note */}
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground/60">
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M17.72 12.63c-.03-2.37 1.95-3.52 2.04-3.58-1.11-1.61-2.84-1.83-3.45-1.86-1.47-.15-2.87.86-3.62.86-.75 0-1.9-.84-3.12-.82-1.61.02-3.09.93-3.92 2.37-1.67 2.89-.43 7.17 1.2 9.52.8 1.15 1.75 2.44 3 2.39 1.2-.05 1.65-.77 3.1-.77 1.45 0 1.86.77 3.13.75 1.29-.02 2.11-1.17 2.9-2.33.91-1.34 1.29-2.63 1.31-2.7-.03-.01-2.52-1-2.57-3.83zM15.36 5.23c.66-.8 1.11-1.91.99-3.02-1 .04-2.18.66-2.89 1.49-.64.74-1.2 1.92-1.05 3.05 1.11.09 2.24-.56 2.95-1.52z" />
-            </svg>
-            <span>Apple Pay {language === "et" ? "toetatud" : "supported"}</span>
-          </div>
-
-          {/* Submit button */}
-          <Button type="submit" className="w-full" size="xl" disabled={isSubmitting || getFinalAmount() < 1}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                {t.flowers.processing}
-              </>
-            ) : (
-              <>
-                {t.flowers.donate}
-                {getFinalAmount() > 0 && ` ${getFinalAmount()}${t.flowers.currency}`}
-              </>
-            )}
-          </Button>
-        </form>
+          {/* Bank transfer info hint */}
+          <p className="text-xs text-muted-foreground/60 text-center">
+            {language === "et" 
+              ? "Makselehel leiate QR-koodi ja pangaülekande andmed" 
+              : "The payment page includes QR code and bank transfer details"}
+          </p>
+        </div>
       </CardContent>
     </Card>
   )
