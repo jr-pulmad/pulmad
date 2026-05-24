@@ -171,9 +171,10 @@ function ScrollHint({ text }: { text: string }) {
 export function VenuePreview() {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isChurchExpanded, setIsChurchExpanded] = useState(false)
 
   const castleGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
-  const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Tartu+Jaani+kirik+Estonia"
+  const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Maarja-Magdaleena+kirik+Maarja-Magdaleena+küla+Tartu+vald+Estonia"
 
   const scrollHintText = language === "et" 
     ? "Vaata viimaseid uuendusi" 
@@ -196,7 +197,7 @@ export function VenuePreview() {
 
           {/* Two venue cards */}
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8">
-            {/* Ceremony - Tartu St John's Church */}
+            {/* Ceremony - Maarja-Magdaleena Church */}
             <Card className="overflow-hidden border-border bg-card/50">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
@@ -209,34 +210,84 @@ export function VenuePreview() {
                         {language === "et" ? "Laulatus" : "Ceremony"}
                       </p>
                       <h3 className="font-serif text-xl font-medium text-foreground">
-                        {language === "et" ? "Tartu Jaani kirik" : "Tartu St. John's Church"}
+                        {language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}
                       </h3>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground mb-3">
-                     Jaani tn 5, 51007 Tartu
+                     Maarja-Magdaleena küla, Tartu vald, 49126 Tartumaa
                   </p>
                   <div className="flex items-center gap-2 text-sm text-foreground">
                     <span className="font-medium">{language === "et" ? "Algus:" : "Start:"}</span>
                     <span>14:00</span>
                   </div>
                   
-                  {/* Weather widget for wedding date */}
-                  <WeatherWidget lat={58.3776} lon={26.7387} location="Tartu" />
+                  {/* Weather widget for wedding date - using Tartu coordinates for nearby weather */}
+                  <WeatherWidget lat={58.4422} lon={26.7345} location="Maarja-Magdaleena" />
                 </div>
-                <div className="aspect-[16/10] w-full">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2099.530577714211!2d26.724997176805846!3d58.38035318791445!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46eb36df4f0b4d2d%3A0x8f3ec8f5f0a1c1b7!2sTartu%20Jaani%20kirik!5e0!3m2!1sen!2see!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Tartu Jaani kirik location"
-                    className="w-full h-full grayscale dark:invert dark:contrast-90"
-                  />
+                {/* Church image and map side by side on larger screens */}
+                <div className="grid sm:grid-cols-2 sm:h-[260px]">
+                  <div className="aspect-[4/3] sm:aspect-auto sm:h-full relative overflow-hidden">
+                    <img
+                      src="/maarja-magdaleena-kirik.jpg"
+                      alt="Maarja-Magdaleena kirik"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="aspect-[4/3] sm:aspect-auto sm:h-full">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2088.8!2d26.7345!3d58.4422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sEELK%20Maarja-Magdaleena%20kirik!5e0!3m2!1sen!2see!4v1234567890"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Maarja-Magdaleena kirik location"
+                      className="w-full h-full min-h-[200px] grayscale dark:invert dark:contrast-90"
+                    />
+                  </div>
                 </div>
-                <div className="p-4">
+                {/* Expandable section */}
+                <div className="border-t border-border">
+                  <button
+                    onClick={() => setIsChurchExpanded(!isChurchExpanded)}
+                    className="w-full p-4 flex items-center justify-between text-left hover:bg-secondary/30 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-foreground">
+                      {language === "et" ? "Loe kirikust rohkem" : "Read more about the church"}
+                    </span>
+                    <ChevronDown className={cn(
+                      "w-4 h-4 text-muted-foreground transition-transform duration-200",
+                      isChurchExpanded && "rotate-180"
+                    )} />
+                  </button>
+
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out",
+                    isChurchExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  )}>
+                    <div className="p-4 pt-0 text-sm text-muted-foreground space-y-3">
+                      <p>
+                        {language === "et"
+                          ? "Maarja-Magdaleena kirik on üks vanemaid kirikuid Tartumaal, mille ajalugu ulatub keskaega. Kirik asub Maarja-Magdaleena külas Tartu vallas ning on tuntud oma rahulikku maakeskkonda ja ajaloolise arhitektuuri poolest."
+                          : "Maarja-Magdaleena Church is one of the oldest churches in Tartu County, with a history dating back to the medieval period. The church is located in Maarja-Magdaleena village, Tartu Parish, and is known for its tranquil rural setting and historical architecture."}
+                      </p>
+                      <p>
+                        {language === "et"
+                          ? "Kirik kuulub Eesti Evangeelsele Luteri Kirikule (EELK) ning on aktiivne koguduse keskus. Ümbritsev maastik ja looduslik keskkond muudavad selle koha eriliseks pulmapäeva alguseks."
+                          : "The church belongs to the Estonian Evangelical Lutheran Church (EELK) and serves as an active parish centre. The surrounding landscape and natural setting make it a truly special place to begin a wedding day."}
+                      </p>
+                      <Button asChild variant="link" size="sm" className="p-0 h-auto text-primary">
+                        <a href="https://maarjamagdaleena.ee" target="_blank" rel="noopener noreferrer">
+                          {language === "et" ? "Külasta koguduse veebilehte" : "Visit parish website"}
+                          <ExternalLink className="w-3 h-3 ml-1" />
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 pt-0">
                   <Button asChild variant="outline" size="sm" className="w-full bg-transparent">
                     <a href={churchGoogleMapsUrl} target="_blank" rel="noopener noreferrer">
                       {t.venue.directions}
@@ -273,12 +324,12 @@ export function VenuePreview() {
                 </div>
                 
                 {/* Castle image and map side by side on larger screens */}
-                <div className="grid sm:grid-cols-2">
+                <div className="grid sm:grid-cols-2 sm:h-[260px]">
                   <div className="aspect-[4/3] sm:aspect-auto sm:h-full relative overflow-hidden">
-                    <img 
-                      src="/alatskivi-castle-estonia.jpg" 
-                      alt="Alatskivi Castle" 
-                      className="w-full h-full object-cover"
+                    <img
+                      src="/alatskivi-castle-real.jpg"
+                      alt="Alatskivi Castle"
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
                   <div className="aspect-[4/3] sm:aspect-auto sm:h-full">

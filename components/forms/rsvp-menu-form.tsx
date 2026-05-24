@@ -19,6 +19,7 @@ interface GuestData {
   id: string
   firstName: string
   lastName: string
+  starterChoice: string
   mainCourseChoice: string
   allergiesAndDiet: string
 }
@@ -38,6 +39,7 @@ export function RSVPMenuForm() {
     attendance: "",
     notes: "",
     transport: "",
+    starterChoice: "",
     mainCourseChoice: "",
     allergiesAndDiet: "",
     honeypot: "",
@@ -70,6 +72,7 @@ export function RSVPMenuForm() {
       id: crypto.randomUUID(),
       firstName: "",
       lastName: "",
+      starterChoice: "",
       mainCourseChoice: "",
       allergiesAndDiet: "",
     }])
@@ -158,6 +161,7 @@ export function RSVPMenuForm() {
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: formData.email,
+            starterChoice: formData.starterChoice,
             mainCourseChoice: formData.mainCourseChoice,
             allergiesAndDiet: formData.allergiesAndDiet,
             honeypot: formData.honeypot,
@@ -181,6 +185,7 @@ export function RSVPMenuForm() {
                 firstName: guest.firstName,
                 lastName: guest.lastName,
                 email: formData.email, // Use main guest's email
+                starterChoice: guest.starterChoice,
                 mainCourseChoice: guest.mainCourseChoice,
                 allergiesAndDiet: guest.allergiesAndDiet,
                 honeypot: formData.honeypot,
@@ -207,11 +212,15 @@ export function RSVPMenuForm() {
     }
   }
 
+  const starterOptions = [
+    { value: "caesar", label: t.menu.starterOptions.option1 },
+    { value: "fried_cheese", label: t.menu.starterOptions.option2 },
+    { value: "vegan_starter", label: t.menu.starterOptions.option3 },
+  ]
+
   const menuOptions = [
-    { value: "beef", label: t.menu.mainCourseOptions.option1 },
-    { value: "salmon", label: t.menu.mainCourseOptions.option2 },
-    { value: "chicken", label: t.menu.mainCourseOptions.option3 },
-    { value: "vegan", label: t.menu.mainCourseOptions.option4 },
+    { value: "duck", label: t.menu.mainCourseOptions.option1 },
+    { value: "beef_steak", label: t.menu.mainCourseOptions.option2 },
   ]
 
   const transportOptions = [
@@ -596,6 +605,27 @@ export function RSVPMenuForm() {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="starter" className="text-sm font-medium">
+                    {t.menu.starter} <span className="text-red-500">*</span>
+                  </Label>
+                  <Select
+                    value={formData.starterChoice}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, starterChoice: value }))}
+                  >
+                    <SelectTrigger className="h-14 rounded-xl bg-card dark:bg-background border-input">
+                      <SelectValue placeholder={t.menu.starterOptions.placeholder} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {starterOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="mainCourse" className="text-sm font-medium">
                     {t.menu.mainCourse} <span className="text-red-500">*</span>
                   </Label>
@@ -635,6 +665,27 @@ export function RSVPMenuForm() {
                       <p className="text-sm text-muted-foreground">{language === "et" ? "Kaastulija" : "Companion"}</p>
                       <p className="font-medium text-foreground">{guest.firstName} {guest.lastName}</p>
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      {t.menu.starter} <span className="text-red-500">*</span>
+                    </Label>
+                    <Select
+                      value={guest.starterChoice}
+                      onValueChange={(value) => updateGuest(guest.id, "starterChoice", value)}
+                    >
+                      <SelectTrigger className="h-14 rounded-xl bg-card dark:bg-background border-input">
+                        <SelectValue placeholder={t.menu.starterOptions.placeholder} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {starterOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-2">
@@ -691,7 +742,7 @@ export function RSVPMenuForm() {
                   type="submit" 
                   className="sm:flex-1" 
                   size="lg" 
-                  disabled={isSubmitting || !formData.mainCourseChoice || additionalGuests.some(g => !g.mainCourseChoice)}
+                  disabled={isSubmitting || !formData.starterChoice || !formData.mainCourseChoice || additionalGuests.some(g => !g.starterChoice || !g.mainCourseChoice)}
                 >
                   {isSubmitting ? (
                     <>

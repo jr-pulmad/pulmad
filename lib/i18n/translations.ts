@@ -14,7 +14,7 @@ export const translations = {
     hero: {
       date: "19. august 2026",
       venue: "Alatskivi Loss",
-      ceremony: "Tartu Jaani kirik",
+      ceremony: "Maarja-Magdaleena kirik",
       reception: "Alatskivi Loss",
       saveTheDate: "Randmäed",
     },
@@ -67,17 +67,22 @@ export const translations = {
     // Menu Page
     menu: {
       title: "Menüüvalik",
-      subtitle: "Palun vali oma pearoog ja märgi allergeenid",
+      subtitle: "Palun vali oma eelroog, pearoog ja märgi allergeenid",
       firstName: "Eesnimi",
       lastName: "Perekonnanimi",
       email: "E-mail",
+      starter: "Eelroog",
+      starterOptions: {
+        placeholder: "Vali eelroog",
+        option1: "Caesari salat röstitud kanafileega",
+        option2: "Eesti praejuust muraka vinegreti, marjade ja krõbeda filoga",
+        option3: "Vegan eelroog",
+      },
       mainCourse: "Pearoog",
       mainCourseOptions: {
         placeholder: "Vali pearoog",
-        option1: "Veisefilee grillitud köögiviljadega",
-        option2: "Lõhe spargelipurega",
-        option3: "Kana ürdivõiga",
-        option4: "Taimetoitlaste valik (vegan)",
+        option1: "Pardifilee",
+        option2: "Veisefilee",
       },
       allergies: "Allergiad ja erisoovid",
       allergiesPlaceholder: "Kirjelda allergiaid ja erisoove (nt gluteen, laktoos, pähklid)",
@@ -185,7 +190,7 @@ export const translations = {
     hero: {
       date: "19 August 2026",
       venue: "Alatskivi Castle",
-      ceremony: "St. John's Church, Tartu",
+      ceremony: "Maarja-Magdaleena Church",
       reception: "Alatskivi Castle",
       saveTheDate: "Randmäed",
     },
@@ -238,17 +243,22 @@ export const translations = {
     // Menu Page
     menu: {
       title: "Menu Selection",
-      subtitle: "Please select your main course and note any allergies",
+      subtitle: "Please select your starter, main course and note any allergies",
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
+      starter: "Starter",
+      starterOptions: {
+        placeholder: "Select starter",
+        option1: "Caesar salad with roasted chicken fillet",
+        option2: "Estonian fried cheese with cloudberry vinaigrette, berries and crispy phyllo",
+        option3: "Vegan starter",
+      },
       mainCourse: "Main Course",
       mainCourseOptions: {
         placeholder: "Select main course",
-        option1: "Beef fillet with grilled vegetables",
-        option2: "Salmon with asparagus puree",
-        option3: "Chicken with herb butter",
-        option4: "Vegetarian option (vegan)",
+        option1: "Duck fillet",
+        option2: "Beef fillet",
       },
       allergies: "Allergies and Dietary Needs",
       allergiesPlaceholder: "Describe allergies and dietary needs (e.g., gluten, lactose, nuts)",

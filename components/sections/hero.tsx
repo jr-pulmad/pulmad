@@ -1,23 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { useTheme } from "next-themes"
 import { useI18n } from "@/lib/i18n/context"
-import { Button } from "@/components/ui/button"
-import { ArrowDown } from "lucide-react"
+import { ArrowDown, Loader2, ArrowRight } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
 import { cn } from "@/lib/utils"
 
 export function Hero() {
   const { t } = useI18n()
-  const { resolvedTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
-    setMounted(true)
-    const timer = setTimeout(() => setShowVideo(true), 300)
+    const timer = setTimeout(() => setShowVideo(true), 100)
     return () => clearTimeout(timer)
   }, [])
 
@@ -26,14 +21,17 @@ export function Hero() {
     window.scrollTo({ top: heroHeight, behavior: "smooth" })
   }
 
-  const heroImage = mounted && resolvedTheme === "dark" 
-    ? "/romantic-castle-evening-twilight-dark-moody-estoni.jpg"
-    : "/alatskivi-castle-hero.jpg"
-
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
       {/* Video Background - always playing, always muted, no controls */}
       <div className="absolute inset-0 z-0">
+        {/* Loading state - simple loader before video loads */}
+        {!showVideo && (
+          <div className="absolute inset-0 bg-background flex items-center justify-center z-10">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        )}
+        
         <video
           ref={videoRef}
           className={cn(
@@ -44,7 +42,7 @@ export function Hero() {
           muted
           loop
           playsInline
-          poster={heroImage}
+          onLoadedData={() => setShowVideo(true)}
         >
           <source 
             src="https://assets.mixkit.co/videos/1946/1946-720.mp4" 
@@ -84,29 +82,15 @@ export function Hero() {
             {t.hero.date}
           </p>
 
-          {/* Luxurious RSVP Button - green theme with transparency and blur */}
+          {/* RSVP Button — liquid glass */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
-            <Button
-              asChild
-              size="lg"
-              className="
-                min-w-[200px] h-14 sm:h-16
-                px-6
-                text-sm sm:text-base font-bold text-white
-                rounded-2xl
-                border border-white/15
-                bg-white/10
-                backdrop-blur-2xl
-                shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-                hover:bg-white/15
-                hover:border-white/25
-                hover:scale-[1.01]
-                active:scale-[0.99]
-                transition-all duration-300
-              "
+            <Link
+              href="/rsvp"
+              className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
-              <Link href="/rsvp">{t.cta.rsvp}</Link>
-            </Button>
+              <span>{t.cta.rsvp}</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-2" />
+            </Link>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { firstName, lastName, email, phone, attendance, notes, language, honeypot } = body
+    const { firstName, lastName, email, phone, attendance, transport, notes, additionalGuests, language, honeypot } = body
 
     // Honeypot check - if this field is filled, it's likely a bot
     if (honeypot) {
@@ -23,6 +23,8 @@ export async function POST(request: Request) {
       email: email || "",
       phone: phone || "",
       attendance,
+      transport: transport || "",
+      additionalGuests: additionalGuests || 0,
       notes: notes || "",
       userAgent: request.headers.get("user-agent") || "",
       sourcePage: "/rsvp",

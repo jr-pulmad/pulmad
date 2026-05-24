@@ -19,8 +19,8 @@
   --secondary-foreground: #1a1a1a;
   --muted: #f0f0eb;
   --muted-foreground: #5c5c5c;
-  --accent: #9abc06;
-  --accent-foreground: #1a1a1a;
+  --accent: #e6efe7;
+  --accent-foreground: #236130;
   --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --border: #e0e0dc;
@@ -57,8 +57,8 @@
   --secondary-foreground: #f5f5f5;
   --muted: #1f1f1f;
   --muted-foreground: #a0a0a0;
-  --accent: #9abc06;
-  --accent-foreground: #0a0a0a;
+  --accent: #1d3b24;
+  --accent-foreground: #a8d4ac;
   --destructive: #ef4444;
   --destructive-foreground: #f5f5f5;
   --border: #2a2a2a;
@@ -217,7 +217,7 @@
 }
 
 .animate-shimmer {
-  animation: shimmer 2s linear infinite;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
 .animate-pulse-glow {
@@ -374,6 +374,73 @@
 .animate-success-check {
   stroke-dasharray: 50;
   animation: success-check 0.5s ease-out 0.2s forwards;
+}
+
+/* Liquid glass RSVP button */
+.rsvp-glass-btn {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.20) 0%,
+    rgba(35, 97, 48, 0.45) 20%,
+    rgba(35, 97, 48, 0.55) 50%,
+    rgba(35, 97, 48, 0.40) 80%,
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.8) brightness(1.05);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8) brightness(1.05);
+  box-shadow:
+    /* Soft outer glow */
+    0 0 50px rgba(35, 97, 48, 0.20),
+    0 0 20px rgba(255, 255, 255, 0.08),
+    /* Depth shadows */
+    0 10px 40px rgba(0, 0, 0, 0.30),
+    0 4px 15px rgba(0, 0, 0, 0.20),
+    /* Inner top glossy highlight */
+    inset 0 2px 2px rgba(255, 255, 255, 0.45),
+    /* Inner side soft highlights */
+    inset 2px 0 4px rgba(255, 255, 255, 0.10),
+    inset -2px 0 4px rgba(255, 255, 255, 0.10),
+    /* Inner bottom depth */
+    inset 0 -3px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Bottom subtle reflection line */
+.rsvp-glass-btn::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.18) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.rsvp-glass-btn:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(35, 97, 48, 0.55) 20%,
+    rgba(35, 97, 48, 0.65) 50%,
+    rgba(35, 97, 48, 0.50) 80%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  box-shadow:
+    0 0 60px rgba(35, 97, 48, 0.30),
+    0 0 25px rgba(255, 255, 255, 0.12),
+    0 14px 50px rgba(0, 0, 0, 0.35),
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    inset 0 2px 2px rgba(255, 255, 255, 0.55),
+    inset 2px 0 4px rgba(255, 255, 255, 0.12),
+    inset -2px 0 4px rgba(255, 255, 255, 0.12),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* Smooth scroll */
