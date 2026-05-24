@@ -224,17 +224,27 @@ export function VenuePreview() {
                   {/* Weather widget for wedding date - using Tartu coordinates for nearby weather */}
                   <WeatherWidget lat={58.4422} lon={26.7345} location="Maarja-Magdaleena" />
                 </div>
-                <div className="aspect-[16/10] w-full">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2088.8!2d26.7345!3d58.4422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sEELK%20Maarja-Magdaleena%20kirik!5e0!3m2!1sen!2see!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Maarja-Magdaleena kirik location"
-                    className="w-full h-full grayscale dark:invert dark:contrast-90"
-                  />
+                {/* Church image and map side by side on larger screens */}
+                <div className="grid sm:grid-cols-2 sm:h-[260px]">
+                  <div className="aspect-[4/3] sm:aspect-auto sm:h-full relative overflow-hidden">
+                    <img
+                      src="/maarja-magdaleena-kirik.jpg"
+                      alt="Maarja-Magdaleena kirik"
+                      className="w-full h-full object-cover object-center"
+                    />
+                  </div>
+                  <div className="aspect-[4/3] sm:aspect-auto sm:h-full">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2088.8!2d26.7345!3d58.4422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sEELK%20Maarja-Magdaleena%20kirik!5e0!3m2!1sen!2see!4v1234567890"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Maarja-Magdaleena kirik location"
+                      className="w-full h-full min-h-[200px] grayscale dark:invert dark:contrast-90"
+                    />
+                  </div>
                 </div>
                 <div className="p-4">
                   <Button asChild variant="outline" size="sm" className="w-full bg-transparent">
@@ -273,12 +283,12 @@ export function VenuePreview() {
                 </div>
                 
                 {/* Castle image and map side by side on larger screens */}
-                <div className="grid sm:grid-cols-2">
+                <div className="grid sm:grid-cols-2 sm:h-[260px]">
                   <div className="aspect-[4/3] sm:aspect-auto sm:h-full relative overflow-hidden">
-                    <img 
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Alatskivi_Castle%2C_Tartumaa%2C_Estonia.jpg/1280px-Alatskivi_Castle%2C_Tartumaa%2C_Estonia.jpg" 
-                      alt="Alatskivi Castle" 
-                      className="w-full h-full object-cover"
+                    <img
+                      src="/alatskivi-castle-real.jpg"
+                      alt="Alatskivi Castle"
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
                   <div className="aspect-[4/3] sm:aspect-auto sm:h-full">
