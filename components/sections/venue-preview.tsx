@@ -171,6 +171,7 @@ function ScrollHint({ text }: { text: string }) {
 export function VenuePreview() {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isChurchExpanded, setIsChurchExpanded] = useState(false)
 
   const castleGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Maarja-Magdaleena+kirik+Maarja-Magdaleena+küla+Tartu+vald+Estonia"
@@ -246,7 +247,47 @@ export function VenuePreview() {
                     />
                   </div>
                 </div>
-                <div className="p-4">
+                {/* Expandable section */}
+                <div className="border-t border-border">
+                  <button
+                    onClick={() => setIsChurchExpanded(!isChurchExpanded)}
+                    className="w-full p-4 flex items-center justify-between text-left hover:bg-secondary/30 transition-colors"
+                  >
+                    <span className="text-sm font-medium text-foreground">
+                      {language === "et" ? "Loe kirikust rohkem" : "Read more about the church"}
+                    </span>
+                    <ChevronDown className={cn(
+                      "w-4 h-4 text-muted-foreground transition-transform duration-200",
+                      isChurchExpanded && "rotate-180"
+                    )} />
+                  </button>
+
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300 ease-in-out",
+                    isChurchExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  )}>
+                    <div className="p-4 pt-0 text-sm text-muted-foreground space-y-3">
+                      <p>
+                        {language === "et"
+                          ? "Maarja-Magdaleena kirik on üks vanemaid kirikuid Tartumaal, mille ajalugu ulatub keskaega. Kirik asub Maarja-Magdaleena külas Tartu vallas ning on tuntud oma rahulikku maakeskkonda ja ajaloolise arhitektuuri poolest."
+                          : "Maarja-Magdaleena Church is one of the oldest churches in Tartu County, with a history dating back to the medieval period. The church is located in Maarja-Magdaleena village, Tartu Parish, and is known for its tranquil rural setting and historical architecture."}
+                      </p>
+                      <p>
+                        {language === "et"
+                          ? "Kirik kuulub Eesti Evangeelsele Luteri Kirikule (EELK) ning on aktiivne koguduse keskus. Ümbritsev maastik ja looduslik keskkond muudavad selle koha eriliseks pulmapäeva alguseks."
+                          : "The church belongs to the Estonian Evangelical Lutheran Church (EELK) and serves as an active parish centre. The surrounding landscape and natural setting make it a truly special place to begin a wedding day."}
+                      </p>
+                      <Button asChild variant="link" size="sm" className="p-0 h-auto text-primary">
+                        <a href="https://maarjamagdaleena.ee" target="_blank" rel="noopener noreferrer">
+                          {language === "et" ? "Külasta koguduse veebilehte" : "Visit parish website"}
+                          <ExternalLink className="w-3 h-3 ml-1" />
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 pt-0">
                   <Button asChild variant="outline" size="sm" className="w-full bg-transparent">
                     <a href={churchGoogleMapsUrl} target="_blank" rel="noopener noreferrer">
                       {t.venue.directions}
