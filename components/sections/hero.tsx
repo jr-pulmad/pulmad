@@ -82,14 +82,14 @@ export function Hero() {
             {t.hero.date}
           </p>
 
-          {/* RSVP Button */}
+          {/* RSVP Button — liquid glass */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
             <Link
               href="/rsvp"
-              className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-[#236130] hover:bg-[#1d5229] text-white text-sm font-medium tracking-wide uppercase no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/30 hover:shadow-xl hover:shadow-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+              className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
               <span>{t.cta.rsvp}</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-2" />
             </Link>
           </div>
         </div>
