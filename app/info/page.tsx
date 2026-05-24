@@ -66,7 +66,7 @@ export default function InfoPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{language === "et" ? "Laulatus" : "Ceremony"}</p>
-                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Tartu Jaani kirik" : "St. John's Church"}</p>
+                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -96,13 +96,13 @@ export default function InfoPage() {
                         <div className="text-foreground font-medium">{language === "et" ? "Laulatus" : "Ceremony"}</div>
                       </div>
                       <p className="text-sm ml-[68px]">
-                        {language === "et" ? "Tartu Jaani kirik, Jaani tn 5, Tartu" : "St. John's Church, Jaani tn 5, Tartu"}
+                        {language === "et" ? "Maarja-Magdaleena kirik, Maarja-Magdaleena küla, Tartu vald" : "Maarja-Magdaleena Church, Maarja-Magdaleena küla, Tartu vald"}
                       </p>
                     </div>
                     {/* Travel */}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground pl-4">
                       <Car className="w-4 h-4" />
-                      <span>{language === "et" ? "~45 min sõitu Alatskivi lossini" : "~45 min drive to Alatskivi"}</span>
+                      <span>{language === "et" ? "~30 min sõitu Alatskivi lossini" : "~30 min drive to Alatskivi"}</span>
                     </div>
                     {/* Reception */}
                     <div className="p-4 rounded-lg bg-secondary/30 border border-border">

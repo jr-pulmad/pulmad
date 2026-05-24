@@ -14,7 +14,7 @@ export const translations = {
     hero: {
       date: "19. august 2026",
       venue: "Alatskivi Loss",
-      ceremony: "Tartu Jaani kirik",
+      ceremony: "Maarja-Magdaleena kirik",
       reception: "Alatskivi Loss",
       saveTheDate: "Randmäed",
     },
@@ -185,7 +185,7 @@ export const translations = {
     hero: {
       date: "19 August 2026",
       venue: "Alatskivi Castle",
-      ceremony: "St. John's Church, Tartu",
+      ceremony: "Maarja-Magdaleena Church",
       reception: "Alatskivi Castle",
       saveTheDate: "Randmäed",
     },
