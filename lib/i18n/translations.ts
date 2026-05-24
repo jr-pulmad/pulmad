@@ -67,10 +67,16 @@ export const translations = {
     // Menu Page
     menu: {
       title: "Menüüvalik",
-      subtitle: "Palun vali oma pearoog ja märgi allergeenid",
+      subtitle: "Palun vali oma eelroog, pearoog ja märgi allergeenid",
       firstName: "Eesnimi",
       lastName: "Perekonnanimi",
       email: "E-mail",
+      starter: "Eelroog",
+      starterOptions: {
+        placeholder: "Vali eelroog",
+        option1: "Caesari salat",
+        option2: "Grillitud kitsejuust",
+      },
       mainCourse: "Pearoog",
       mainCourseOptions: {
         placeholder: "Vali pearoog",
@@ -238,10 +244,16 @@ export const translations = {
     // Menu Page
     menu: {
       title: "Menu Selection",
-      subtitle: "Please select your main course and note any allergies",
+      subtitle: "Please select your starter, main course and note any allergies",
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
+      starter: "Starter",
+      starterOptions: {
+        placeholder: "Select starter",
+        option1: "Caesar salad",
+        option2: "Grilled goat cheese",
+      },
       mainCourse: "Main Course",
       mainCourseOptions: {
         placeholder: "Select main course",

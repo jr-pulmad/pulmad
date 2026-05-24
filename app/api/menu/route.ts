@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { firstName, lastName, email, mainCourseChoice, allergiesAndDiet, language, honeypot } = body
+    const { firstName, lastName, email, starterChoice, mainCourseChoice, allergiesAndDiet, language, honeypot } = body
 
     // Honeypot check
     if (honeypot) {
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     }
 
     // Validate required fields
-    if (!firstName || !lastName || !mainCourseChoice || !allergiesAndDiet) {
+    if (!firstName || !lastName || !mainCourseChoice) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
@@ -21,8 +21,9 @@ export async function POST(request: Request) {
       firstName,
       lastName,
       email: email || "",
+      starterChoice: starterChoice || "",
       mainCourseChoice,
-      allergiesAndDiet,
+      allergiesAndDiet: allergiesAndDiet || "",
       userAgent: request.headers.get("user-agent") || "",
       sourcePage: "/menu",
     }
