@@ -404,24 +404,6 @@
     inset 0 -3px 6px rgba(0, 0, 0, 0.12);
 }
 
-/* Top-left diagonal glass reflection */
-.rsvp-glass-btn::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  width: 120%;
-  height: 110%;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(255, 255, 255, 0.22) 5%,
-    transparent 15%
-  );
-  pointer-events: none;
-  border-radius: inherit;
-}
-
 /* Bottom subtle reflection line */
 .rsvp-glass-btn::after {
   content: "";
