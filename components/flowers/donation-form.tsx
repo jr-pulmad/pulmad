@@ -2,109 +2,57 @@
 
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Flower2 } from "lucide-react"
+import { Flower2, ExternalLink } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
-// 3 fixed donation amounts with flower previews
-// Estonian flower prices: roses ~3-5€, tulips ~2-3€, mixed bouquet ~25-50€
+// 3 fixed donation amounts with descriptions
 const DONATION_OPTIONS = [
   {
     amount: 25,
-    flowerCount: 8,
-    description_et: "Väike kimp tulpe ja roose",
-    description_en: "Small bouquet of tulips and roses",
+    flowerCount: 3,
+    description_et: "Väike kimp tulpe",
+    description_en: "Small tulip bouquet",
     envKey: "FLOWERS_PAYMENT_URL_25",
   },
   {
     amount: 50,
-    flowerCount: 18,
-    description_et: "Keskmine kimp segatud lilledega",
-    description_en: "Medium bouquet with mixed flowers",
+    flowerCount: 5,
+    description_et: "Keskmine segakimp",
+    description_en: "Medium mixed bouquet",
     envKey: "FLOWERS_PAYMENT_URL_50",
   },
   {
     amount: 100,
-    flowerCount: 35,
-    description_et: "Suur luksuslillede kimp",
-    description_en: "Large luxury flower arrangement",
+    flowerCount: 8,
+    description_et: "Suur roosikimp",
+    description_en: "Large rose arrangement",
     envKey: "FLOWERS_PAYMENT_URL_100",
   },
 ]
 
-// Payment URLs from environment variables (will be set later)
-const getPaymentUrl = (envKey: string): string => {
-  const urls: Record<string, string | undefined> = {
-    FLOWERS_PAYMENT_URL_25: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_25,
-    FLOWERS_PAYMENT_URL_50: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_50,
-    FLOWERS_PAYMENT_URL_100: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_100,
-  }
-  return urls[envKey] || "#"
-}
-
-function FlowerIcon({ className }: { className?: string }) {
-  return (
-    <svg 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="1.5" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 2a3 3 0 0 0 0 6 3 3 0 0 0 0-6z" />
-      <path d="M19 9a3 3 0 0 0-4.5 2.5M5 9a3 3 0 0 1 4.5 2.5" />
-      <path d="M19 15a3 3 0 0 1-4.5-2.5M5 15a3 3 0 0 0 4.5-2.5" />
-      <path d="M12 22a3 3 0 0 1 0-6 3 3 0 0 1 0 6z" />
-      <path d="M12 22v-6" />
-    </svg>
-  )
+// Payment URLs from environment variables
+const PAYMENT_URLS: Record<string, string> = {
+  FLOWERS_PAYMENT_URL_25: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_25 || "#",
+  FLOWERS_PAYMENT_URL_50: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_50 || "#",
+  FLOWERS_PAYMENT_URL_100: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_100 || "#",
 }
 
 function FlowerPreview({ count, description }: { count: number; description: string }) {
-  // Show flowers in rows, max 7 per row
-  const rows = []
-  let remaining = count
-  const rowSizes = [Math.min(remaining, 5)]
-  remaining -= rowSizes[0]
-  if (remaining > 0) {
-    rowSizes.push(Math.min(remaining, 7))
-    remaining -= rowSizes[1]
-  }
-  if (remaining > 0) {
-    rowSizes.push(Math.min(remaining, 9))
-    remaining -= rowSizes[2]
-  }
-  if (remaining > 0) {
-    rowSizes.push(Math.min(remaining, 11))
-    remaining -= rowSizes[3]
-  }
-  if (remaining > 0) {
-    rowSizes.push(remaining)
-  }
-
+  const colors = ["text-rose-400", "text-pink-400", "text-primary"]
+  
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex flex-col items-center gap-1">
-        {rowSizes.map((size, rowIndex) => (
-          <div key={rowIndex} className="flex items-center justify-center gap-0.5">
-            {Array.from({ length: size }).map((_, i) => (
-              <FlowerIcon 
-                key={i} 
-                className={cn(
-                  "w-4 h-4",
-                  i % 3 === 0 && "text-rose-400",
-                  i % 3 === 1 && "text-pink-400",
-                  i % 3 === 2 && "text-primary"
-                )}
-              />
-            ))}
-          </div>
+      <div className="flex items-center justify-center gap-1.5">
+        {Array.from({ length: count }).map((_, i) => (
+          <Flower2 
+            key={i} 
+            className={cn("w-5 h-5", colors[i % colors.length])}
+          />
         ))}
       </div>
-      <p className="text-xs text-muted-foreground text-center leading-tight mt-1">
-        ~{count} {count === 1 ? "lill" : "lille"} • {description}
+      <p className="text-xs text-muted-foreground text-center">
+        {description}
       </p>
     </div>
   )
@@ -112,13 +60,6 @@ function FlowerPreview({ count, description }: { count: number; description: str
 
 export function DonationForm() {
   const { t, language } = useI18n()
-
-  const handleDonationClick = (envKey: string) => {
-    const url = getPaymentUrl(envKey)
-    if (url && url !== "#") {
-      window.open(url, "_blank", "noopener,noreferrer")
-    }
-  }
 
   return (
     <Card className="max-w-xl mx-auto bg-card/50 border-border backdrop-blur-sm shadow-xl">
@@ -132,53 +73,64 @@ export function DonationForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
-        <div className="space-y-6">
+        <div className="space-y-5">
           {/* Preset amounts */}
           <div className="space-y-3">
             <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
-            <div className="grid grid-cols-1 gap-4">
-              {DONATION_OPTIONS.map((option) => (
-                <button
-                  key={option.amount}
-                  type="button"
-                  onClick={() => handleDonationClick(option.envKey)}
-                  className="group relative py-6 px-6 rounded-2xl font-semibold text-xl transition-all duration-300 bg-card border-2 border-border text-foreground hover:border-primary hover:bg-primary/5 hover:shadow-lg overflow-hidden"
-                >
-                  {/* Default state - just the amount */}
-                  <div className="transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-[-10px]">
-                    {option.amount}{t.flowers.currency}
-                  </div>
-                  
-                  {/* Hover state - flower preview */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 translate-y-[10px] transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 p-4">
-                    <div className="text-lg font-semibold text-primary mb-2">
-                      {option.amount}{t.flowers.currency}
+            <div className="grid grid-cols-1 gap-3">
+              {DONATION_OPTIONS.map((option) => {
+                const url = PAYMENT_URLS[option.envKey]
+                const description = language === "et" ? option.description_et : option.description_en
+                
+                return (
+                  <Link
+                    key={option.amount}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex items-center justify-between py-4 px-5 rounded-xl font-medium transition-all duration-300 bg-card border border-border text-foreground hover:border-primary hover:bg-primary/5"
+                  >
+                    {/* Left side - amount and description */}
+                    <div className="flex flex-col items-start gap-0.5">
+                      <span className="text-lg font-semibold">
+                        {option.amount}{t.flowers.currency}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {description}
+                      </span>
                     </div>
-                    <FlowerPreview 
-                      count={option.flowerCount} 
-                      description={language === "et" ? option.description_et : option.description_en}
-                    />
-                  </div>
-                </button>
-              ))}
+                    
+                    {/* Right side - flower icons (visible on hover) */}
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 opacity-0 translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                        {Array.from({ length: option.flowerCount }).map((_, i) => (
+                          <Flower2 
+                            key={i} 
+                            className={cn(
+                              "w-4 h-4",
+                              i % 3 === 0 && "text-rose-400",
+                              i % 3 === 1 && "text-pink-400",
+                              i % 3 === 2 && "text-primary"
+                            )}
+                          />
+                        ))}
+                      </div>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           </div>
 
           {/* Info text */}
-          <div className="text-center py-4 rounded-2xl bg-secondary/30 border border-border">
+          <div className="text-center py-3 px-4 rounded-xl bg-secondary/30 border border-border">
             <p className="text-sm text-muted-foreground">
               {language === "et" 
-                ? "Klõpsates suunatakse teid turvalisele makselehele" 
-                : "Clicking will redirect you to a secure payment page"}
+                ? "Klikkides avaneb makseleht QR-koodi ja pangaandmetega" 
+                : "Click to open payment page with QR code and bank details"}
             </p>
           </div>
-
-          {/* Bank transfer info hint */}
-          <p className="text-xs text-muted-foreground/60 text-center">
-            {language === "et" 
-              ? "Makselehel leiate QR-koodi ja pangaülekande andmed" 
-              : "The payment page includes QR code and bank transfer details"}
-          </p>
         </div>
       </CardContent>
     </Card>
