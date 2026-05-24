@@ -214,7 +214,8 @@ export function RSVPMenuForm() {
 
   const starterOptions = [
     { value: "caesar", label: t.menu.starterOptions.option1 },
-    { value: "goat_cheese", label: t.menu.starterOptions.option2 },
+    { value: "fried_cheese", label: t.menu.starterOptions.option2 },
+    { value: "vegan_starter", label: t.menu.starterOptions.option3 },
   ]
 
   const menuOptions = [

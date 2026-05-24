@@ -74,8 +74,9 @@ export const translations = {
       starter: "Eelroog",
       starterOptions: {
         placeholder: "Vali eelroog",
-        option1: "Caesari salat",
-        option2: "Grillitud kitsejuust",
+        option1: "Caesari salat röstitud kanafileega",
+        option2: "Eesti praejuust muraka vinegreti, marjade ja krõbeda filoga",
+        option3: "Vegan eelroog – köögiviljakappachio röstitud seemnetega",
       },
       mainCourse: "Pearoog",
       mainCourseOptions: {
@@ -249,8 +250,9 @@ export const translations = {
       starter: "Starter",
       starterOptions: {
         placeholder: "Select starter",
-        option1: "Caesar salad",
-        option2: "Grilled goat cheese",
+        option1: "Caesar salad with roasted chicken fillet",
+        option2: "Estonian fried cheese with cloudberry vinaigrette, berries and crispy phyllo",
+        option3: "Vegan starter – vegetable carpaccio with toasted seeds",
       },
       mainCourse: "Main Course",
       mainCourseOptions: {
