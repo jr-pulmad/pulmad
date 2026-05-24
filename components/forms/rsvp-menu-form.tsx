@@ -221,6 +221,7 @@ export function RSVPMenuForm() {
   const menuOptions = [
     { value: "duck", label: t.menu.mainCourseOptions.option1 },
     { value: "beef_steak", label: t.menu.mainCourseOptions.option2 },
+    { value: "vegan_main", label: t.menu.mainCourseOptions.option3 },
   ]
 
   const transportOptions = [
