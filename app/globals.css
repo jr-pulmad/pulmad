@@ -217,7 +217,7 @@
 }
 
 .animate-shimmer {
-  animation: shimmer 2s linear infinite;
+  animation: shimmer 3s ease-in-out infinite;
 }
 
 .animate-pulse-glow {
