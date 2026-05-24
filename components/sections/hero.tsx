@@ -82,40 +82,14 @@ export function Hero() {
             {t.hero.date}
           </p>
 
-          {/* Modern RSVP Button - 2026 design with elegant animation */}
+          {/* RSVP Button */}
           <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
-            <Link 
+            <Link
               href="/rsvp"
-              className="
-                group
-                relative
-                inline-flex items-center justify-center gap-3
-                min-w-[220px] h-14 sm:h-16
-                px-8 sm:px-10
-                text-sm sm:text-base font-medium tracking-wide uppercase
-                text-white
-                rounded-full
-                overflow-hidden
-                transition-all duration-500 ease-out
-                hover:scale-[1.02]
-                active:scale-[0.98]
-                focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black/50
-              "
+              className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl bg-[#236130] hover:bg-[#1d5229] text-white text-sm font-medium tracking-wide uppercase no-underline transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/30 hover:shadow-xl hover:shadow-black/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
-              {/* Animated gradient background */}
-              <span className="absolute inset-0 bg-gradient-to-r from-[#c9a87c] via-[#dfc9a0] to-[#c9a87c] bg-[length:200%_100%] animate-shimmer" />
-              
-              {/* Subtle inner glow on hover */}
-              <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-white/20 to-transparent" />
-              
-              {/* Border overlay */}
-              <span className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/40 transition-colors duration-300" />
-              
-              {/* Text content */}
-              <span className="relative z-10 drop-shadow-sm">{t.cta.rsvp}</span>
-              
-              {/* Arrow icon with animation */}
-              <ArrowRight className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              <span>{t.cta.rsvp}</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>
