@@ -2,7 +2,7 @@
 
 import { useI18n } from "@/lib/i18n/context"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Flower2, ExternalLink } from "lucide-react"
+import { Flower2, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -31,12 +31,7 @@ const DONATION_OPTIONS = [
   },
 ]
 
-// Payment URLs from environment variables
-const PAYMENT_URLS: Record<string, string> = {
-  FLOWERS_PAYMENT_URL_25: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_25 || "#",
-  FLOWERS_PAYMENT_URL_50: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_50 || "#",
-  FLOWERS_PAYMENT_URL_100: process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_URL_100 || "#",
-}
+
 
 function FlowerPreview({ count, description }: { count: number; description: string }) {
   const colors = ["text-rose-400", "text-pink-400", "text-primary"]
@@ -79,15 +74,12 @@ export function DonationForm() {
             <p className="text-sm font-medium text-muted-foreground">{t.flowers.presetAmounts}</p>
             <div className="grid grid-cols-1 gap-3">
               {DONATION_OPTIONS.map((option) => {
-                const url = PAYMENT_URLS[option.envKey]
-                const description = language === "et" ? option.description_et : option.description_en
+                  const description = language === "et" ? option.description_et : option.description_en
                 
                 return (
                   <Link
                     key={option.amount}
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`/flowers/${option.amount}`}
                     className="group relative flex items-center justify-between py-4 px-5 rounded-xl font-medium transition-all duration-300 bg-card border border-border text-foreground hover:border-primary hover:bg-primary/5"
                   >
                     {/* Left side - amount and description */}
@@ -115,7 +107,7 @@ export function DonationForm() {
                           />
                         ))}
                       </div>
-                      <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     </div>
                   </Link>
                 )
@@ -127,8 +119,8 @@ export function DonationForm() {
           <div className="text-center py-3 px-4 rounded-xl bg-secondary/30 border border-border">
             <p className="text-sm text-muted-foreground">
               {language === "et" 
-                ? "Klikkides avaneb makseleht QR-koodi ja pangaandmetega" 
-                : "Click to open payment page with QR code and bank details"}
+                ? "Vali summa – lehel näed QR-koodi ja pangaandmeid ülekande tegemiseks." 
+                : "Select an amount – you will see the QR code and bank details for a transfer."}
             </p>
           </div>
         </div>
