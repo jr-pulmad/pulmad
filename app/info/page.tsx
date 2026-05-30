@@ -162,50 +162,27 @@ export default function InfoPage() {
               {/* Dress code */}
               <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title}>
                 <div className="text-muted-foreground space-y-4">
-                  <p>{t.info.dressCode.content}</p>
-                  
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {/* Women's dress code */}
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <div className="flex items-center gap-2 mb-3">
-                        <DressIcon className="w-5 h-5 text-primary" />
-                        <h4 className="font-medium text-foreground">{language === "et" ? "Naised" : "Women"}</h4>
-                      </div>
-                      <ul className="text-sm space-y-2">
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Elegantsed pikad kleidid või kostüümid" : "Elegant long dresses or gowns"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Formaalsed kingad" : "Formal footwear"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Elegantne ehted ja aksessuaarid" : "Elegant jewelry and accessories"}</span>
-                        </li>
+                  <p>
+                    {language === "et"
+                      ? "Palume kanda pidulikku riietust, mis sobib elegantse pulmapäeva atmosfääriga. Riietusstiil: formaalne."
+                      : "We kindly ask you to wear formal attire suited to an elegant wedding celebration. Dress code: formal."}
+                  </p>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="flex items-start gap-3 p-4 rounded-lg bg-secondary/30 border border-border">
+                      <DressIcon className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <ul className="text-sm space-y-1.5">
+                        <li>{language === "et" ? "Pikk kleit või elegantne kostüüm" : "Long dress or elegant suit"}</li>
+                        <li>{language === "et" ? "Formaalsed kingad" : "Formal footwear"}</li>
+                        <li>{language === "et" ? "Diskreeetsed ehted" : "Understated jewellery"}</li>
                       </ul>
                     </div>
-                    
-                    {/* Men's dress code */}
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <div className="flex items-center gap-2 mb-3">
-                        <SuitIcon className="w-5 h-5 text-primary" />
-                        <h4 className="font-medium text-foreground">{language === "et" ? "Mehed" : "Men"}</h4>
-                      </div>
-                      <ul className="text-sm space-y-2">
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Tumedad ülikonnad või smokingud" : "Dark suits or tuxedos"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Valge või helge särkk" : "White or light colored shirt"}</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          <span>{language === "et" ? "Lips ja formaalsed kingad" : "Tie and formal shoes"}</span>
-                        </li>
+                    <div className="flex items-start gap-3 p-4 rounded-lg bg-secondary/30 border border-border">
+                      <SuitIcon className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <ul className="text-sm space-y-1.5">
+                        <li>{language === "et" ? "Tume ülikond või smokingut" : "Dark suit or tuxedo"}</li>
+                        <li>{language === "et" ? "Valge või hele särk ja lips" : "White or light shirt with tie"}</li>
+                        <li>{language === "et" ? "Formaalsed kingad" : "Formal shoes"}</li>
                       </ul>
                     </div>
                   </div>
@@ -266,8 +243,8 @@ export default function InfoPage() {
                       </h4>
                       <p className="text-sm">
                         {language === "et"
-                          ? "Info bussitranspordi kohta täiendatakse peagi."
-                          : "Information about shuttle service will be updated soon."}
+                          ? "Lähim bussipeatus asub Alatskivi külas. Sõiduplaanid leiab peatus.ee lehelt."
+                          : "The nearest bus stop is in Alatskivi village. Timetables available at peatus.ee."}
                       </p>
                     </div>
                   </div>
@@ -308,8 +285,13 @@ export default function InfoPage() {
               {/* Contact */}
               <InfoSection icon={<Mail className="w-5 h-5" />} title={t.info.contact.title}>
                 <div className="text-muted-foreground space-y-3">
+                  <p>
+                    {language === "et"
+                      ? "Võta meiega ühendust — oleme rõõmuga valmis vastama kõikidele küsimustele."
+                      : "Reach out to us — we are happy to answer any questions you may have."}
+                  </p>
                   <div className="flex items-center gap-2 p-4 rounded-lg bg-secondary/30 border border-border hover:border-primary/30 transition-colors group">
-                    <a 
+                    <a
                       href={`mailto:${email}`}
                       className="flex-1 flex items-center gap-3 cursor-pointer"
                     >
@@ -324,7 +306,7 @@ export default function InfoPage() {
                       {copiedEmail ? (
                         <Check className="w-4 h-4 text-green-500" />
                       ) : (
-                        <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
+                        <Copy className="w-4 h-4 text-muted-foreground" />
                       )}
                     </button>
                   </div>
