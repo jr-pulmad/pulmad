@@ -149,25 +149,6 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   )
 }
 
-// Scroll hint component with custom text - clickable
-function ScrollHint({ text }: { text: string }) {
-  const handleClick = () => {
-    window.scrollBy({ top: window.innerHeight, behavior: "smooth" })
-  }
-
-  return (
-    <button 
-      onClick={handleClick}
-      className="absolute bottom-8 sm:bottom-8 mt-8 sm:mt-0 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 hover:opacity-80 transition-opacity max-w-xs text-center px-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-    >
-      <span className="text-s text-muted-foreground/70 leading-relaxed">
-        {text}
-      </span>
-      <ChevronDown className="w-5 h-5 text-muted-foreground/70" />
-    </button>
-  )
-}
-
 export function VenuePreview() {
   const { t, language } = useI18n()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -175,10 +156,6 @@ export function VenuePreview() {
 
   const castleGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
   const churchGoogleMapsUrl = "https://www.google.com/maps/search/?api=1&query=Maarja-Magdaleena+kirik+Maarja-Magdaleena+küla+Tartu+vald+Estonia"
-
-  const scrollHintText = language === "et" 
-    ? "Vaata viimaseid uuendusi" 
-    : "See the latest updates"
 
   return (
     <section className="min-h-[100dvh] flex items-center py-16 sm:py-24 relative">
@@ -399,9 +376,6 @@ export function VenuePreview() {
           </div>
         </div>
       </div>
-      
-      {/* Scroll hint with custom text */}
-      <ScrollHint text={scrollHintText} />
     </section>
   )
 }

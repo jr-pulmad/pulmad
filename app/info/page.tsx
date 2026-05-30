@@ -1,16 +1,27 @@
 "use client"
 
+import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection, CopyCodeButton } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, Phone, MapPin, Calendar, ExternalLink, Palette } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function InfoPage() {
   const { t, language } = useI18n()
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  
+  const email = "kirjaordu@gmail.com"
+  
+  const copyEmail = () => {
+    navigator.clipboard.writeText(email).then(() => {
+      setCopiedEmail(true)
+      setTimeout(() => setCopiedEmail(false), 2000)
+    })
+  }
 
   // Sample accommodation data - would be filled in later
   const accommodations = [
@@ -130,15 +141,25 @@ export default function InfoPage() {
 
               {/* Dress code */}
               <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title}>
-                <div className="text-muted-foreground">
-                  <p>{t.info.dressCode.content}</p>
-                  <div className="mt-4 p-4 rounded-lg bg-secondary/30 border border-border">
-                    <p className="text-sm text-foreground font-medium">{language === "et" ? "Vihje:" : "Hint:"}</p>
-                    <p className="text-sm mt-1">
-                      {language === "et"
-                        ? "Elegantne pidulik riietus. Täpsem info tuleb varsti."
-                        : "Elegant formal attire. More details coming soon."}
-                    </p>
+                <div className="text-muted-foreground space-y-4">
+                  <p>
+                    {language === "et"
+                      ? "Palume kanda pidulikku riietust, mis sobib elegantse pulmapäeva atmosfääriga. Riietusstiil: formaalne."
+                      : "We kindly ask you to wear formal attire suited to an elegant wedding celebration. Dress code: formal."}
+                  </p>
+
+                  <p className="text-xs text-muted-foreground/70">
+                    {language === "et" ? "Näited:" : "Examples:"}
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
+                      <span className="text-lg">👗</span>
+                      <span className="text-sm">{language === "et" ? "Pikk kleit, elegantne kostüüm, formaalsed kingad" : "Long dress, elegant suit, formal footwear"}</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
+                      <span className="text-lg">🤵</span>
+                      <span className="text-sm">{language === "et" ? "Tume ülikond, hele särk, lips, formaalsed kingad" : "Dark suit, light shirt, tie, formal shoes"}</span>
+                    </div>
                   </div>
                 </div>
               </InfoSection>
@@ -182,59 +203,145 @@ export default function InfoPage() {
                 <div className="text-muted-foreground">
                   <p className="mb-4">{t.info.transport.content}</p>
 
-                  <div className="space-y-3">
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <h4 className="font-medium text-foreground mb-2">{language === "et" ? "Autoga" : "By car"}</h4>
-                      <p className="text-sm">
-                        {language === "et"
-                          ? "Alatskivi Loss asub ~45 km Tartust ja ~210 km Tallinnast. Parkimine on tasuta lossi territooriumil."
-                          : "Alatskivi Castle is located ~45 km from Tartu and ~210 km from Tallinn. Free parking available at the castle grounds."}
-                      </p>
-                    </div>
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <h4 className="font-medium text-foreground mb-2">
-                        {language === "et" ? "Ühistranspordiga" : "By public transport"}
+                  <div className="space-y-4">
+                    {/* Church transport */}
+                    <div>
+                      <h4 className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        {language === "et" ? "Maarja-Magdaleena kirik (laulatus)" : "Maarja-Magdaleena Church (ceremony)"}
                       </h4>
-                      <p className="text-sm">
-                        {language === "et"
-                          ? "Info bussitranspordi kohta täiendatakse peagi."
-                          : "Information about shuttle service will be updated soon."}
-                      </p>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~25 km Tartust" : "~25 km from Tartu"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://www.google.com/maps/dir/?api=1&destination=Maarja-Magdaleena+kirik+Estonia"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Navigation className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Bus className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "Peatus: Maarja-Magdaleena" : "Stop: Maarja-Magdaleena"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://peatus.ee/#route_search/to_name/Maarja-Magdaleena"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Castle transport */}
+                    <div>
+                      <h4 className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        {language === "et" ? "Alatskivi Loss (pidu)" : "Alatskivi Castle (reception)"}
+                      </h4>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~45 km Tartust, tasuta parkimine" : "~45 km from Tartu, free parking"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://www.google.com/maps/dir/?api=1&destination=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Navigation className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Bus className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "Peatus: Alatskivi" : "Stop: Alatskivi"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://peatus.ee/#route_search/to_name/Alatskivi"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  <Button asChild variant="outline" className="mt-4 bg-transparent">
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {t.venue.directions}
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </a>
-                  </Button>
                 </div>
               </InfoSection>
 
               {/* Children */}
               <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
                 <div className="text-muted-foreground">
-                  <p>{t.info.children.content}</p>
+                  <p className="mb-3">
+                    {language === "et"
+                      ? "Lapsed on teretulnud laulatusel kirikus. Õhtune pidustus lossis on planeeritud täiskasvanute üritusena."
+                      : "Children are welcome at the church ceremony. The evening reception at the castle is planned as an adults-only event."}
+                  </p>
+                  <p className="text-sm text-muted-foreground/70">
+                    {language === "et"
+                      ? "Täname mõistmise eest — see võimaldab meil luua õhtu, kus kõik külalised saavad täielikult lõõgastuda ja pidutseda."
+                      : "Thank you for understanding — this allows us to create an evening where all guests can fully relax and celebrate."}
+                  </p>
                 </div>
               </InfoSection>
 
               {/* Contact */}
-              <InfoSection icon={<Phone className="w-5 h-5" />} title={t.info.contact.title}>
-                <div className="text-muted-foreground">
-                  <p className="mb-4">{t.info.contact.content}</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
-                      <span className="text-foreground font-medium">kirjaordu@gmail.com</span>
-                    </div>
-                    <p className="text-sm">
-                      {language === "et" ? "Kontaktandmed lisatakse peagi." : "Contact details will be added soon."}
-                    </p>
+              <InfoSection icon={<Mail className="w-5 h-5" />} title={t.info.contact.title}>
+                <div className="text-muted-foreground space-y-3">
+                  <p>
+                    {language === "et"
+                      ? "Võta meiega ühendust — oleme rõõmuga valmis vastama kõikidele küsimustele."
+                      : "Reach out to us — we are happy to answer any questions you may have."}
+                  </p>
+                  <div className="flex items-center gap-2 p-4 rounded-lg bg-secondary/30 border border-border hover:border-primary/30 transition-colors group">
+                    <a
+                      href={`mailto:${email}`}
+                      className="flex-1 flex items-center gap-3 cursor-pointer"
+                    >
+                      <Mail className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-foreground font-medium group-hover:text-primary transition-colors">{email}</span>
+                    </a>
+                    <button
+                      onClick={copyEmail}
+                      className="flex-shrink-0 p-2 rounded hover:bg-foreground/10 transition-colors"
+                      title={language === "et" ? "Kopeeri" : "Copy"}
+                    >
+                      {copiedEmail ? (
+                        <Check className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-muted-foreground" />
+                      )}
+                    </button>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    {language === "et" ? "Kliki e-posti avamiseks või kopeeri aadress" : "Click to open email or copy address"}
+                  </p>
                 </div>
               </InfoSection>
 
