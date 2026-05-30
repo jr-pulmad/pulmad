@@ -1,16 +1,47 @@
 "use client"
 
+import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection, CopyCodeButton } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, Phone, MapPin, Calendar, ExternalLink, Palette } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, Phone, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
+// Custom icons for dress code
+function DressIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L8 6v2c0 2 1 4 4 5c3-1 4-3 4-5V6l-4-4z" />
+      <path d="M8 8c-2 1-4 3-4 6c0 4 3 8 8 8s8-4 8-8c0-3-2-5-4-6" />
+    </svg>
+  )
+}
+
+function SuitIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l-3 4v4l3 2l3-2V6l-3-4z" />
+      <path d="M9 6L6 8v12c0 1 1 2 2 2h8c1 0 2-1 2-2V8l-3-2" />
+      <path d="M12 12v10" />
+    </svg>
+  )
+}
+
 export default function InfoPage() {
   const { t, language } = useI18n()
+  const [copiedEmail, setCopiedEmail] = useState(false)
+  
+  const email = "kirjaordu@gmail.com"
+  
+  const copyEmail = () => {
+    navigator.clipboard.writeText(email).then(() => {
+      setCopiedEmail(true)
+      setTimeout(() => setCopiedEmail(false), 2000)
+    })
+  }
 
   // Sample accommodation data - would be filled in later
   const accommodations = [

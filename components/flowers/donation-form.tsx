@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 const DONATION_OPTIONS = [
-  { amount: 25, flowerCount: 3 },
-  { amount: 50, flowerCount: 5 },
-  { amount: 100, flowerCount: 8 },
+  { amount: 25, flowerCount: 2 },
+  { amount: 50, flowerCount: 3 },
+  { amount: 100, flowerCount: 4 },
 ]
 
 const FLOWER_COLORS = ["text-rose-400", "text-pink-400", "text-primary"]
@@ -45,17 +45,19 @@ export function DonationForm() {
                 onFocus={() => setHoveredAmount(option.amount)}
                 onBlur={() => setHoveredAmount(null)}
                 className={cn(
-                  "relative flex flex-col items-center justify-center gap-2.5 py-5 px-3 rounded-xl border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                  "relative flex flex-col items-center justify-center py-5 px-3 rounded-xl border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary min-h-[88px]",
                   isActive
-                    ? "border-primary bg-primary/8 shadow-md shadow-primary/10 scale-[1.03]"
-                    : "border-border bg-card hover:border-primary/50"
+                    ? "border-primary bg-primary/5 shadow-[inset_0_2px_8px_rgba(35,97,48,0.15)] scale-[1.02]"
+                    : "border-border bg-card hover:border-primary/40"
                 )}
               >
-                {/* Amount label */}
+                {/* Amount label - centered, moves up when flowers appear */}
                 <span
                   className={cn(
                     "text-xl tabular-nums transition-all duration-200",
-                    isActive ? "font-bold text-primary" : "font-semibold text-foreground"
+                    isActive 
+                      ? "font-bold text-foreground -translate-y-2" 
+                      : "font-normal text-foreground"
                   )}
                 >
                   {option.amount}{t.flowers.currency}
@@ -64,7 +66,7 @@ export function DonationForm() {
                 {/* Flower icons — hidden by default, fade in on hover */}
                 <div
                   className={cn(
-                    "flex items-center justify-center gap-0.5 transition-all duration-200",
+                    "absolute bottom-3 flex items-center justify-center gap-1 transition-all duration-200",
                     isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-1 pointer-events-none"
                   )}
                   aria-hidden="true"
@@ -73,11 +75,10 @@ export function DonationForm() {
                     <Flower2
                       key={i}
                       className={cn(
-                        "w-3.5 h-3.5 transition-transform duration-150",
-                        FLOWER_COLORS[i % FLOWER_COLORS.length],
-                        isActive && "scale-110"
+                        "w-3.5 h-3.5 transition-all duration-150",
+                        FLOWER_COLORS[i % FLOWER_COLORS.length]
                       )}
-                      style={{ transitionDelay: `${i * 20}ms` }}
+                      style={{ transitionDelay: `${i * 30}ms` }}
                     />
                   ))}
                 </div>

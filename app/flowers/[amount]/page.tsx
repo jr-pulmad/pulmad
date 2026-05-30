@@ -104,15 +104,15 @@ export default function FlowersPaymentPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 
                 {/* QR code placeholder - left side */}
-                <div className="flex-shrink-0 flex flex-col items-center justify-center sm:w-36">
-                  <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-xl bg-secondary/40 border-2 border-dashed border-border flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-0.5 opacity-30">
-                      {Array.from({ length: 9 }).map((_, i) => (
+                <div className="flex-shrink-0 flex flex-col items-center justify-center sm:w-44">
+                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-xl bg-secondary/40 border-2 border-dashed border-border flex items-center justify-center">
+                    <div className="grid grid-cols-4 gap-1 opacity-30">
+                      {Array.from({ length: 16 }).map((_, i) => (
                         <div
                           key={i}
                           className={cn(
                             "w-3 h-3 rounded-sm bg-foreground",
-                            [0, 2, 6, 8].includes(i) && "w-4 h-4"
+                            [0, 3, 12, 15].includes(i) && "w-4 h-4"
                           )}
                         />
                       ))}

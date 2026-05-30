@@ -128,11 +128,11 @@ export function RSVPMenuForm() {
     setIsSubmitting(true)
 
     try {
-      // Submit main guest RSVP
-      const rsvpResponse = await fetch("/api/rsvp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      // Build unified payload with all data in a single request
+      const payload = {
+        language,
+        honeypot: formData.honeypot,
+        mainGuest: {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
@@ -140,66 +140,30 @@ export function RSVPMenuForm() {
           attendance: formData.attendance,
           transport: formData.transport,
           notes: formData.notes,
-          additionalGuests: additionalGuests.length,
-          honeypot: formData.honeypot,
-          language,
-        }),
+          // Menu data (only relevant if attending reception)
+          starterChoice: showMenuSection ? formData.starterChoice : "",
+          mainCourseChoice: showMenuSection ? formData.mainCourseChoice : "",
+          allergiesAndDiet: showMenuSection ? formData.allergiesAndDiet : "",
+        },
+        additionalGuests: showMenuSection ? additionalGuests.map(guest => ({
+          firstName: guest.firstName,
+          lastName: guest.lastName,
+          starterChoice: guest.starterChoice,
+          mainCourseChoice: guest.mainCourseChoice,
+          allergiesAndDiet: guest.allergiesAndDiet,
+        })) : [],
+      }
+
+      const response = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       })
 
-      if (!rsvpResponse.ok) {
+      if (!response.ok) {
         setError(t.rsvp.error)
         setIsSubmitting(false)
         return
-      }
-
-      // Submit menu for main guest if attending reception
-      if (showMenuSection && formData.mainCourseChoice) {
-        const menuResponse = await fetch("/api/menu", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            starterChoice: formData.starterChoice,
-            mainCourseChoice: formData.mainCourseChoice,
-            allergiesAndDiet: formData.allergiesAndDiet,
-            honeypot: formData.honeypot,
-            language,
-          }),
-        })
-
-        if (!menuResponse.ok) {
-          setError(t.menu.error)
-          setIsSubmitting(false)
-          return
-        }
-
-        // Submit menu for each additional guest
-        for (const guest of additionalGuests) {
-          if (guest.mainCourseChoice) {
-            const guestMenuResponse = await fetch("/api/menu", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                firstName: guest.firstName,
-                lastName: guest.lastName,
-                email: formData.email, // Use main guest's email
-                starterChoice: guest.starterChoice,
-                mainCourseChoice: guest.mainCourseChoice,
-                allergiesAndDiet: guest.allergiesAndDiet,
-                honeypot: formData.honeypot,
-                language,
-              }),
-            })
-
-            if (!guestMenuResponse.ok) {
-              setError(t.menu.error)
-              setIsSubmitting(false)
-              return
-            }
-          }
-        }
       }
 
       setCurrentStep("success")
