@@ -333,7 +333,6 @@ export default function InfoPage() {
                   </p>
                 </div>
               </InfoSection>
-              </InfoSection>
 
               {/* Theme Palette */}
               <InfoSection icon={<Palette className="w-5 h-5" />} title={language === "et" ? "Värvipalett" : "Color Palette"}>
