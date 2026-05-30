@@ -161,15 +161,53 @@ export default function InfoPage() {
 
               {/* Dress code */}
               <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title}>
-                <div className="text-muted-foreground">
+                <div className="text-muted-foreground space-y-4">
                   <p>{t.info.dressCode.content}</p>
-                  <div className="mt-4 p-4 rounded-lg bg-secondary/30 border border-border">
-                    <p className="text-sm text-foreground font-medium">{language === "et" ? "Vihje:" : "Hint:"}</p>
-                    <p className="text-sm mt-1">
-                      {language === "et"
-                        ? "Elegantne pidulik riietus. Täpsem info tuleb varsti."
-                        : "Elegant formal attire. More details coming soon."}
-                    </p>
+                  
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {/* Women's dress code */}
+                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                      <div className="flex items-center gap-2 mb-3">
+                        <DressIcon className="w-5 h-5 text-primary" />
+                        <h4 className="font-medium text-foreground">{language === "et" ? "Naised" : "Women"}</h4>
+                      </div>
+                      <ul className="text-sm space-y-2">
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Elegantsed pikad kleidid või kostüümid" : "Elegant long dresses or gowns"}</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Formaalsed kingad" : "Formal footwear"}</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Elegantne ehted ja aksessuaarid" : "Elegant jewelry and accessories"}</span>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    {/* Men's dress code */}
+                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                      <div className="flex items-center gap-2 mb-3">
+                        <SuitIcon className="w-5 h-5 text-primary" />
+                        <h4 className="font-medium text-foreground">{language === "et" ? "Mehed" : "Men"}</h4>
+                      </div>
+                      <ul className="text-sm space-y-2">
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Tumedad ülikonnad või smokingud" : "Dark suits or tuxedos"}</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Valge või helge särkk" : "White or light colored shirt"}</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          <span>{language === "et" ? "Lips ja formaalsed kingad" : "Tie and formal shoes"}</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </InfoSection>
@@ -249,24 +287,52 @@ export default function InfoPage() {
 
               {/* Children */}
               <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
-                <div className="text-muted-foreground">
+                <div className="text-muted-foreground space-y-3">
                   <p>{t.info.children.content}</p>
+                  <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                    <p className="text-sm font-medium text-foreground mb-2">{language === "et" ? "Osalemise tingimused:" : "Participation:"}</p>
+                    <ul className="text-sm space-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary mt-0.5">✓</span>
+                        <span>{language === "et" ? "Laulatus (tseremoonia) – oodatakse" : "Ceremony – Welcome"}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-muted-foreground/50 mt-0.5">–</span>
+                        <span>{language === "et" ? "Pidutamisõhtu (loss) – perekonna otsus" : "Reception (castle) – Family decision"}</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </InfoSection>
 
               {/* Contact */}
-              <InfoSection icon={<Phone className="w-5 h-5" />} title={t.info.contact.title}>
-                <div className="text-muted-foreground">
-                  <p className="mb-4">{t.info.contact.content}</p>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
-                      <span className="text-foreground font-medium">kirjaordu@gmail.com</span>
-                    </div>
-                    <p className="text-sm">
-                      {language === "et" ? "Kontaktandmed lisatakse peagi." : "Contact details will be added soon."}
-                    </p>
+              <InfoSection icon={<Mail className="w-5 h-5" />} title={t.info.contact.title}>
+                <div className="text-muted-foreground space-y-3">
+                  <div className="flex items-center gap-2 p-4 rounded-lg bg-secondary/30 border border-border hover:border-primary/30 transition-colors group">
+                    <a 
+                      href={`mailto:${email}`}
+                      className="flex-1 flex items-center gap-3 cursor-pointer"
+                    >
+                      <Mail className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-foreground font-medium group-hover:text-primary transition-colors">{email}</span>
+                    </a>
+                    <button
+                      onClick={copyEmail}
+                      className="flex-shrink-0 p-2 rounded hover:bg-foreground/10 transition-colors"
+                      title={language === "et" ? "Kopeeri" : "Copy"}
+                    >
+                      {copiedEmail ? (
+                        <Check className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
+                      )}
+                    </button>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    {language === "et" ? "Kliki e-posti avamiseks või kopeeri aadress" : "Click to open email or copy address"}
+                  </p>
                 </div>
+              </InfoSection>
               </InfoSection>
 
               {/* Theme Palette */}
