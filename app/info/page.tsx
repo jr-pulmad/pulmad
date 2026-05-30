@@ -6,29 +6,9 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection, CopyCodeButton } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, Phone, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-
-// Custom icons for dress code
-function DressIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2L8 6v2c0 2 1 4 4 5c3-1 4-3 4-5V6l-4-4z" />
-      <path d="M8 8c-2 1-4 3-4 6c0 4 3 8 8 8s8-4 8-8c0-3-2-5-4-6" />
-    </svg>
-  )
-}
-
-function SuitIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2l-3 4v4l3 2l3-2V6l-3-4z" />
-      <path d="M9 6L6 8v12c0 1 1 2 2 2h8c1 0 2-1 2-2V8l-3-2" />
-      <path d="M12 12v10" />
-    </svg>
-  )
-}
 
 export default function InfoPage() {
   const { t, language } = useI18n()
@@ -168,22 +148,17 @@ export default function InfoPage() {
                       : "We kindly ask you to wear formal attire suited to an elegant wedding celebration. Dress code: formal."}
                   </p>
 
+                  <p className="text-xs text-muted-foreground/70">
+                    {language === "et" ? "Näited:" : "Examples:"}
+                  </p>
                   <div className="grid sm:grid-cols-2 gap-3">
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-secondary/30 border border-border">
-                      <DressIcon className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <ul className="text-sm space-y-1.5">
-                        <li>{language === "et" ? "Pikk kleit või elegantne kostüüm" : "Long dress or elegant suit"}</li>
-                        <li>{language === "et" ? "Formaalsed kingad" : "Formal footwear"}</li>
-                        <li>{language === "et" ? "Diskreeetsed ehted" : "Understated jewellery"}</li>
-                      </ul>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
+                      <span className="text-lg">👗</span>
+                      <span className="text-sm">{language === "et" ? "Pikk kleit, elegantne kostüüm, formaalsed kingad" : "Long dress, elegant suit, formal footwear"}</span>
                     </div>
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-secondary/30 border border-border">
-                      <SuitIcon className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                      <ul className="text-sm space-y-1.5">
-                        <li>{language === "et" ? "Tume ülikond või smokingut" : "Dark suit or tuxedo"}</li>
-                        <li>{language === "et" ? "Valge või hele särk ja lips" : "White or light shirt with tie"}</li>
-                        <li>{language === "et" ? "Formaalsed kingad" : "Formal shoes"}</li>
-                      </ul>
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
+                      <span className="text-lg">🤵</span>
+                      <span className="text-sm">{language === "et" ? "Tume ülikond, hele särk, lips, formaalsed kingad" : "Dark suit, light shirt, tie, formal shoes"}</span>
                     </div>
                   </div>
                 </div>
@@ -228,57 +203,111 @@ export default function InfoPage() {
                 <div className="text-muted-foreground">
                   <p className="mb-4">{t.info.transport.content}</p>
 
-                  <div className="space-y-3">
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <h4 className="font-medium text-foreground mb-2">{language === "et" ? "Autoga" : "By car"}</h4>
-                      <p className="text-sm">
-                        {language === "et"
-                          ? "Alatskivi Loss asub ~45 km Tartust ja ~210 km Tallinnast. Parkimine on tasuta lossi territooriumil."
-                          : "Alatskivi Castle is located ~45 km from Tartu and ~210 km from Tallinn. Free parking available at the castle grounds."}
-                      </p>
-                    </div>
-                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                      <h4 className="font-medium text-foreground mb-2">
-                        {language === "et" ? "Ühistranspordiga" : "By public transport"}
+                  <div className="space-y-4">
+                    {/* Church transport */}
+                    <div>
+                      <h4 className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        {language === "et" ? "Maarja-Magdaleena kirik (laulatus)" : "Maarja-Magdaleena Church (ceremony)"}
                       </h4>
-                      <p className="text-sm">
-                        {language === "et"
-                          ? "Lähim bussipeatus asub Alatskivi külas. Sõiduplaanid leiab peatus.ee lehelt."
-                          : "The nearest bus stop is in Alatskivi village. Timetables available at peatus.ee."}
-                      </p>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~25 km Tartust" : "~25 km from Tartu"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://www.google.com/maps/dir/?api=1&destination=Maarja-Magdaleena+kirik+Estonia"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Navigation className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Bus className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "Peatus: Maarja-Magdaleena" : "Stop: Maarja-Magdaleena"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://peatus.ee/#route_search/to_name/Maarja-Magdaleena"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Castle transport */}
+                    <div>
+                      <h4 className="font-medium text-foreground text-sm mb-2 flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        {language === "et" ? "Alatskivi Loss (pidu)" : "Alatskivi Castle (reception)"}
+                      </h4>
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~45 km Tartust, tasuta parkimine" : "~45 km from Tartu, free parking"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://www.google.com/maps/dir/?api=1&destination=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Navigation className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Bus className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "Peatus: Alatskivi" : "Stop: Alatskivi"}</span>
+                            </div>
+                            <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                              <a
+                                href="https://peatus.ee/#route_search/to_name/Alatskivi"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  <Button asChild variant="outline" className="mt-4 bg-transparent">
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=Alatskivi+Castle+Lossi+1+60201+Alatskivi+Estonia"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {t.venue.directions}
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </a>
-                  </Button>
                 </div>
               </InfoSection>
 
               {/* Children */}
               <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
-                <div className="text-muted-foreground space-y-3">
-                  <p>{t.info.children.content}</p>
-                  <div className="p-4 rounded-lg bg-secondary/30 border border-border">
-                    <p className="text-sm font-medium text-foreground mb-2">{language === "et" ? "Osalemise tingimused:" : "Participation:"}</p>
-                    <ul className="text-sm space-y-2">
-                      <li className="flex items-start gap-2">
-                        <span className="text-primary mt-0.5">✓</span>
-                        <span>{language === "et" ? "Laulatus (tseremoonia) – oodatakse" : "Ceremony – Welcome"}</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-muted-foreground/50 mt-0.5">–</span>
-                        <span>{language === "et" ? "Pidutamisõhtu (loss) – perekonna otsus" : "Reception (castle) – Family decision"}</span>
-                      </li>
-                    </ul>
-                  </div>
+                <div className="text-muted-foreground">
+                  <p className="mb-3">
+                    {language === "et"
+                      ? "Lapsed on teretulnud laulatusel kirikus. Õhtune pidustus lossis on planeeritud täiskasvanute üritusena."
+                      : "Children are welcome at the church ceremony. The evening reception at the castle is planned as an adults-only event."}
+                  </p>
+                  <p className="text-sm text-muted-foreground/70">
+                    {language === "et"
+                      ? "Täname mõistmise eest — see võimaldab meil luua õhtu, kus kõik külalised saavad täielikult lõõgastuda ja pidutseda."
+                      : "Thank you for understanding — this allows us to create an evening where all guests can fully relax and celebrate."}
+                  </p>
                 </div>
               </InfoSection>
 
