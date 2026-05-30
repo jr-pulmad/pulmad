@@ -10,8 +10,9 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
-import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car } from "lucide-react"
+import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 type Step = "rsvp" | "guests" | "menu" | "success"
 
@@ -106,6 +107,8 @@ export function RSVPMenuForm() {
     if (showMenuSection) {
       // Go to guests confirmation step
       setCurrentStep("guests")
+      // Scroll to top on mobile
+      window.scrollTo({ top: 0, behavior: "smooth" })
       return
     }
 
@@ -116,6 +119,8 @@ export function RSVPMenuForm() {
     e.preventDefault()
     setError("")
     setCurrentStep("menu")
+    // Scroll to top on mobile
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const handleMenuSubmit = async (e: React.FormEvent) => {
@@ -212,6 +217,22 @@ export function RSVPMenuForm() {
               t.rsvp.success
             )}
           </p>
+          
+          {/* Navigation links */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 animate-fade-in-up" style={{ animationDelay: "0.5s", animationFillMode: "both" }}>
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link href="/info">
+                <Info className="w-4 h-4" />
+                {language === "et" ? "Kasulik info" : "Useful info"}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link href="/flowers">
+                <Flower2 className="w-4 h-4" />
+                {language === "et" ? "Kingi lilli" : "Gift flowers"}
+              </Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     )
