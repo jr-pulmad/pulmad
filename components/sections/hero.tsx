@@ -72,7 +72,7 @@ export function Hero() {
         "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-all duration-1000 delay-500",
         imageLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto translate-y-8 md:translate-y-0">
           {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-10 sm:w-16 bg-white/40" />
