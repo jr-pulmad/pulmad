@@ -130,7 +130,7 @@ export default function FlowersPaymentPage() {
                   <div className="flex items-center gap-2 mb-3">
                     <Smartphone className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-foreground">
-                      {language === "et" ? "Maksa pangaäpis" : "Pay in bank app"}
+                      {language === "et" ? "Maksa lingiga" : "Pay with a link"}
                     </span>
                   </div>
 
