@@ -39,14 +39,14 @@ export function Hero() {
             alt="Johanna & Rannar"
             fill
             priority
+            style={{ objectPosition: "center 20%" }}
             className={cn(
-              "object-cover object-[center_45%] transition-opacity duration-1000",
+              "object-cover transition-opacity duration-1000",
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setImageLoaded(true)}
           />
         </div>
-        
         {/* Desktop: Cropped landscape from face height */}
         <div className="hidden md:block absolute inset-0">
           <Image
