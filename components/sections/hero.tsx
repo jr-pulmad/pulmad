@@ -33,15 +33,14 @@ export function Hero() {
         )}
         
         {/* Mobile: Portrait image (full height) */}
-        <div className="block md:hidden absolute inset-0">
+        <div className="block md:hidden absolute inset-0 overflow-hidden">
           <Image
             src="/images/hero_couple.jpeg"
             alt="Johanna & Rannar"
             fill
             priority
-            style={{ objectPosition: "center 10%" }}
             className={cn(
-              "object-cover transition-opacity duration-1000",
+              "object-cover object-[center_0%] scale-[1.08] transition-opacity duration-1000",
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setImageLoaded(true)}
