@@ -4,15 +4,19 @@ import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { InfoSection, CopyCodeButton } from "@/components/info/info-section"
+import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function InfoPage() {
   const { t, language } = useI18n()
   const [copiedEmail, setCopiedEmail] = useState(false)
+  const [womenOutfitIndex, setWomenOutfitIndex] = useState(0)
+  const [menOutfitIndex, setMenOutfitIndex] = useState(0)
+  const [womenSpinning, setWomenSpinning] = useState(false)
+  const [menSpinning, setMenSpinning] = useState(false)
   
   const email = "kirjaordu@gmail.com"
   
@@ -23,24 +27,96 @@ export default function InfoPage() {
     })
   }
 
-  // Sample accommodation data - would be filled in later
+  // Outfit suggestions for the dress code randomizer
+  const womenOutfits = [
+    { et: "Smaragdroheline siidkleit ja kuldsed sandaalid", en: "Emerald green silk dress with gold sandals" },
+    { et: "Puudritooni midi-kleit ja pärlkõrvarõngad", en: "Blush midi dress with pearl earrings" },
+    { et: "Tumesinine õhtukleit ja hõbedased kontsad", en: "Navy blue evening gown with silver heels" },
+    { et: "Salveiroheline satiinkleit ja kuldne clutch", en: "Sage green satin dress with gold clutch" },
+    { et: "Bordoopunane maksi-kleit ja elegantsed sandaalid", en: "Burgundy maxi dress with elegant sandals" },
+    { et: "Kreemjas pitskleit ja pärlkaelakee", en: "Cream lace dress with pearl necklace" },
+    { et: "Tumeroosa A-lõikeline kleit ja kuldne vöö", en: "Dusty rose A-line dress with gold belt" },
+    { et: "Šampanjavärvi siidkleit ja hõbedane kõrvarõngad", en: "Champagne silk dress with silver earrings" },
+    { et: "Teal-värvi maksi-kleit ja kuldsed aksessuaarid", en: "Teal maxi dress with gold accessories" },
+    { et: "Lavendlililla õhtukleit ja pärl käevõru", en: "Lavender evening dress with pearl bracelet" },
+  ]
+
+  const menOutfits = [
+    { et: "Tumeroheline ülikond, valge särk ja kuldne lips", en: "Dark green suit, white shirt, and gold tie" },
+    { et: "Tumesinine ülikond, helesinine särk ja hõbedane lipsunõel", en: "Navy suit, light blue shirt, and silver tie pin" },
+    { et: "Hallikas ülikond, valge särk ja smaragdroheline lips", en: "Charcoal suit, white shirt, and emerald tie" },
+    { et: "Beež linane ülikond ja valge avatud kaelaga särk", en: "Beige linen suit with white open-collar shirt" },
+    { et: "Must klassikaline ülikond ja bordoopunane lips", en: "Classic black suit with burgundy tie" },
+    { et: "Tumepruun ülikond, kreemjas särk ja kuldne taskurätt", en: "Dark brown suit, cream shirt, and gold pocket square" },
+    { et: "Tumehall kolmikosa ülikond ja hõbedane lips", en: "Dark grey three-piece suit with silver tie" },
+    { et: "Metsaroheline blazer, must püksid ja tumesinine lips", en: "Forest green blazer, black trousers, and navy tie" },
+    { et: "Tumesinine smokingülikond ja must kikilips", en: "Navy tuxedo with black bow tie" },
+    { et: "Oliivtooni ülikond, valge särk ja pruun nahkvöö", en: "Olive suit, white shirt, and brown leather belt" },
+  ]
+
+  const randomizeWomenOutfit = () => {
+    setWomenSpinning(true)
+    let count = 0
+    const currentIndex = womenOutfitIndex
+    const interval = setInterval(() => {
+      // Ensure we don't land on the same outfit
+      let newIndex
+      do {
+        newIndex = Math.floor(Math.random() * womenOutfits.length)
+      } while (newIndex === currentIndex && womenOutfits.length > 1)
+      setWomenOutfitIndex(newIndex)
+      count++
+      if (count > 8) {
+        clearInterval(interval)
+        setWomenSpinning(false)
+      }
+    }, 100)
+  }
+
+  const randomizeMenOutfit = () => {
+    setMenSpinning(true)
+    let count = 0
+    const currentIndex = menOutfitIndex
+    const interval = setInterval(() => {
+      // Ensure we don't land on the same outfit
+      let newIndex
+      do {
+        newIndex = Math.floor(Math.random() * menOutfits.length)
+      } while (newIndex === currentIndex && menOutfits.length > 1)
+      setMenOutfitIndex(newIndex)
+      count++
+      if (count > 8) {
+        clearInterval(interval)
+        setMenSpinning(false)
+      }
+    }, 100)
+  }
+
+  // Accommodation options near the venue
   const accommodations = [
     {
-      name: "Alatskivi Kõrtsitalu",
-      description_et: "Hubane külalistemaja lossi lähedal",
-      description_en: "Cozy guesthouse near the castle",
-      distance: "0.5 km",
-      link: "https://www.kortsitalu.ee/",
+      name: "Sepikoja Külalistemaja",
+      description_et: "Hubane külalistemaja lossi kõrval",
+      description_en: "Cozy guesthouse next to the castle",
+      distance: "0.2 km",
+      link: "https://www.booking.com/hotel/ee/sepikoja-ka1-4lalistemaja.et.html",
     },
     {
-      name: "Peipsi Veski Puhkemaja",
-      description_et: "Maalilises asukohas puhkemaja Peipsi järve ääres",
-      description_en: "Scenic guesthouse by Lake Peipsi",
-      distance: "15 km",
-      link: "https://www.booking.com/hotel/ee/peipsi-veski-puhkemaja.html",
+      name: "Peipsi Lake House",
+      description_et: "Moodne puhkemaja Peipsi järve ääres",
+      description_en: "Modern holiday house by Lake Peipsi",
+      distance: "20 km",
+      link: "https://www.booking.com/hotel/ee/peipsi-lake-house.et.html",
     },
     {
-      name: "Tartu hotels",
+      name: "Hostel Laguun",
+      description_et: "Soodne hostel Peipsi ääres",
+      description_en: "Budget-friendly hostel by Lake Peipsi",
+      distance: "25 km",
+      link: "https://laguun.xtadia.com/index.php",
+    },
+    {
+      name: "Tartu hotellid",
       description_et: "Mitmeid hotelle Tartu kesklinnas",
       description_en: "Various hotels in Tartu city center",
       distance: "45 km",
@@ -106,7 +182,7 @@ export default function InfoPage() {
             {/* Info sections */}
             <div className="space-y-6">
               {/* Schedule */}
-              <InfoSection icon={<Clock className="w-5 h-5" />} title={t.info.schedule.title}>
+              <InfoSection icon={<Clock className="w-5 h-5" />} title={t.info.schedule.title} animatedIcon="clock">
                 <div className="text-muted-foreground">
                   <div className="space-y-4">
                     {/* Ceremony */}
@@ -149,7 +225,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Dress code */}
-              <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title}>
+              <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title} animatedIcon="shirt">
                 <div className="text-muted-foreground space-y-4">
                   <p>
                     {language === "et"
@@ -158,27 +234,72 @@ export default function InfoPage() {
                   </p>
 
                   <p className="text-xs text-muted-foreground/70">
-                    {language === "et" ? "Näited:" : "Examples:"}
+                    {language === "et" ? "Vajad inspiratsiooni? Proovi meie riietusgeneraatorit!" : "Need inspiration? Try our outfit generator!"}
                   </p>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
-                      <span className="text-lg">👗</span>
-                      <span className="text-sm">{language === "et" ? "Pikk kleit, elegantne kostüüm, formaalsed kingad" : "Long dress, elegant suit, formal footwear"}</span>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {/* Women's outfit randomizer */}
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border overflow-hidden">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">👗</span>
+                          <span className="text-sm font-medium text-foreground">{language === "et" ? "Naistele" : "For Women"}</span>
+                        </div>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={randomizeWomenOutfit}
+                          disabled={womenSpinning}
+                          className={`gap-1.5 transition-all duration-200 ${womenSpinning ? 'scale-95' : 'hover:scale-105'}`}
+                        >
+                          <Dices className={`w-4 h-4 ${womenSpinning ? 'animate-bounce' : ''}`} />
+                          {language === "et" ? "Vali uus!" : "Roll!"}
+                        </Button>
+                      </div>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${womenSpinning ? 'opacity-50 blur-[1px]' : ''}`}>
+                        <p className="text-sm text-foreground">
+                          {language === "et" ? womenOutfits[womenOutfitIndex].et : womenOutfits[womenOutfitIndex].en}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
-                      <span className="text-lg">🤵</span>
-                      <span className="text-sm">{language === "et" ? "Tume ülikond, hele särk, lips, formaalsed kingad" : "Dark suit, light shirt, tie, formal shoes"}</span>
+
+                    {/* Men's outfit randomizer */}
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border overflow-hidden">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🤵</span>
+                          <span className="text-sm font-medium text-foreground">{language === "et" ? "Meestele" : "For Men"}</span>
+                        </div>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={randomizeMenOutfit}
+                          disabled={menSpinning}
+                          className={`gap-1.5 transition-all duration-200 ${menSpinning ? 'scale-95' : 'hover:scale-105'}`}
+                        >
+                          <Dices className={`w-4 h-4 ${menSpinning ? 'animate-bounce' : ''}`} />
+                          {language === "et" ? "Vali uus!" : "Roll!"}
+                        </Button>
+                      </div>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${menSpinning ? 'opacity-50 blur-[1px]' : ''}`}>
+                        <p className="text-sm text-foreground">
+                          {language === "et" ? menOutfits[menOutfitIndex].et : menOutfits[menOutfitIndex].en}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </InfoSection>
 
               {/* Accommodation */}
-              <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title}>
+              <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title} animatedIcon="hotel">
                 <div className="text-muted-foreground">
-                  <p className="mb-4">{t.info.accommodation.content}</p>
+                  <p className="mb-4 text-sm">
+                    {language === "et"
+                      ? "Majutust me ise ei korralda, kuid soovitame järgmisi võimalusi:"
+                      : "We do not arrange accommodation ourselves, but we recommend the following options:"}
+                  </p>
 
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-3">
                     {accommodations.map((acc, index) => (
                       <div key={index} className="p-4 rounded-lg bg-secondary/30 border border-border">
                         <div className="flex items-start justify-between gap-4">
@@ -204,20 +325,11 @@ export default function InfoPage() {
                       </div>
                     ))}
                   </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">{t.info.accommodation.discountCode}:</p>
-                    <CopyCodeButton
-                      code="RANDMÄED26"
-                      copyLabel={t.info.accommodation.copyCode}
-                      copiedLabel={t.info.accommodation.copied}
-                    />
-                  </div>
                 </div>
               </InfoSection>
 
               {/* Transport */}
-              <InfoSection icon={<Car className="w-5 h-5" />} title={t.info.transport.title}>
+              <InfoSection icon={<Car className="w-5 h-5" />} title={t.info.transport.title} animatedIcon="car">
                 <div className="text-muted-foreground">
                   <p className="mb-4">{t.info.transport.content}</p>
 
@@ -244,6 +356,14 @@ export default function InfoPage() {
                                 <Navigation className="w-4 h-4" />
                               </a>
                             </Button>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~30 km Alatskivi lossini" : "~30 km to Alatskivi Castle"}</span>
+                            </div>
                           </div>
                         </div>
                         <div className="p-3 rounded-lg bg-secondary/30 border border-border">
@@ -277,7 +397,7 @@ export default function InfoPage() {
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <Car className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-sm">{language === "et" ? "~45 km Tartust, tasuta parkimine" : "~45 km from Tartu, free parking"}</span>
+                              <span className="text-sm">{language === "et" ? "~45 km Tartust" : "~45 km from Tartu"}</span>
                             </div>
                             <Button asChild variant="ghost" size="sm" className="h-8 px-2">
                               <a
@@ -314,7 +434,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Children */}
-              <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
+              <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title} animatedIcon="baby">
                 <div className="text-muted-foreground">
                   <p>
                     {language === "et"

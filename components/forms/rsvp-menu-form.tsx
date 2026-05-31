@@ -471,7 +471,7 @@ export function RSVPMenuForm() {
             <form onSubmit={handleGuestsSubmit} className="space-y-5">
               {/* Main guest reminder */}
               <div className="p-4 rounded-xl bg-secondary/30 border border-border">
-                <p className="text-sm text-muted-foreground">{language === "et" ? "Peamine külaline:" : "Primary guest:"}</p>
+                <p className="text-sm text-muted-foreground">{language === "et" ? "Sinu andmed:" : "Your details:"}</p>
                 <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
               </div>
 
@@ -552,7 +552,10 @@ export function RSVPMenuForm() {
                   variant="outline" 
                   size="lg"
                   className="sm:flex-1 cursor-pointer"
-                  onClick={() => setCurrentStep("rsvp")}
+                  onClick={() => {
+                    setCurrentStep("rsvp")
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   {t.common.back}
@@ -585,7 +588,7 @@ export function RSVPMenuForm() {
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">1</div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Peamine külaline" : "Primary guest"}</p>
+                    <p className="text-sm text-muted-foreground">{language === "et" ? "Sina" : "You"}</p>
                     <p className="font-medium text-foreground">{formData.firstName} {formData.lastName}</p>
                   </div>
                 </div>
@@ -719,7 +722,10 @@ export function RSVPMenuForm() {
                   variant="outline" 
                   size="lg"
                   className="sm:flex-1 cursor-pointer"
-                  onClick={() => setCurrentStep("guests")}
+                  onClick={() => {
+                    setCurrentStep("guests")
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
                   {t.common.back}

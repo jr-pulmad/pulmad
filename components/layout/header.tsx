@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Flower2, Info, Heart, FlowerIcon as Flower2Filled } from "lucide-react"
+import { Menu, X, Flower2, Info, Heart } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Filled heart icon
@@ -23,6 +23,15 @@ function InfoFilled({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+    </svg>
+  )
+}
+
+// Filled flower icon (for active state)
+function Flower2Filled({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M12 2a5 5 0 0 0-2.5 9.33A5 5 0 0 0 7 11a5 5 0 0 0-.67 9.95c.16.02.33.03.5.04L7 22l5-3 5 3 .17-1.01c.17-.01.34-.02.5-.04A5 5 0 0 0 17 11a5 5 0 0 0-2.5-.67A5 5 0 0 0 12 2z" />
     </svg>
   )
 }

@@ -404,25 +404,6 @@
     inset 0 -3px 6px rgba(0, 0, 0, 0.12);
 }
 
-/* Bottom subtle reflection line */
-.rsvp-glass-btn::after {
-  content: "";
-  position: absolute;
-  bottom: 4px;
-  left: 20%;
-  right: 20%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.18) 30%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.18) 70%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
 .rsvp-glass-btn:hover {
   background: linear-gradient(
     145deg,
@@ -446,6 +427,87 @@
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Info section icon animations */
+@keyframes car-drive {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(3px) rotate(2deg);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(3px) rotate(-2deg);
+  }
+}
+
+@keyframes clock-tick {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(8deg);
+  }
+  75% {
+    transform: rotate(-8deg);
+  }
+}
+
+@keyframes hotel-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes shirt-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes baby-rock {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+.group-hover\:animate-car-drive:is(:where(.group):hover *) {
+  animation: car-drive 0.6s ease-in-out;
+}
+
+.group-hover\:animate-clock-tick:is(:where(.group):hover *) {
+  animation: clock-tick 0.5s ease-in-out;
+}
+
+.group-hover\:animate-hotel-bounce:is(:where(.group):hover *) {
+  animation: hotel-bounce 0.4s ease-in-out;
+}
+
+.group-hover\:animate-shirt-sway:is(:where(.group):hover *) {
+  animation: shirt-sway 0.5s ease-in-out;
+}
+
+.group-hover\:animate-baby-rock:is(:where(.group):hover *) {
+  animation: baby-rock 0.5s ease-in-out;
 }
 
 /* Focus visible styles */

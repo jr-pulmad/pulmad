@@ -13,14 +13,37 @@ interface InfoSectionProps {
   title: string
   children: React.ReactNode
   className?: string
+  animatedIcon?: "car" | "clock" | "hotel" | "shirt" | "baby" | "none"
 }
 
-export function InfoSection({ icon, title, children, className }: InfoSectionProps) {
+export function InfoSection({ icon, title, children, className, animatedIcon = "none" }: InfoSectionProps) {
+  const getAnimationClass = () => {
+    switch (animatedIcon) {
+      case "car":
+        return "group-hover:animate-car-drive"
+      case "clock":
+        return "group-hover:animate-clock-tick"
+      case "hotel":
+        return "group-hover:animate-hotel-bounce"
+      case "shirt":
+        return "group-hover:animate-shirt-sway"
+      case "baby":
+        return "group-hover:animate-baby-rock"
+      default:
+        return "group-hover:scale-110"
+    }
+  }
+
   return (
-    <Card className={cn("bg-card/50 border-border", className)}>
+    <Card className={cn("bg-card/50 border-border group", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-primary/10 text-primary">{icon}</div>
+          <div className={cn(
+            "p-2.5 rounded-xl bg-primary/10 text-primary transition-all duration-300",
+            getAnimationClass()
+          )}>
+            {icon}
+          </div>
           <CardTitle className="font-serif text-xl font-medium text-foreground">{title}</CardTitle>
         </div>
       </CardHeader>
