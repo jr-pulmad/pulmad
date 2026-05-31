@@ -404,25 +404,6 @@
     inset 0 -3px 6px rgba(0, 0, 0, 0.12);
 }
 
-/* Bottom subtle reflection line */
-.rsvp-glass-btn::after {
-  content: "";
-  position: absolute;
-  bottom: 4px;
-  left: 20%;
-  right: 20%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.18) 30%,
-    rgba(255, 255, 255, 0.25) 50%,
-    rgba(255, 255, 255, 0.18) 70%,
-    transparent 100%
-  );
-  pointer-events: none;
-}
-
 .rsvp-glass-btn:hover {
   background: linear-gradient(
     145deg,
