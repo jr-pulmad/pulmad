@@ -95,7 +95,7 @@ export function Hero() {
           </p>
 
           {/* RSVP Button — liquid glass */}
-          <div className=" mt-18 md:mt-0" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
+          <div className="animate-fade-in-up mt-18 md:mt-0" style={{ animationDelay: "1.4s" }}>
             <Link
               href="/rsvp"
               className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
