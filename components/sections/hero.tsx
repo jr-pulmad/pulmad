@@ -40,7 +40,7 @@ export function Hero() {
             fill
             priority
             className={cn(
-              "object-cover object-[center_0%] scale-[1.08] transition-opacity duration-1000",
+              "object-cover scale-95 transition-opacity duration-1000",
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setImageLoaded(true)}
