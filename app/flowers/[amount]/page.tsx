@@ -45,7 +45,7 @@ export default function FlowersPaymentPage() {
   }
 
   // Reference includes amount without currency
-  const referenceValue = `Pulmalilled ${amount}`;
+  const referenceValue = `Pulmalilled ${amount}`
 
   const fields = [
     {
@@ -80,7 +80,6 @@ export default function FlowersPaymentPage() {
       <Header />
       <main className="flex-1 pt-24 sm:pt-28 pb-12">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-
           {/* Back button */}
           <button
             onClick={() => router.back()}
@@ -109,7 +108,6 @@ export default function FlowersPaymentPage() {
           <Card className="border-border bg-card/50">
             <CardContent className="p-4 sm:p-5">
               <div className="flex flex-col sm:flex-row sm:items-stretch gap-4">
-                
                 {/* QR Code - left side */}
                 <div className="flex flex-col items-center sm:flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -118,18 +116,20 @@ export default function FlowersPaymentPage() {
                       {language === "et" ? "Skaneeri" : "Scan"}
                     </span>
                   </div>
-                  <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-lg overflow-hidden bg-white p-0.5">
+
+                  <div className="w-48 h-48 sm:w-52 sm:h-52 rounded-lg overflow-hidden bg-white p-0">
                     <Image
                       src={QR_CODES[amount]}
                       alt={`QR code for ${amount}€ payment`}
-                      width={200}
-                      height={200}
+                      width={240}
+                      height={240}
                       className="w-full h-full object-contain"
                     />
                   </div>
+
                   <p className="text-[10px] text-muted-foreground mt-1.5 text-center max-w-[140px]">
-                    {language === "et" 
-                      ? "Ava pangaäpp ja skaneeri" 
+                    {language === "et"
+                      ? "Ava pangaäpp ja skaneeri"
                       : "Open bank app & scan"}
                   </p>
                 </div>
@@ -144,39 +144,44 @@ export default function FlowersPaymentPage() {
                 </div>
 
                 {/* Manual Bank Details - right side */}
-                <div className="flex-1 sm:flex-[1.3]">
+                <div className="flex-1 sm:flex-[1]">
                   <p className="text-sm font-medium text-foreground mb-2 text-center sm:text-left">
                     {language === "et" ? "Sisesta käsitsi" : "Enter manually"}
                   </p>
+
                   <div className="space-y-1.5">
                     {fields.map((field) => (
                       <div
                         key={field.key}
-                        className="flex items-center justify-between py-1.5 px-2 rounded-md bg-secondary/30 border border-border"
+                        className="flex items-center justify-between py-2 px-2 rounded-md bg-secondary/30 border border-border"
                       >
                         <div className="flex flex-col min-w-0">
-                          <span className="text-[9px] text-muted-foreground leading-tight">{field.label}</span>
-                          <span className="text-[11px] font-medium text-foreground truncate">{field.value}</span>
+                          <span className="text-[11px] text-muted-foreground leading-tight">
+                            {field.label}
+                          </span>
+                          <span className="text-sm font-medium text-foreground truncate">
+                            {field.value}
+                          </span>
                         </div>
+
                         <button
                           onClick={() => copyToClipboard(field.value, field.key)}
-                          className="ml-2 flex-shrink-0 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+                          className="ml-2 flex-shrink-0 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
                           aria-label={`Copy ${field.label}`}
                         >
-                          {copiedField === field.key
-                            ? <Check className="w-3 h-3 text-primary" />
-                            : <Copy className="w-3 h-3" />
-                          }
+                          {copiedField === field.key ? (
+                            <Check className="w-4 h-4 text-primary" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
                         </button>
                       </div>
                     ))}
                   </div>
                 </div>
-
               </div>
             </CardContent>
           </Card>
-
         </div>
       </main>
       <Footer />
