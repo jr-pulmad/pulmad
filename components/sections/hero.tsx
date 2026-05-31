@@ -31,7 +31,7 @@ export function Hero() {
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
         )}
-
+        
         {/* Mobile: Portrait image (full height) */}
         <div className="block md:hidden absolute inset-0">
           <Image
@@ -47,7 +47,6 @@ export function Hero() {
             onLoad={() => setImageLoaded(true)}
           />
         </div>
-
         {/* Desktop: Cropped landscape from face height */}
         <div className="hidden md:block absolute inset-0">
           <Image
@@ -62,61 +61,41 @@ export function Hero() {
             onLoad={() => setImageLoaded(true)}
           />
         </div>
-
+        
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 dark:from-black/80 dark:via-black/50 dark:to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.3)_100%)]" />
       </div>
 
       {/* Content */}
-      <div
-        className={cn(
-          "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-transform duration-1000 delay-500",
-          imageLoaded ? "translate-y-0" : "translate-y-4"
-        )}
-      >
+      <div className={cn(
+        "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-all duration-1000 delay-500",
+        imageLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      )}>
         <div className="max-w-3xl mx-auto translate-y-6 md:translate-y-0">
           {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-10 sm:w-16 bg-white/40" />
-            <span className="text-white/80 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-light">
-              {t.hero.saveTheDate}
-            </span>
+            <span className="text-white/80 text-[10px] sm:text-xs tracking-[0.3em] uppercase font-light">{t.hero.saveTheDate}</span>
             <div className="h-px w-10 sm:w-16 bg-white/40" />
           </div>
 
           {/* Names - & symbol in white */}
           <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium tracking-tight text-white mb-3 sm:mb-4 text-balance drop-shadow-lg">
-            <span
-              className="inline-block animate-fade-in-up"
-              style={{ animationDelay: "0.6s", animationFillMode: "both" }}
-            >
-              Johanna
-            </span>{" "}
-            <span
-              className="inline-block text-white animate-fade-in-up"
-              style={{ animationDelay: "0.8s", animationFillMode: "both" }}
-            >
-              &
-            </span>{" "}
-            <span
-              className="inline-block animate-fade-in-up"
-              style={{ animationDelay: "1s", animationFillMode: "both" }}
-            >
-              Rannar
-            </span>
+            <span className="inline-block animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>Johanna</span>
+            {" "}
+            <span className="inline-block text-white animate-fade-in-up" style={{ animationDelay: "0.8s", animationFillMode: "both" }}>&</span>
+            {" "}
+            <span className="inline-block animate-fade-in-up" style={{ animationDelay: "1s", animationFillMode: "both" }}>Rannar</span>
           </h1>
 
           {/* Date */}
-          <p
-            className="text-lg sm:text-xl md:text-2xl text-white font-light tracking-wide mb-8 sm:mb-12 animate-fade-in-up"
-            style={{ animationDelay: "1.2s", animationFillMode: "both" }}
-          >
+          <p className="text-lg sm:text-xl md:text-2xl text-white font-light tracking-wide mb-8 sm:mb-12 animate-fade-in-up" style={{ animationDelay: "1.2s", animationFillMode: "both" }}>
             {t.hero.date}
           </p>
 
           {/* RSVP Button — liquid glass */}
-          <div className="mt-18 md:mt-0">
+          <div className="animate-fade-in-up mt-18 md:mt-0" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
             <Link
               href="/rsvp"
               className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
@@ -139,3 +118,5 @@ export function Hero() {
     </section>
   )
 }
+
+Here u can see all parents
