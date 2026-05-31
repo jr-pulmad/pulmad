@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Sparkles } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -35,6 +35,10 @@ export default function InfoPage() {
     { et: "Salveiroheline satiinkleit ja kuldne clutch", en: "Sage green satin dress with gold clutch" },
     { et: "Bordoopunane maksi-kleit ja elegantsed sandaalid", en: "Burgundy maxi dress with elegant sandals" },
     { et: "Kreemjas pitskleit ja pärlkaelakee", en: "Cream lace dress with pearl necklace" },
+    { et: "Tumeroosa A-lõikeline kleit ja kuldne vöö", en: "Dusty rose A-line dress with gold belt" },
+    { et: "Šampanjavärvi siidkleit ja hõbedane kõrvarõngad", en: "Champagne silk dress with silver earrings" },
+    { et: "Teal-värvi maksi-kleit ja kuldsed aksessuaarid", en: "Teal maxi dress with gold accessories" },
+    { et: "Lavendlililla õhtukleit ja pärl käevõru", en: "Lavender evening dress with pearl bracelet" },
   ]
 
   const menOutfits = [
@@ -44,13 +48,23 @@ export default function InfoPage() {
     { et: "Beež linane ülikond ja valge avatud kaelaga särk", en: "Beige linen suit with white open-collar shirt" },
     { et: "Must klassikaline ülikond ja bordoopunane lips", en: "Classic black suit with burgundy tie" },
     { et: "Tumepruun ülikond, kreemjas särk ja kuldne taskurätt", en: "Dark brown suit, cream shirt, and gold pocket square" },
+    { et: "Tumehall kolmikosa ülikond ja hõbedane lips", en: "Dark grey three-piece suit with silver tie" },
+    { et: "Metsaroheline blazer, must püksid ja tumesinine lips", en: "Forest green blazer, black trousers, and navy tie" },
+    { et: "Tumesinine smokingülikond ja must kikilips", en: "Navy tuxedo with black bow tie" },
+    { et: "Oliivtooni ülikond, valge särk ja pruun nahkvöö", en: "Olive suit, white shirt, and brown leather belt" },
   ]
 
   const randomizeWomenOutfit = () => {
     setWomenSpinning(true)
     let count = 0
+    const currentIndex = womenOutfitIndex
     const interval = setInterval(() => {
-      setWomenOutfitIndex(Math.floor(Math.random() * womenOutfits.length))
+      // Ensure we don't land on the same outfit
+      let newIndex
+      do {
+        newIndex = Math.floor(Math.random() * womenOutfits.length)
+      } while (newIndex === currentIndex && womenOutfits.length > 1)
+      setWomenOutfitIndex(newIndex)
       count++
       if (count > 8) {
         clearInterval(interval)
@@ -62,8 +76,14 @@ export default function InfoPage() {
   const randomizeMenOutfit = () => {
     setMenSpinning(true)
     let count = 0
+    const currentIndex = menOutfitIndex
     const interval = setInterval(() => {
-      setMenOutfitIndex(Math.floor(Math.random() * menOutfits.length))
+      // Ensure we don't land on the same outfit
+      let newIndex
+      do {
+        newIndex = Math.floor(Math.random() * menOutfits.length)
+      } while (newIndex === currentIndex && menOutfits.length > 1)
+      setMenOutfitIndex(newIndex)
       count++
       if (count > 8) {
         clearInterval(interval)
@@ -162,7 +182,7 @@ export default function InfoPage() {
             {/* Info sections */}
             <div className="space-y-6">
               {/* Schedule */}
-              <InfoSection icon={<Clock className="w-5 h-5" />} title={t.info.schedule.title}>
+              <InfoSection icon={<Clock className="w-5 h-5" />} title={t.info.schedule.title} animatedIcon="clock">
                 <div className="text-muted-foreground">
                   <div className="space-y-4">
                     {/* Ceremony */}
@@ -205,7 +225,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Dress code */}
-              <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title}>
+              <InfoSection icon={<Shirt className="w-5 h-5" />} title={t.info.dressCode.title} animatedIcon="shirt">
                 <div className="text-muted-foreground space-y-4">
                   <p>
                     {language === "et"
@@ -218,21 +238,24 @@ export default function InfoPage() {
                   </p>
                   <div className="grid sm:grid-cols-2 gap-4">
                     {/* Women's outfit randomizer */}
-                    <div className="p-4 rounded-xl bg-secondary/30 border border-border">
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border overflow-hidden">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-foreground">{language === "et" ? "Naistele" : "For Women"}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">👗</span>
+                          <span className="text-sm font-medium text-foreground">{language === "et" ? "Naistele" : "For Women"}</span>
+                        </div>
                         <Button
-                          variant="outline"
+                          variant="default"
                           size="sm"
                           onClick={randomizeWomenOutfit}
                           disabled={womenSpinning}
-                          className="gap-1.5"
+                          className={`gap-1.5 transition-all duration-200 ${womenSpinning ? 'scale-95' : 'hover:scale-105'}`}
                         >
-                          <Sparkles className={`w-3.5 h-3.5 ${womenSpinning ? 'animate-spin' : ''}`} />
-                          {language === "et" ? "Uus" : "New"}
+                          <Dices className={`w-4 h-4 ${womenSpinning ? 'animate-bounce' : ''}`} />
+                          {language === "et" ? "Vali uus!" : "Roll!"}
                         </Button>
                       </div>
-                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${womenSpinning ? 'opacity-50 scale-[0.98]' : ''}`}>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${womenSpinning ? 'opacity-50 blur-[1px]' : ''}`}>
                         <p className="text-sm text-foreground">
                           {language === "et" ? womenOutfits[womenOutfitIndex].et : womenOutfits[womenOutfitIndex].en}
                         </p>
@@ -240,21 +263,24 @@ export default function InfoPage() {
                     </div>
 
                     {/* Men's outfit randomizer */}
-                    <div className="p-4 rounded-xl bg-secondary/30 border border-border">
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border overflow-hidden">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-foreground">{language === "et" ? "Meestele" : "For Men"}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🤵</span>
+                          <span className="text-sm font-medium text-foreground">{language === "et" ? "Meestele" : "For Men"}</span>
+                        </div>
                         <Button
-                          variant="outline"
+                          variant="default"
                           size="sm"
                           onClick={randomizeMenOutfit}
                           disabled={menSpinning}
-                          className="gap-1.5"
+                          className={`gap-1.5 transition-all duration-200 ${menSpinning ? 'scale-95' : 'hover:scale-105'}`}
                         >
-                          <Sparkles className={`w-3.5 h-3.5 ${menSpinning ? 'animate-spin' : ''}`} />
-                          {language === "et" ? "Uus" : "New"}
+                          <Dices className={`w-4 h-4 ${menSpinning ? 'animate-bounce' : ''}`} />
+                          {language === "et" ? "Vali uus!" : "Roll!"}
                         </Button>
                       </div>
-                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${menSpinning ? 'opacity-50 scale-[0.98]' : ''}`}>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${menSpinning ? 'opacity-50 blur-[1px]' : ''}`}>
                         <p className="text-sm text-foreground">
                           {language === "et" ? menOutfits[menOutfitIndex].et : menOutfits[menOutfitIndex].en}
                         </p>
@@ -265,7 +291,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Accommodation */}
-              <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title}>
+              <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title} animatedIcon="hotel">
                 <div className="text-muted-foreground">
                   <p className="mb-4 text-sm">
                     {language === "et"
@@ -303,7 +329,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Transport */}
-              <InfoSection icon={<Car className="w-5 h-5" />} title={t.info.transport.title}>
+              <InfoSection icon={<Car className="w-5 h-5" />} title={t.info.transport.title} animatedIcon="car">
                 <div className="text-muted-foreground">
                   <p className="mb-4">{t.info.transport.content}</p>
 
@@ -408,7 +434,7 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Children */}
-              <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
+              <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title} animatedIcon="baby">
                 <div className="text-muted-foreground">
                   <p>
                     {language === "et"
