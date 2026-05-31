@@ -75,7 +75,7 @@ export function Hero() {
           imageLoaded ? "translate-y-0" : "translate-y-4"
         )}
       >
-        <div className="max-w-3xl mx-auto translate-y-4 md:translate-y-0">
+        <div className="max-w-3xl mx-auto translate-y-6 md:translate-y-0">
           {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-10 sm:w-16 bg-white/40" />
@@ -116,7 +116,7 @@ export function Hero() {
           </p>
 
           {/* RSVP Button — liquid glass */}
-          <div className="mt-28 md:mt-0">
+          <div className="mt-20 md:mt-0">
             <Link
               href="/rsvp"
               className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
