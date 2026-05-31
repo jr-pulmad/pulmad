@@ -45,7 +45,7 @@ export default function FlowersPaymentPage() {
   }
 
   // Reference includes amount without currency
-  const referenceValue = language === "et" ? `Pulmalilled ${amount}` : `Wedding flowers ${amount}`
+  const referenceValue = `Pulmalilled ${amount}`;
 
   const fields = [
     {
@@ -118,12 +118,12 @@ export default function FlowersPaymentPage() {
                       {language === "et" ? "Skaneeri" : "Scan"}
                     </span>
                   </div>
-                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-lg overflow-hidden bg-white p-1.5">
+                  <div className="w-40 h-40 sm:w-44 sm:h-44 rounded-lg overflow-hidden bg-white p-0.5">
                     <Image
                       src={QR_CODES[amount]}
                       alt={`QR code for ${amount}€ payment`}
-                      width={150}
-                      height={150}
+                      width={200}
+                      height={200}
                       className="w-full h-full object-contain"
                     />
                   </div>
@@ -176,13 +176,6 @@ export default function FlowersPaymentPage() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Footer note */}
-          <p className="text-[10px] text-muted-foreground text-center mt-3">
-            {language === "et"
-              ? `Selgitus: "${referenceValue}"`
-              : `Reference: "${referenceValue}"`}
-          </p>
 
         </div>
       </main>
