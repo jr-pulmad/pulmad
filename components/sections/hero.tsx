@@ -33,13 +33,13 @@ export function Hero() {
         )}
         
         {/* Mobile: Portrait image (full height) */}
-        <div className="block md:hidden absolute inset-0 overflow-hidden">
+        <div className="block md:hidden absolute inset-0">
           <Image
             src="/images/hero_couple.jpeg"
             alt="Johanna & Rannar"
             fill
             priority
-            style={{ objectPosition: "center 20%" }} 
+            style={{ objectPosition: "center 10%" }}
             className={cn(
               "object-cover transition-opacity duration-1000",
               imageLoaded ? "opacity-100" : "opacity-0"
@@ -95,7 +95,7 @@ export function Hero() {
           </p>
 
           {/* RSVP Button — liquid glass */}
-          <div className="animate-fade-in-up" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
+          <div className="animate-fade-in-up mt-6 md:mt-0" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
             <Link
               href="/rsvp"
               className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
