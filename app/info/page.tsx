@@ -30,12 +30,21 @@ export default function InfoPage() {
       description_et: "Hubane külalistemaja lossi lähedal",
       description_en: "Cozy guesthouse near the castle",
       distance: "0.5 km",
+      link: "https://www.kortsitalu.ee/",
+    },
+    {
+      name: "Peipsi Veski Puhkemaja",
+      description_et: "Maalilises asukohas puhkemaja Peipsi järve ääres",
+      description_en: "Scenic guesthouse by Lake Peipsi",
+      distance: "15 km",
+      link: "https://www.booking.com/hotel/ee/peipsi-veski-puhkemaja.html",
     },
     {
       name: "Tartu hotels",
       description_et: "Mitmeid hotelle Tartu kesklinnas",
       description_en: "Various hotels in Tartu city center",
       distance: "45 km",
+      link: "https://www.booking.com/city/ee/tartu.html",
     },
   ]
 
@@ -178,6 +187,15 @@ export default function InfoPage() {
                             <p className="text-sm mt-1">
                               {language === "et" ? acc.description_et : acc.description_en}
                             </p>
+                            <a
+                              href={acc.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-2"
+                            >
+                              {language === "et" ? "Vaata" : "View"}
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
                           </div>
                           <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0">
                             {acc.distance}
@@ -298,15 +316,10 @@ export default function InfoPage() {
               {/* Children */}
               <InfoSection icon={<Baby className="w-5 h-5" />} title={t.info.children.title}>
                 <div className="text-muted-foreground">
-                  <p className="mb-3">
+                  <p>
                     {language === "et"
                       ? "Lapsed on teretulnud laulatusel kirikus. Õhtune pidustus lossis on planeeritud täiskasvanute üritusena."
                       : "Children are welcome at the church ceremony. The evening reception at the castle is planned as an adults-only event."}
-                  </p>
-                  <p className="text-sm text-muted-foreground/70">
-                    {language === "et"
-                      ? "Täname mõistmise eest — see võimaldab meil luua õhtu, kus kõik külalised saavad täielikult lõõgastuda ja pidutseda."
-                      : "Thank you for understanding — this allows us to create an evening where all guests can fully relax and celebrate."}
                   </p>
                 </div>
               </InfoSection>

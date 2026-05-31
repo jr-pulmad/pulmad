@@ -129,7 +129,7 @@ export const translations = {
       },
       transport: {
         title: "Transport ja parkimine",
-        content: "Info tuleb varsti...",
+        content: "Mõlemad kohad on autoga hästi ligipääsetavad. Parkimine on tasuta.",
       },
       children: {
         title: "Lapsed",
@@ -306,7 +306,7 @@ export const translations = {
       },
       transport: {
         title: "Transport & Parking",
-        content: "Information coming soon...",
+        content: "Both venues are easily accessible by car. Parking is free.",
       },
       children: {
         title: "Children",
