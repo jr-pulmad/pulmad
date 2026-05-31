@@ -39,8 +39,9 @@ export function Hero() {
             alt="Johanna & Rannar"
             fill
             priority
+            style={{ objectPosition: "center 20%" }} 
             className={cn(
-              "object-cover scale-95 transition-opacity duration-1000",
+              "object-cover transition-opacity duration-1000",
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setImageLoaded(true)}
