@@ -345,14 +345,16 @@ export function RSVPMenuForm() {
                       : "Required to receive event updates"}
                   </p>
                 </div>
-                <FloatingInput
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  label={<>{t.rsvp.phone} <span className="text-red-500">*</span></>}
-                />
+                <div className="self-start">
+                  <FloatingInput
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    label={t.rsvp.phone}
+                  />
+                </div>
               </div>
 
               {/* Attendance */}
