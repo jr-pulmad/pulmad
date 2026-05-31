@@ -351,7 +351,7 @@ export function RSVPMenuForm() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  label={<>{t.rsvp.phone}<span> </span></>}
+                  label={t.rsvp.phone}
                 />
               </div>
 
