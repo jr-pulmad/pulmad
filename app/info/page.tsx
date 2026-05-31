@@ -26,18 +26,18 @@ export default function InfoPage() {
   // Accommodation options near the venue
   const accommodations = [
     {
-      name: "Alatskivi Loss",
-      description_et: "Neli sviiti otse lossis, hommikusöök kaasas",
-      description_en: "Four suites directly in the castle, breakfast included",
-      distance: "0 km",
-      link: "https://www.booking.com/hotel/ee/alatskivi-loss.html",
-    },
-    {
       name: "Sepikoja Külalistemaja",
       description_et: "Hubane külalistemaja lossi kõrval",
       description_en: "Cozy guesthouse next to the castle",
       distance: "0.2 km",
       link: "https://www.booking.com/hotel/ee/sepikoja-guest-house.html",
+    },
+    {
+      name: "Kallaste Turismitalu",
+      description_et: "Puhkekeskus Peipsi järve ääres",
+      description_en: "Holiday resort by Lake Peipsi",
+      distance: "15 km",
+      link: "https://www.booking.com/hotel/ee/kallaste-turismitalu-amp-holiday-resort.html",
     },
     {
       name: "Tartu hotellid",
@@ -176,8 +176,7 @@ export default function InfoPage() {
               {/* Accommodation */}
               <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title}>
                 <div className="text-muted-foreground">
-                  <p className="mb-2">{t.info.accommodation.content}</p>
-                  <p className="mb-4 text-sm text-muted-foreground/70">
+                  <p className="mb-4 text-sm">
                     {language === "et"
                       ? "Majutust me ise ei korralda, kuid soovitame järgmisi võimalusi:"
                       : "We do not arrange accommodation ourselves, but we recommend the following options:"}

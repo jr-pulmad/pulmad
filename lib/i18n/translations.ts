@@ -122,7 +122,7 @@ export const translations = {
       },
       accommodation: {
         title: "Majutus",
-        content: "Soovitame järgmisi majutuskohti lähedal:",
+        content: "",
         discountCode: "Sooduskood",
         copyCode: "Kopeeri",
         copied: "Kopeeritud!",
@@ -299,7 +299,7 @@ export const translations = {
       },
       accommodation: {
         title: "Accommodation",
-        content: "We recommend the following nearby accommodations:",
+        content: "",
         discountCode: "Discount Code",
         copyCode: "Copy",
         copied: "Copied!",
