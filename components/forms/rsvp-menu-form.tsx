@@ -286,12 +286,11 @@ export function RSVPMenuForm() {
         <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
-            <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
-            <p className="text-sm text-primary font-medium mt-3">
+            <CardDescription className="text-muted-foreground mt-2">
               {language === "et" 
-                ? "Palume vastata hiljemalt 1. juuliks" 
-                : "Please respond by July 1st"}
-            </p>
+                ? <>Palun anna meile hiljemalt <span className="font-semibold text-foreground">1. juuliks</span> teada, kas saad tulla</>
+                : <>Please let us know by <span className="font-semibold text-foreground">July 1st</span> if you can attend</>}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleRSVPSubmit} className="space-y-5">
