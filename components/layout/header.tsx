@@ -27,11 +27,15 @@ function InfoFilled({ className }: { className?: string }) {
   )
 }
 
-// Filled flower icon (for active state)
+// Filled flower icon (for active state) - matches Lucide Flower2 outline
 function Flower2Filled({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <path d="M12 2a5 5 0 0 0-2.5 9.33A5 5 0 0 0 7 11a5 5 0 0 0-.67 9.95c.16.02.33.03.5.04L7 22l5-3 5 3 .17-1.01c.17-.01.34-.02.5-.04A5 5 0 0 0 17 11a5 5 0 0 0-2.5-.67A5 5 0 0 0 12 2z" />
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1M9 8a3 3 0 1 0 3 3M9 8h1m5 0a3 3 0 1 1-3 3m3-3h-1m-2 3v-1" />
+      <circle cx="12" cy="8" r="2" />
+      <path d="M12 10v12" />
+      <path d="M12 22c4.2 0 7-1.667 7-5-4.2 0-7 1.667-7 5Z" />
+      <path d="M12 22c-4.2 0-7-1.667-7-5 4.2 0 7 1.667 7 5Z" />
     </svg>
   )
 }

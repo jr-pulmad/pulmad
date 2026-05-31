@@ -107,8 +107,10 @@ export function RSVPMenuForm() {
     if (showMenuSection) {
       // Go to guests confirmation step
       setCurrentStep("guests")
-      // Scroll to top on mobile
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      // Scroll to top on mobile - use setTimeout to ensure state has updated
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      }, 50)
       return
     }
 
@@ -119,8 +121,10 @@ export function RSVPMenuForm() {
     e.preventDefault()
     setError("")
     setCurrentStep("menu")
-    // Scroll to top on mobile
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    // Scroll to top on mobile - use setTimeout to ensure state has updated
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 50)
   }
 
   const handleMenuSubmit = async (e: React.FormEvent) => {
@@ -463,8 +467,8 @@ export function RSVPMenuForm() {
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
               {language === "et" 
-                ? "Kas tuled üksi või kellegagi koos? Lisa siia oma kaaslased." 
-                : "Coming alone or with someone? Add your companions here."}
+                ? "Kas tuled üksi või kellegagi koos? Lisage siia kutsel märgitud kaaslased." 
+                : "Coming alone or with someone? Add companions listed on your invitation here."}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -554,7 +558,9 @@ export function RSVPMenuForm() {
                   className="sm:flex-1 cursor-pointer"
                   onClick={() => {
                     setCurrentStep("rsvp")
-                    window.scrollTo({ top: 0, behavior: "smooth" })
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }, 50)
                   }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
@@ -724,7 +730,9 @@ export function RSVPMenuForm() {
                   className="sm:flex-1 cursor-pointer"
                   onClick={() => {
                     setCurrentStep("guests")
-                    window.scrollTo({ top: 0, behavior: "smooth" })
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }, 50)
                   }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
