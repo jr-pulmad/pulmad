@@ -72,7 +72,7 @@ export function Hero() {
         "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-all duration-1000 delay-500",
         imageLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
-        <div className="max-w-3xl mx-auto translate-y-4 md:translate-y-0">
+        <div className="max-w-3xl mx-auto translate-y-6 md:translate-y-0">
           {/* Decorative line */}
           <div className="flex items-center justify-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-10 sm:w-16 bg-white/40" />
@@ -95,7 +95,7 @@ export function Hero() {
           </p>
 
           {/* RSVP Button — liquid glass */}
-          <div className="animate-fade-in-up mt-28 md:mt-0" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
+          <div className="animate-fade-in-up mt-24 md:mt-0" style={{ animationDelay: "1.4s", animationFillMode: "both" }}>
             <Link
               href="/rsvp"
               className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
