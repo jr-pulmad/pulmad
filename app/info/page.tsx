@@ -516,7 +516,7 @@ export default function InfoPage() {
                       <div className="flex flex-col items-center gap-2">
                         <div className="w-full aspect-square rounded-lg bg-[#c2dd45] border border-border shadow-sm" />
                         <span className="text-xs text-foreground">
-                          {language === "et" ? "Sidrunkollane" : "Lime Yellow"}
+                          {language === "et" ? "Laimiroheline" : "Lime Green"}
                         </span>
                       </div>
                 
