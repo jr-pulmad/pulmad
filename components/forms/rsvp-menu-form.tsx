@@ -287,6 +287,11 @@ export function RSVPMenuForm() {
           <CardHeader className="text-center pb-2">
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
+            <p className="text-sm text-primary font-medium mt-3">
+              {language === "et" 
+                ? "Palume vastata hiljemalt 1. juuliks" 
+                : "Please respond by July 1st"}
+            </p>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleRSVPSubmit} className="space-y-5">
@@ -646,7 +651,7 @@ export function RSVPMenuForm() {
                   name="allergiesAndDiet"
                   value={formData.allergiesAndDiet}
                   onChange={handleChange}
-                  className="min-h-[56px] h-14 resize-none"
+                  className="min-h-[80px] text-sm resize-none"
                   label={t.menu.allergies}
                 />
               </div>
@@ -708,7 +713,7 @@ export function RSVPMenuForm() {
                     id={`guest-${guest.id}-allergies`}
                     value={guest.allergiesAndDiet}
                     onChange={(e) => updateGuest(guest.id, "allergiesAndDiet", e.target.value)}
-                    className="min-h-[56px] h-14 resize-none"
+                    className="min-h-[80px] text-sm resize-none"
                     label={t.menu.allergies}
                   />
                 </div>

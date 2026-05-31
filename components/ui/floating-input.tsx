@@ -78,7 +78,7 @@ function FloatingTextarea({
         placeholder=" "
         aria-invalid={!!error}
         className={cn(
-          "peer min-h-[120px] w-full rounded-xl border bg-card-50 px-4 pt-6 pb-3 text-base transition-colors duration-200 resize-none",
+          "peer min-h-[80px] w-full rounded-xl border bg-card-50 px-4 pt-6 pb-3 text-sm transition-colors duration-200 resize-none overflow-hidden",
           "border-input",
           "focus:border-primary",
           "outline-none ring-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none",

@@ -216,9 +216,13 @@ export default function InfoPage() {
                       <div className="w-14 text-sm font-medium text-primary">TBD</div>
                       <div className="text-foreground">{language === "et" ? "Tantsimine & pidu" : "Dancing & party"}</div>
                     </div>
-                    <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
-                      <div className="w-14 text-sm font-medium text-primary">23:00</div>
-                      <div className="text-foreground">{language === "et" ? "Pulmapeo lõpp" : "Reception ends"}</div>
+                    {/* Reception ends - highlighted */}
+                    <div className="p-4 rounded-lg bg-secondary/30 border border-border">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-14 text-sm font-medium text-primary">23:00</div>
+                        <div className="text-foreground font-medium">{language === "et" ? "Pulmapeo lõpp" : "Reception ends"}</div>
+                      </div>
+                      <p className="text-sm ml-[68px]">Alatskivi Loss</p>
                     </div>
                     <div className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30">
                       <div className="w-14 text-sm font-medium text-primary">23:00</div>
