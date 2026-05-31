@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useI18n } from "@/lib/i18n/context"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { InfoSection, CopyCodeButton } from "@/components/info/info-section"
+import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
 import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -23,24 +23,24 @@ export default function InfoPage() {
     })
   }
 
-  // Sample accommodation data - would be filled in later
+  // Accommodation options near the venue
   const accommodations = [
     {
-      name: "Alatskivi Kõrtsitalu",
-      description_et: "Hubane külalistemaja lossi lähedal",
-      description_en: "Cozy guesthouse near the castle",
-      distance: "0.5 km",
-      link: "https://www.kortsitalu.ee/",
+      name: "Alatskivi Loss",
+      description_et: "Neli sviiti otse lossis, hommikusöök kaasas",
+      description_en: "Four suites directly in the castle, breakfast included",
+      distance: "0 km",
+      link: "https://www.booking.com/hotel/ee/alatskivi-loss.html",
     },
     {
-      name: "Peipsi Veski Puhkemaja",
-      description_et: "Maalilises asukohas puhkemaja Peipsi järve ääres",
-      description_en: "Scenic guesthouse by Lake Peipsi",
-      distance: "15 km",
-      link: "https://www.booking.com/hotel/ee/peipsi-veski-puhkemaja.html",
+      name: "Sepikoja Külalistemaja",
+      description_et: "Hubane külalistemaja lossi kõrval",
+      description_en: "Cozy guesthouse next to the castle",
+      distance: "0.2 km",
+      link: "https://www.booking.com/hotel/ee/sepikoja-guest-house.html",
     },
     {
-      name: "Tartu hotels",
+      name: "Tartu hotellid",
       description_et: "Mitmeid hotelle Tartu kesklinnas",
       description_en: "Various hotels in Tartu city center",
       distance: "45 km",
@@ -176,9 +176,14 @@ export default function InfoPage() {
               {/* Accommodation */}
               <InfoSection icon={<Hotel className="w-5 h-5" />} title={t.info.accommodation.title}>
                 <div className="text-muted-foreground">
-                  <p className="mb-4">{t.info.accommodation.content}</p>
+                  <p className="mb-2">{t.info.accommodation.content}</p>
+                  <p className="mb-4 text-sm text-muted-foreground/70">
+                    {language === "et"
+                      ? "Majutust me ise ei korralda, kuid soovitame järgmisi võimalusi:"
+                      : "We do not arrange accommodation ourselves, but we recommend the following options:"}
+                  </p>
 
-                  <div className="space-y-3 mb-4">
+                  <div className="space-y-3">
                     {accommodations.map((acc, index) => (
                       <div key={index} className="p-4 rounded-lg bg-secondary/30 border border-border">
                         <div className="flex items-start justify-between gap-4">
@@ -203,15 +208,6 @@ export default function InfoPage() {
                         </div>
                       </div>
                     ))}
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-sm font-medium text-foreground">{t.info.accommodation.discountCode}:</p>
-                    <CopyCodeButton
-                      code="RANDMÄED26"
-                      copyLabel={t.info.accommodation.copyCode}
-                      copiedLabel={t.info.accommodation.copied}
-                    />
                   </div>
                 </div>
               </InfoSection>
