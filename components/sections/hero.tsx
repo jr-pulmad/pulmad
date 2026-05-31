@@ -35,7 +35,7 @@ export function Hero() {
         {/* Mobile: Portrait image (full height) */}
         <div className="block md:hidden absolute inset-0">
           <Image
-            src="/images/hero_couple.jpg"
+            src="/images/hero_couple.jpeg"
             alt="Johanna & Rannar"
             fill
             priority
@@ -50,7 +50,7 @@ export function Hero() {
         {/* Desktop: Cropped landscape from face height */}
         <div className="hidden md:block absolute inset-0">
           <Image
-            src="/images/hero_couple.jpg"
+            src="/images/hero_couple.jpeg"
             alt="Johanna & Rannar"
             fill
             priority
