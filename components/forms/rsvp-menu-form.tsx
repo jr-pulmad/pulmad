@@ -288,8 +288,8 @@ export function RSVPMenuForm() {
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
               {language === "et" 
-                ? <>Palun anna meile teada, kas saad tulla — vastamise tähtaeg <span className="font-semibold text-foreground">1. juuli</span></>
-                : <>Please let us know if you can attend — RSVP by <span className="font-semibold text-foreground">July 1st</span></>}
+                ? "Palun anna meile teada, kas saad tulla. Vastamise tähtaeg on 1. juuli."
+                : "Please let us know if you can attend. RSVP by July 1st."}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
