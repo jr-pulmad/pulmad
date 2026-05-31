@@ -1,18 +1,18 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useI18n } from "@/lib/i18n/context"
 import { ArrowDown, Loader2, ArrowRight } from "lucide-react"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
 export function Hero() {
   const { t } = useI18n()
-  const [showVideo, setShowVideo] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowVideo(true), 100)
+    const timer = setTimeout(() => setImageLoaded(true), 100)
     return () => clearTimeout(timer)
   }, [])
 
@@ -23,32 +23,44 @@ export function Hero() {
 
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
-      {/* Video Background - always playing, always muted, no controls */}
+      {/* Image Background */}
       <div className="absolute inset-0 z-0">
-        {/* Loading state - simple loader before video loads */}
-        {!showVideo && (
+        {/* Loading state */}
+        {!imageLoaded && (
           <div className="absolute inset-0 bg-background flex items-center justify-center z-10">
             <Loader2 className="w-8 h-8 text-primary animate-spin" />
           </div>
         )}
         
-        <video
-          ref={videoRef}
-          className={cn(
-            "w-full h-full object-cover transition-opacity duration-1000",
-            showVideo ? "opacity-100" : "opacity-0"
-          )}
-          autoPlay
-          muted
-          loop
-          playsInline
-          onLoadedData={() => setShowVideo(true)}
-        >
-          <source 
-            src="https://assets.mixkit.co/videos/1946/1946-720.mp4" 
-            type="video/mp4" 
+        {/* Mobile: Portrait image (full height) */}
+        <div className="block md:hidden absolute inset-0">
+          <Image
+            src="/images/hero-couple.jpeg"
+            alt="Johanna & Rannar"
+            fill
+            priority
+            className={cn(
+              "object-cover object-top transition-opacity duration-1000",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            onLoad={() => setImageLoaded(true)}
           />
-        </video>
+        </div>
+        
+        {/* Desktop: Cropped landscape from face height */}
+        <div className="hidden md:block absolute inset-0">
+          <Image
+            src="/images/hero-couple.jpeg"
+            alt="Johanna & Rannar"
+            fill
+            priority
+            className={cn(
+              "object-cover object-[center_35%] transition-opacity duration-1000",
+              imageLoaded ? "opacity-100" : "opacity-0"
+            )}
+            onLoad={() => setImageLoaded(true)}
+          />
+        </div>
         
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 dark:from-black/80 dark:via-black/50 dark:to-background" />
@@ -58,7 +70,7 @@ export function Hero() {
       {/* Content */}
       <div className={cn(
         "relative z-10 container mx-auto px-4 sm:px-6 pt-16 sm:pt-20 pb-24 sm:pb-28 text-center flex flex-col items-center justify-center transition-all duration-1000 delay-500",
-        showVideo ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+        imageLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       )}>
         <div className="max-w-3xl mx-auto">
           {/* Decorative line */}

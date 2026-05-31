@@ -5,11 +5,18 @@ import { useI18n } from "@/lib/i18n/context"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Flower2, Copy, Check } from "lucide-react"
+import { ArrowLeft, Flower2, Copy, Check, Smartphone } from "lucide-react"
 import { useState } from "react"
-import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 const VALID_AMOUNTS = ["25", "50", "100"]
+
+// QR code images mapped by amount
+const QR_CODES: Record<string, string> = {
+  "25": "/images/qr-25.jpeg",
+  "50": "/images/qr-50.jpeg",
+  "100": "/images/qr-100.jpeg",
+}
 
 // Bank details from env vars (with fallbacks for preview)
 const BANK_RECIPIENT = process.env.NEXT_PUBLIC_BANK_RECIPIENT || "Saaja nimi"
@@ -72,19 +79,19 @@ export default function FlowersPaymentPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 pt-24 sm:pt-28 pb-12">
-        <div className="container mx-auto px-4 sm:px-6 max-w-lg">
+        <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
 
           {/* Back button */}
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             {language === "et" ? "Tagasi" : "Back"}
           </button>
 
           {/* Compact header with amount */}
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
               <Flower2 className="w-5 h-5 text-primary" />
             </div>
@@ -98,54 +105,72 @@ export default function FlowersPaymentPage() {
             </div>
           </div>
 
-          {/* QR + Bank details in a compact grid */}
+          {/* Payment options - horizontal on desktop, stacked on mobile */}
           <Card className="border-border bg-card/50">
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row gap-4">
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-stretch gap-4">
                 
-                {/* QR code placeholder - left side */}
-                <div className="flex-shrink-0 flex flex-col items-center justify-center sm:w-44">
-                  <div className="w-36 h-36 sm:w-40 sm:h-40 rounded-xl bg-secondary/40 border-2 border-dashed border-border flex items-center justify-center">
-                    <div className="grid grid-cols-4 gap-1 opacity-30">
-                      {Array.from({ length: 16 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={cn(
-                            "w-3 h-3 rounded-sm bg-foreground",
-                            [0, 3, 12, 15].includes(i) && "w-4 h-4"
-                          )}
-                        />
-                      ))}
-                    </div>
+                {/* QR Code - left side */}
+                <div className="flex flex-col items-center sm:flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Smartphone className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">
+                      {language === "et" ? "Skaneeri" : "Scan"}
+                    </span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-2 text-center">
-                    {language === "et" ? "QR tuleb varsti" : "QR coming soon"}
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-lg overflow-hidden bg-white p-1.5">
+                    <Image
+                      src={QR_CODES[amount]}
+                      alt={`QR code for ${amount}€ payment`}
+                      width={150}
+                      height={150}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1.5 text-center max-w-[140px]">
+                    {language === "et" 
+                      ? "Ava pangaäpp ja skaneeri" 
+                      : "Open bank app & scan"}
                   </p>
                 </div>
 
-                {/* Bank details - right side */}
-                <div className="flex-1 space-y-2">
-                  {fields.map((field) => (
-                    <div
-                      key={field.key}
-                      className="flex items-center justify-between py-2 px-2.5 rounded-lg bg-secondary/30 border border-border"
-                    >
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-[10px] text-muted-foreground leading-tight">{field.label}</span>
-                        <span className="text-xs font-medium text-foreground truncate">{field.value}</span>
-                      </div>
-                      <button
-                        onClick={() => copyToClipboard(field.value, field.key)}
-                        className="ml-2 flex-shrink-0 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                        aria-label={`Copy ${field.label}`}
+                {/* OR Divider - vertical on desktop, horizontal on mobile */}
+                <div className="flex sm:flex-col items-center gap-2 sm:gap-3 sm:py-2">
+                  <div className="flex-1 h-px sm:h-auto sm:w-px sm:flex-1 bg-border" />
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    {language === "et" ? "VÕI" : "OR"}
+                  </span>
+                  <div className="flex-1 h-px sm:h-auto sm:w-px sm:flex-1 bg-border" />
+                </div>
+
+                {/* Manual Bank Details - right side */}
+                <div className="flex-1 sm:flex-[1.3]">
+                  <p className="text-sm font-medium text-foreground mb-2 text-center sm:text-left">
+                    {language === "et" ? "Sisesta käsitsi" : "Enter manually"}
+                  </p>
+                  <div className="space-y-1.5">
+                    {fields.map((field) => (
+                      <div
+                        key={field.key}
+                        className="flex items-center justify-between py-1.5 px-2 rounded-md bg-secondary/30 border border-border"
                       >
-                        {copiedField === field.key
-                          ? <Check className="w-3.5 h-3.5 text-primary" />
-                          : <Copy className="w-3.5 h-3.5" />
-                        }
-                      </button>
-                    </div>
-                  ))}
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[9px] text-muted-foreground leading-tight">{field.label}</span>
+                          <span className="text-[11px] font-medium text-foreground truncate">{field.value}</span>
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(field.value, field.key)}
+                          className="ml-2 flex-shrink-0 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+                          aria-label={`Copy ${field.label}`}
+                        >
+                          {copiedField === field.key
+                            ? <Check className="w-3 h-3 text-primary" />
+                            : <Copy className="w-3 h-3" />
+                          }
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
               </div>
@@ -153,10 +178,10 @@ export default function FlowersPaymentPage() {
           </Card>
 
           {/* Footer note */}
-          <p className="text-[10px] text-muted-foreground text-center mt-4 px-4">
+          <p className="text-[10px] text-muted-foreground text-center mt-3">
             {language === "et"
-              ? `Kasuta selgitusena "${referenceValue}".`
-              : `Use "${referenceValue}" as reference.`}
+              ? `Selgitus: "${referenceValue}"`
+              : `Reference: "${referenceValue}"`}
           </p>
 
         </div>

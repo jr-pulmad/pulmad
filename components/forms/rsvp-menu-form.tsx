@@ -107,8 +107,10 @@ export function RSVPMenuForm() {
     if (showMenuSection) {
       // Go to guests confirmation step
       setCurrentStep("guests")
-      // Scroll to top on mobile
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      // Scroll to top on mobile - use setTimeout to ensure state has updated
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+      }, 50)
       return
     }
 
@@ -119,8 +121,10 @@ export function RSVPMenuForm() {
     e.preventDefault()
     setError("")
     setCurrentStep("menu")
-    // Scroll to top on mobile
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    // Scroll to top on mobile - use setTimeout to ensure state has updated
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }, 50)
   }
 
   const handleMenuSubmit = async (e: React.FormEvent) => {
@@ -282,7 +286,11 @@ export function RSVPMenuForm() {
         <Card className="bg-card/50 border-border backdrop-blur-sm shadow-xl">
           <CardHeader className="text-center pb-2">
             <CardTitle className="font-serif text-2xl sm:text-3xl font-medium text-foreground">{t.rsvp.title}</CardTitle>
-            <CardDescription className="text-muted-foreground mt-2">{t.rsvp.subtitle}</CardDescription>
+            <CardDescription className="text-muted-foreground mt-2">
+              {language === "et" 
+                ? "Palun anna meile teada, kas saad tulla. Vastamise tähtaeg on 1. juuli."
+                : "Please let us know if you can attend. RSVP by July 1st."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <form onSubmit={handleRSVPSubmit} className="space-y-5">
@@ -337,14 +345,16 @@ export function RSVPMenuForm() {
                       : "Required to receive event updates"}
                   </p>
                 </div>
-                <FloatingInput
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  label={<>{t.rsvp.phone}<span> </span></>}
-                />
+                <div className="self-start">
+                  <FloatingInput
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    label={t.rsvp.phone}
+                  />
+                </div>
               </div>
 
               {/* Attendance */}
@@ -463,8 +473,8 @@ export function RSVPMenuForm() {
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
               {language === "et" 
-                ? "Kas tuled üksi või kellegagi koos? Lisa siia oma kaaslased." 
-                : "Coming alone or with someone? Add your companions here."}
+                ? "Kas tuled üksi või kellegagi koos? Lisage siia kutsel märgitud kaaslased." 
+                : "Coming alone or with someone? Add companions listed on your invitation here."}
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -554,7 +564,9 @@ export function RSVPMenuForm() {
                   className="sm:flex-1 cursor-pointer"
                   onClick={() => {
                     setCurrentStep("rsvp")
-                    window.scrollTo({ top: 0, behavior: "smooth" })
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }, 50)
                   }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
@@ -640,7 +652,7 @@ export function RSVPMenuForm() {
                   name="allergiesAndDiet"
                   value={formData.allergiesAndDiet}
                   onChange={handleChange}
-                  className="min-h-[56px] h-14 resize-none"
+                  className="min-h-[80px] text-sm resize-none"
                   label={t.menu.allergies}
                 />
               </div>
@@ -702,7 +714,7 @@ export function RSVPMenuForm() {
                     id={`guest-${guest.id}-allergies`}
                     value={guest.allergiesAndDiet}
                     onChange={(e) => updateGuest(guest.id, "allergiesAndDiet", e.target.value)}
-                    className="min-h-[56px] h-14 resize-none"
+                    className="min-h-[80px] text-sm resize-none"
                     label={t.menu.allergies}
                   />
                 </div>
@@ -724,7 +736,9 @@ export function RSVPMenuForm() {
                   className="sm:flex-1 cursor-pointer"
                   onClick={() => {
                     setCurrentStep("guests")
-                    window.scrollTo({ top: 0, behavior: "smooth" })
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                    }, 50)
                   }}
                 >
                   <ChevronLeft className="w-4 h-4 mr-2" />
