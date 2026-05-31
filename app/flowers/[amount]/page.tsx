@@ -98,7 +98,7 @@ export default function FlowersPaymentPage() {
           {/* Back button */}
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             {language === "et" ? "Tagasi" : "Back"}
@@ -127,13 +127,6 @@ export default function FlowersPaymentPage() {
               <div className="flex flex-col sm:flex-row sm:items-stretch gap-4">
                 {/* QR / Bank link section */}
                 <div className="flex flex-col items-center justify-center sm:flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Smartphone className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">
-                      {language === "et" ? "Maksa lingiga" : "Pay with a link"}
-                    </span>
-                  </div>
-
                   <div className="w-full max-w-xs flex flex-col items-center gap-3">
                     {paymentLink ? (
                       <a
