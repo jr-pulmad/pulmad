@@ -6,13 +6,17 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export default function InfoPage() {
   const { t, language } = useI18n()
   const [copiedEmail, setCopiedEmail] = useState(false)
+  const [womenOutfitIndex, setWomenOutfitIndex] = useState(0)
+  const [menOutfitIndex, setMenOutfitIndex] = useState(0)
+  const [womenSpinning, setWomenSpinning] = useState(false)
+  const [menSpinning, setMenSpinning] = useState(false)
   
   const email = "kirjaordu@gmail.com"
   
@@ -23,6 +27,51 @@ export default function InfoPage() {
     })
   }
 
+  // Outfit suggestions for the dress code randomizer
+  const womenOutfits = [
+    { et: "Smaragdroheline siidkleit ja kuldsed sandaalid", en: "Emerald green silk dress with gold sandals" },
+    { et: "Puudritooni midi-kleit ja pärlkõrvarõngad", en: "Blush midi dress with pearl earrings" },
+    { et: "Tumesinine õhtukleit ja hõbedased kontsad", en: "Navy blue evening gown with silver heels" },
+    { et: "Salveiroheline satiinkleit ja kuldne clutch", en: "Sage green satin dress with gold clutch" },
+    { et: "Bordoopunane maksi-kleit ja elegantsed sandaalid", en: "Burgundy maxi dress with elegant sandals" },
+    { et: "Kreemjas pitskleit ja pärlkaelakee", en: "Cream lace dress with pearl necklace" },
+  ]
+
+  const menOutfits = [
+    { et: "Tumeroheline ülikond, valge särk ja kuldne lips", en: "Dark green suit, white shirt, and gold tie" },
+    { et: "Tumesinine ülikond, helesinine särk ja hõbedane lipsunõel", en: "Navy suit, light blue shirt, and silver tie pin" },
+    { et: "Hallikas ülikond, valge särk ja smaragdroheline lips", en: "Charcoal suit, white shirt, and emerald tie" },
+    { et: "Beež linane ülikond ja valge avatud kaelaga särk", en: "Beige linen suit with white open-collar shirt" },
+    { et: "Must klassikaline ülikond ja bordoopunane lips", en: "Classic black suit with burgundy tie" },
+    { et: "Tumepruun ülikond, kreemjas särk ja kuldne taskurätt", en: "Dark brown suit, cream shirt, and gold pocket square" },
+  ]
+
+  const randomizeWomenOutfit = () => {
+    setWomenSpinning(true)
+    let count = 0
+    const interval = setInterval(() => {
+      setWomenOutfitIndex(Math.floor(Math.random() * womenOutfits.length))
+      count++
+      if (count > 8) {
+        clearInterval(interval)
+        setWomenSpinning(false)
+      }
+    }, 100)
+  }
+
+  const randomizeMenOutfit = () => {
+    setMenSpinning(true)
+    let count = 0
+    const interval = setInterval(() => {
+      setMenOutfitIndex(Math.floor(Math.random() * menOutfits.length))
+      count++
+      if (count > 8) {
+        clearInterval(interval)
+        setMenSpinning(false)
+      }
+    }, 100)
+  }
+
   // Accommodation options near the venue
   const accommodations = [
     {
@@ -30,14 +79,21 @@ export default function InfoPage() {
       description_et: "Hubane külalistemaja lossi kõrval",
       description_en: "Cozy guesthouse next to the castle",
       distance: "0.2 km",
-      link: "https://www.booking.com/hotel/ee/sepikoja-guest-house.html",
+      link: "https://www.booking.com/hotel/ee/sepikoja-ka1-4lalistemaja.et.html",
     },
     {
-      name: "Kallaste Turismitalu",
-      description_et: "Puhkekeskus Peipsi järve ääres",
-      description_en: "Holiday resort by Lake Peipsi",
-      distance: "15 km",
-      link: "https://www.booking.com/hotel/ee/kallaste-turismitalu-amp-holiday-resort.html",
+      name: "Peipsi Lake House",
+      description_et: "Moodne puhkemaja Peipsi järve ääres",
+      description_en: "Modern holiday house by Lake Peipsi",
+      distance: "20 km",
+      link: "https://www.booking.com/hotel/ee/peipsi-lake-house.et.html",
+    },
+    {
+      name: "Hostel Laguun",
+      description_et: "Soodne hostel Peipsi ääres",
+      description_en: "Budget-friendly hostel by Lake Peipsi",
+      distance: "25 km",
+      link: "https://laguun.xtadia.com/index.php",
     },
     {
       name: "Tartu hotellid",
@@ -158,16 +214,51 @@ export default function InfoPage() {
                   </p>
 
                   <p className="text-xs text-muted-foreground/70">
-                    {language === "et" ? "Näited:" : "Examples:"}
+                    {language === "et" ? "Vajad inspiratsiooni? Proovi meie riietusgeneraatorit!" : "Need inspiration? Try our outfit generator!"}
                   </p>
-                  <div className="grid sm:grid-cols-2 gap-3">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
-                      <span className="text-lg">👗</span>
-                      <span className="text-sm">{language === "et" ? "Pikk kleit, elegantne kostüüm, formaalsed kingad" : "Long dress, elegant suit, formal footwear"}</span>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {/* Women's outfit randomizer */}
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-foreground">{language === "et" ? "Naistele" : "For Women"}</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={randomizeWomenOutfit}
+                          disabled={womenSpinning}
+                          className="gap-1.5"
+                        >
+                          <Sparkles className={`w-3.5 h-3.5 ${womenSpinning ? 'animate-spin' : ''}`} />
+                          {language === "et" ? "Uus" : "New"}
+                        </Button>
+                      </div>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${womenSpinning ? 'opacity-50 scale-[0.98]' : ''}`}>
+                        <p className="text-sm text-foreground">
+                          {language === "et" ? womenOutfits[womenOutfitIndex].et : womenOutfits[womenOutfitIndex].en}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border">
-                      <span className="text-lg">🤵</span>
-                      <span className="text-sm">{language === "et" ? "Tume ülikond, hele särk, lips, formaalsed kingad" : "Dark suit, light shirt, tie, formal shoes"}</span>
+
+                    {/* Men's outfit randomizer */}
+                    <div className="p-4 rounded-xl bg-secondary/30 border border-border">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-foreground">{language === "et" ? "Meestele" : "For Men"}</span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={randomizeMenOutfit}
+                          disabled={menSpinning}
+                          className="gap-1.5"
+                        >
+                          <Sparkles className={`w-3.5 h-3.5 ${menSpinning ? 'animate-spin' : ''}`} />
+                          {language === "et" ? "Uus" : "New"}
+                        </Button>
+                      </div>
+                      <div className={`min-h-[60px] flex items-center transition-all duration-150 ${menSpinning ? 'opacity-50 scale-[0.98]' : ''}`}>
+                        <p className="text-sm text-foreground">
+                          {language === "et" ? menOutfits[menOutfitIndex].et : menOutfits[menOutfitIndex].en}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -244,6 +335,14 @@ export default function InfoPage() {
                         <div className="p-3 rounded-lg bg-secondary/30 border border-border">
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
+                              <Car className="w-4 h-4 text-muted-foreground" />
+                              <span className="text-sm">{language === "et" ? "~30 km Alatskivi lossini" : "~30 km to Alatskivi Castle"}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-secondary/30 border border-border">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
                               <Bus className="w-4 h-4 text-muted-foreground" />
                               <span className="text-sm">{language === "et" ? "Peatus: Maarja-Magdaleena" : "Stop: Maarja-Magdaleena"}</span>
                             </div>
@@ -272,7 +371,7 @@ export default function InfoPage() {
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <Car className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-sm">{language === "et" ? "~45 km Tartust, tasuta parkimine" : "~45 km from Tartu, free parking"}</span>
+                              <span className="text-sm">{language === "et" ? "~45 km Tartust" : "~45 km from Tartu"}</span>
                             </div>
                             <Button asChild variant="ghost" size="sm" className="h-8 px-2">
                               <a
