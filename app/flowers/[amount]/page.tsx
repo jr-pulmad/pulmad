@@ -79,19 +79,19 @@ export default function FlowersPaymentPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1 pt-24 sm:pt-28 pb-12">
-        <div className="container mx-auto px-4 sm:px-6 max-w-lg">
+        <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
 
           {/* Back button */}
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             {language === "et" ? "Tagasi" : "Back"}
           </button>
 
           {/* Compact header with amount */}
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10">
               <Flower2 className="w-5 h-5 text-primary" />
             </div>
@@ -105,80 +105,83 @@ export default function FlowersPaymentPage() {
             </div>
           </div>
 
-          {/* QR Code Section */}
-          <Card className="border-border bg-card/50 mb-4">
-            <CardContent className="p-5">
-              <div className="flex flex-col items-center">
-                <div className="flex items-center gap-2 mb-3">
-                  <Smartphone className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-medium text-foreground">
-                    {language === "et" ? "Skaneeri QR-koodi" : "Scan QR code"}
-                  </span>
-                </div>
-                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-xl overflow-hidden bg-white p-2">
-                  <Image
-                    src={QR_CODES[amount]}
-                    alt={`QR code for ${amount}€ payment`}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-2 text-center">
-                  {language === "et" 
-                    ? "Ava oma pangaäpp ja skaneeri koodi" 
-                    : "Open your banking app and scan the code"}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* OR Divider */}
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground font-medium px-2">
-              {language === "et" ? "VÕI" : "OR"}
-            </span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          {/* Manual Bank Details Section */}
+          {/* Payment options - horizontal on desktop, stacked on mobile */}
           <Card className="border-border bg-card/50">
-            <CardContent className="p-4">
-              <p className="text-sm font-medium text-foreground mb-3 text-center">
-                {language === "et" ? "Sisesta andmed käsitsi" : "Enter details manually"}
-              </p>
-              <div className="space-y-2">
-                {fields.map((field) => (
-                  <div
-                    key={field.key}
-                    className="flex items-center justify-between py-2 px-2.5 rounded-lg bg-secondary/30 border border-border"
-                  >
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-[10px] text-muted-foreground leading-tight">{field.label}</span>
-                      <span className="text-xs font-medium text-foreground truncate">{field.value}</span>
-                    </div>
-                    <button
-                      onClick={() => copyToClipboard(field.value, field.key)}
-                      className="ml-2 flex-shrink-0 p-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                      aria-label={`Copy ${field.label}`}
-                    >
-                      {copiedField === field.key
-                        ? <Check className="w-3.5 h-3.5 text-primary" />
-                        : <Copy className="w-3.5 h-3.5" />
-                      }
-                    </button>
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex flex-col sm:flex-row sm:items-stretch gap-4">
+                
+                {/* QR Code - left side */}
+                <div className="flex flex-col items-center sm:flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Smartphone className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">
+                      {language === "et" ? "Skaneeri" : "Scan"}
+                    </span>
                   </div>
-                ))}
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-lg overflow-hidden bg-white p-1.5">
+                    <Image
+                      src={QR_CODES[amount]}
+                      alt={`QR code for ${amount}€ payment`}
+                      width={150}
+                      height={150}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1.5 text-center max-w-[140px]">
+                    {language === "et" 
+                      ? "Ava pangaäpp ja skaneeri" 
+                      : "Open bank app & scan"}
+                  </p>
+                </div>
+
+                {/* OR Divider - vertical on desktop, horizontal on mobile */}
+                <div className="flex sm:flex-col items-center gap-2 sm:gap-3 sm:py-2">
+                  <div className="flex-1 h-px sm:h-auto sm:w-px sm:flex-1 bg-border" />
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    {language === "et" ? "VÕI" : "OR"}
+                  </span>
+                  <div className="flex-1 h-px sm:h-auto sm:w-px sm:flex-1 bg-border" />
+                </div>
+
+                {/* Manual Bank Details - right side */}
+                <div className="flex-1 sm:flex-[1.3]">
+                  <p className="text-sm font-medium text-foreground mb-2 text-center sm:text-left">
+                    {language === "et" ? "Sisesta käsitsi" : "Enter manually"}
+                  </p>
+                  <div className="space-y-1.5">
+                    {fields.map((field) => (
+                      <div
+                        key={field.key}
+                        className="flex items-center justify-between py-1.5 px-2 rounded-md bg-secondary/30 border border-border"
+                      >
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[9px] text-muted-foreground leading-tight">{field.label}</span>
+                          <span className="text-[11px] font-medium text-foreground truncate">{field.value}</span>
+                        </div>
+                        <button
+                          onClick={() => copyToClipboard(field.value, field.key)}
+                          className="ml-2 flex-shrink-0 p-1 rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+                          aria-label={`Copy ${field.label}`}
+                        >
+                          {copiedField === field.key
+                            ? <Check className="w-3 h-3 text-primary" />
+                            : <Copy className="w-3 h-3" />
+                          }
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </CardContent>
           </Card>
 
           {/* Footer note */}
-          <p className="text-[10px] text-muted-foreground text-center mt-4 px-4">
+          <p className="text-[10px] text-muted-foreground text-center mt-3">
             {language === "et"
-              ? `Kasuta selgitusena "${referenceValue}".`
-              : `Use "${referenceValue}" as reference.`}
+              ? `Selgitus: "${referenceValue}"`
+              : `Reference: "${referenceValue}"`}
           </p>
 
         </div>
