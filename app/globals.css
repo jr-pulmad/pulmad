@@ -523,7 +523,7 @@ textarea[data-slot="textarea"]:focus-visible {
   box-shadow: none;
 }
 
-/* Autofill styling - prevent yellow background */
+/* Autofill styling - prevent yellow background and black text */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -532,7 +532,9 @@ input:-webkit-autofill:active {
   box-shadow: 0 0 0 1000px var(--card) inset !important;
   -webkit-text-fill-color: var(--foreground) !important;
   caret-color: var(--foreground) !important;
-  transition: background-color 5000s ease-in-out 0s;
+  color: var(--foreground) !important;
+  background-color: var(--card) !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
 }
 
 .dark input:-webkit-autofill,
@@ -542,4 +544,7 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px var(--card) inset !important;
   box-shadow: 0 0 0 1000px var(--card) inset !important;
   -webkit-text-fill-color: var(--foreground) !important;
+  caret-color: var(--foreground) !important;
+  color: var(--foreground) !important;
+  background-color: var(--card) !important;
 }
