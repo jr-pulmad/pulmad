@@ -487,42 +487,68 @@ export default function InfoPage() {
               </InfoSection>
 
               {/* Theme Palette */}
-              <InfoSection icon={<Palette className="w-5 h-5" />} title={language === "et" ? "Värvipalett" : "Color Palette"}>
-                <div className="text-muted-foreground">
-                  <p className="mb-4">
-                    {language === "et"
-                      ? "Meie pulma värvipalett inspireerib elegantset ja loomulikku atmosfääri. Kasuta neid toone riietuse valimisel!"
-                      : "Our wedding color palette inspires an elegant and natural atmosphere. Feel free to use these tones when choosing your outfit!"}
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-full aspect-square rounded-lg bg-[#236130] border border-border shadow-sm" />
-                      <span className="text-xs text-foreground">{language === "et" ? "Metsaroheline" : "Forest Green"}</span>
+                <InfoSection
+                  icon={<Palette className="w-5 h-5" />}
+                  title={language === "et" ? "Värvipalett" : "Color Palette"}
+                >
+                  <div className="text-muted-foreground">
+                    <p className="mb-4">
+                      {language === "et"
+                        ? "Meie pulma värvipalett loob elegantse ja looduslähedase meeleolu. Kaaluge nende toonide kasutamist ka riietuse valimisel."
+                        : "Our wedding color palette creates an elegant and natural atmosphere. Feel free to use these tones when choosing your outfit!"}
+                    </p>
+                
+                    <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#ffbdf7] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Heleroosa" : "Light Pink"}
+                        </span>
+                      </div>
+                
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#ff7af6] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Roosa" : "Pink"}
+                        </span>
+                      </div>
+                
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#c2dd45] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Sidrunkollane" : "Lime Yellow"}
+                        </span>
+                      </div>
+                
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#456011] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Tume roheline" : "Dark Green"}
+                        </span>
+                      </div>
+                
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#000000] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Must" : "Black"}
+                        </span>
+                      </div>
+                
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="w-full aspect-square rounded-lg bg-[#ffffff] border border-border shadow-sm" />
+                        <span className="text-xs text-foreground">
+                          {language === "et" ? "Valge" : "White"}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-full aspect-square rounded-lg bg-[#9abc06] border border-border shadow-sm" />
-                      <span className="text-xs text-foreground">{language === "et" ? "Laimiroheline" : "Lime Green"}</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-full aspect-square rounded-lg bg-[#ff28b0] border border-border shadow-sm" />
-                      <span className="text-xs text-foreground">{language === "et" ? "Magenta" : "Magenta"}</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-full aspect-square rounded-lg bg-[#ffffff] border border-border shadow-sm" />
-                      <span className="text-xs text-foreground">{language === "et" ? "Valge" : "White"}</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="w-full aspect-square rounded-lg bg-[#000000] border border-border shadow-sm" />
-                      <span className="text-xs text-foreground">{language === "et" ? "Must" : "Black"}</span>
-                    </div>
+                
+                    <p className="text-xs text-muted-foreground/70 mt-4">
+                      {language === "et"
+                        ? "Vihje: valge on pruudile reserveeritud!"
+                        : "Hint: white is reserved for the bride!"}
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground/70 mt-4">
-                    {language === "et"
-                      ? "Vihje: Valge on reserveeritud pruudile!"
-                      : "Hint: White is reserved for the bride!"}
-                  </p>
-                </div>
-              </InfoSection>
+                </InfoSection>
             </div>
 
             {/* CTA */}
