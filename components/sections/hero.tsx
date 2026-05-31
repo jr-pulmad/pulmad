@@ -118,5 +118,3 @@ export function Hero() {
     </section>
   )
 }
-
-Here u can see all parents
