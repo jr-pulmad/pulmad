@@ -160,7 +160,7 @@ export default function InfoPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="mt-5 pt-4 w-full border-t border-border/40">
+                  <div className="mt-2 pt-4 flex justify-center w-full">
                  <Button
                       variant="default"
                       size="sm"
