@@ -160,10 +160,11 @@ export default function InfoPage() {
                       </p>
                     </div>
                   </div>
+                  <div className="mt-5 pt-4 w-full border-t border-border/40">
                  <Button
                       variant="default"
                       size="sm"
-                      className="mt-5 gap-1.5 transition-all duration-200 hover:scale-105"
+                      className="gap-1.5 transition-all duration-200 hover:scale-105"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)
@@ -187,6 +188,7 @@ export default function InfoPage() {
                     <CalendarPlus className="w-4 h-4" />
                     {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
                   </Button>
+                  </div>
                 </CardContent>
               </Card>
             
