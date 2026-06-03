@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
 import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
+import { atcb_action } from "add-to-calendar-button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -247,16 +248,30 @@ export function RSVPMenuForm() {
           
           {/* Add to Calendar button */}
           <div className="mt-6 animate-fade-in-up flex justify-center" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               className="gap-2"
-              asChild
+              onClick={(e) => {
+                atcb_action(
+                  {
+                    name: language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding",
+                    description: language === "et"
+                      ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
+                      : "Please arrive by 13:45. Ceremony starts at 14:00.",
+                    startDate: "2026-08-19",
+                    startTime: "13:45",
+                    endTime: "23:00",
+                    timeZone: "Europe/Tallinn",
+                    location: "Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia",
+                    options: ["Apple", "Google", "Outlook.com", "iCal"],
+                  },
+                  e.currentTarget as HTMLElement,
+                )
+              }}
             >
-              <a href={`/api/calendar?lang=${language}`} download="johanna-rannar-pulmad.ics">
-                <CalendarPlus className="w-4 h-4" />
-                {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
-              </a>
+              <CalendarPlus className="w-4 h-4" />
+              {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
             </Button>
           </div>
         </CardContent>
