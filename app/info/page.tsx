@@ -146,8 +146,8 @@ export default function InfoPage() {
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4 flex-1">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
                       <div className="p-3 rounded-xl bg-primary/10 text-primary">
                         <Calendar className="w-6 h-6" />
                       </div>
@@ -157,9 +157,9 @@ export default function InfoPage() {
                       </div>
                     </div>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="h-8 px-2 text-muted-foreground hover:text-primary"
+                      className="gap-2 w-fit"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)
@@ -179,9 +179,9 @@ export default function InfoPage() {
                           document.body.removeChild(link)
                         }
                       }}
-                      title={language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
                     >
                       <CalendarPlus className="w-4 h-4" />
+                      {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
                     </Button>
                   </div>
                 </CardContent>
