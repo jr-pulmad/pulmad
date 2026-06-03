@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -145,13 +145,44 @@ export default function InfoPage() {
             {/* Quick info cards */}
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                    <Calendar className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
-                    <p className="font-medium text-foreground">{t.hero.date}</p>
+                <CardContent className="p-5">
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                        <Calendar className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
+                        <p className="font-medium text-foreground">{t.hero.date}</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 w-fit"
+                      onClick={() => {
+                        const ua = navigator.userAgent
+                        const isIOS = /iPad|iPhone|iPod/.test(ua)
+                        const isAndroid = /Android/.test(ua)
+                        const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
+
+                        if (isIOS || isMacSafari) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else if (isAndroid) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else {
+                          const link = document.createElement("a")
+                          link.href = `/api/calendar?lang=${language}`
+                          link.download = "johanna-rannar-pulmad.ics"
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                        }
+                      }}
+                    >
+                      <CalendarPlus className="w-4 h-4" />
+                      {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
