@@ -11,7 +11,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
 import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
-import { atcb_action } from "add-to-calendar-button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -252,22 +251,34 @@ export function RSVPMenuForm() {
               variant="outline"
               size="lg"
               className="gap-2"
-              onClick={(e) => {
-                atcb_action(
-                  {
-                    name: language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding",
-                    description: language === "et"
-                      ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
-                      : "Please arrive by 13:45. Ceremony starts at 14:00.",
-                    startDate: "2026-08-19",
-                    startTime: "13:45",
-                    endTime: "23:00",
-                    timeZone: "Europe/Tallinn",
-                    location: "Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia",
-                    options: ["Apple", "Google", "Outlook.com", "iCal"],
-                  },
-                  e.currentTarget as HTMLElement,
-                )
+              onClick={() => {
+                const ua = navigator.userAgent
+                const isIOS = /iPad|iPhone|iPod/.test(ua)
+                const isAndroid = /Android/.test(ua)
+                const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
+
+                const title = encodeURIComponent(language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding")
+                const description = encodeURIComponent(language === "et"
+                  ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
+                  : "Please arrive by 13:45. Ceremony starts at 14:00.")
+                const location = encodeURIComponent("Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia")
+
+                if (isAndroid) {
+                  // Google Calendar intent
+                  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20260819T134500/20260819T230000&details=${description}&location=${location}`
+                  window.open(googleUrl, "_blank")
+                } else if (isIOS || isMacSafari) {
+                  // Apple Calendar via .ics download (Safari handles this natively)
+                  window.location.href = `/api/calendar?lang=${language}`
+                } else {
+                  // Windows / other desktop: .ics download (opens Outlook or default calendar)
+                  const link = document.createElement("a")
+                  link.href = `/api/calendar?lang=${language}`
+                  link.download = "johanna-rannar-pulmad.ics"
+                  document.body.appendChild(link)
+                  link.click()
+                  document.body.removeChild(link)
+                }
               }}
             >
               <CalendarPlus className="w-4 h-4" />
