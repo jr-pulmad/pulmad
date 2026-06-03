@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
 
   const eventTitle = lang === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"
   const eventDescription = lang === "et" 
-    ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
-    : "Please arrive by 13:45. Ceremony starts at 15:00. Reception begins at 17:00 at Alatskivi Castle."
+    ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
+    : "Please arrive by 13:45. Ceremony starts at 14:00."
   const eventLocation = "Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
   const alarmDescription = lang === "et" ? "Homme on Johanna & Rannari pulmad!" : "Johanna & Rannar's Wedding is tomorrow!"
 
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    "DTSTART:20260819T134500",
-    "DTEND:20260819T230000",
+    "DTSTART;VALUE=DATE-TIME:20260819T134500",
+    "DTEND;VALUE=DATE-TIME:20260819T230000",
     `SUMMARY:${eventTitle}`,
     `DESCRIPTION:${eventDescription.replace(/\n/g, "\\n")}`,
     `LOCATION:${eventLocation}`,
