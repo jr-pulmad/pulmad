@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
