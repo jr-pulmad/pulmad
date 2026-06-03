@@ -257,18 +257,11 @@ export function RSVPMenuForm() {
                 const isAndroid = /Android/.test(ua)
                 const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
 
-                const title = encodeURIComponent(language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding")
-                const description = encodeURIComponent(language === "et"
-                  ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
-                  : "Please arrive by 13:45. Ceremony starts at 14:00.")
-                const location = encodeURIComponent("Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia")
-
-                if (isAndroid) {
-                  // Google Calendar intent
-                  const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20260819T134500/20260819T230000&details=${description}&location=${location}`
-                  window.open(googleUrl, "_blank")
-                } else if (isIOS || isMacSafari) {
-                  // Apple Calendar via .ics download (Safari handles this natively)
+                if (isIOS || isMacSafari) {
+                  // Apple Calendar via .ics - Safari handles this natively
+                  window.location.href = `/api/calendar?lang=${language}`
+                } else if (isAndroid) {
+                  // Android: .ics download opens system calendar picker
                   window.location.href = `/api/calendar?lang=${language}`
                 } else {
                   // Windows / other desktop: .ics download (opens Outlook or default calendar)
