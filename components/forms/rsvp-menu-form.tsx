@@ -251,10 +251,10 @@ export function RSVPMenuForm() {
             <AddToCalendarButton
               name={language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"}
               description={language === "et" 
-                ? "Laulatustseremoonia algab kell 15:00 Maarja-Magdaleena kirikus. Peolaud algab kell 17:00 Alatskivi lossis."
-                : "Wedding ceremony starts at 15:00 at Maarja-Magdaleena Church. Reception begins at 17:00 at Alatskivi Castle."}
+                ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
+                : "Please arrive by 13:45. Ceremony starts at 15:00. Reception begins at 17:00 at Alatskivi Castle."}
               startDate="2026-08-19"
-              startTime="15:00"
+              startTime="13:45"
               endTime="23:00"
               timeZone="Europe/Tallinn"
               location="Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
