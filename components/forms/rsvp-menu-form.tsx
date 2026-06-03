@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
-import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2 } from "lucide-react"
+import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
+import { AddToCalendarButton } from 'add-to-calendar-button-react'
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -243,6 +244,28 @@ export function RSVPMenuForm() {
                 {language === "et" ? "Kingi lilli" : "Gift flowers"}
               </Link>
             </Button>
+          </div>
+          
+          {/* Add to Calendar button */}
+          <div className="mt-6 animate-fade-in-up flex justify-center [&_button]:!font-sans [&_button]:!text-sm [&_button]:!font-medium" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
+            <AddToCalendarButton
+              name={language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"}
+              description={language === "et" 
+                ? "Laulatustseremoonia algab kell 15:00 Maarja-Magdaleena kirikus. Peolaud algab kell 17:00 Alatskivi lossis."
+                : "Wedding ceremony starts at 15:00 at Maarja-Magdaleena Church. Reception begins at 17:00 at Alatskivi Castle."}
+              startDate="2026-08-19"
+              startTime="15:00"
+              endTime="23:00"
+              timeZone="Europe/Tallinn"
+              location="Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
+              options={['Apple', 'Google', 'Outlook.com', 'iCal']}
+              buttonStyle="round"
+              size="4"
+              lightMode="bodyScheme"
+              label={language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+              trigger="click"
+              hideCheckmark
+            />
           </div>
         </CardContent>
       </Card>
