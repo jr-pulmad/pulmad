@@ -176,6 +176,12 @@ export const translations = {
       back: "Tagasi",
       close: "Sulge",
     },
+    // Calendar
+    calendar: {
+      addToCalendar: "Lisa kalendrisse",
+      eventName: "Randmäe pulmad",
+      eventDescription: "Laulatus Maarja-Magdaleena kirikus",
+    },
   },
   en: {
     // Navigation
@@ -352,6 +358,12 @@ export const translations = {
       success: "Success",
       back: "Back",
       close: "Close",
+    },
+    // Calendar
+    calendar: {
+      addToCalendar: "Add to calendar",
+      eventName: "Randmäe Wedding",
+      eventDescription: "Ceremony at Maarja-Magdaleena Church",
     },
   },
 } as const

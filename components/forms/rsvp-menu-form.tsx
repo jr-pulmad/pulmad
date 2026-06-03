@@ -10,9 +10,10 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
-import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2 } from "lucide-react"
+import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { AddToCalendar } from "@/components/ui/add-to-calendar"
 
 type Step = "rsvp" | "guests" | "menu" | "success"
 
@@ -224,6 +225,7 @@ export function RSVPMenuForm() {
           
           {/* Navigation links */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8 animate-fade-in-up" style={{ animationDelay: "0.5s", animationFillMode: "both" }}>
+            <AddToCalendar />
             <Button asChild variant="outline" size="lg" className="gap-2">
               <Link href="/info">
                 <Info className="w-4 h-4" />
