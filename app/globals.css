@@ -521,40 +521,35 @@ html {
   animation: baby-rock 0.5s ease-in-out;
 }
 
-/* Calendar button pulse ring animation */
-@keyframes calendar-ring {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  70% {
-    transform: scale(1.55);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1.55);
-    opacity: 0;
-  }
-}
-
 .calendar-ring-btn {
   position: relative;
+  overflow: visible;
 }
 
-.calendar-ring-btn::before,
-.calendar-ring-btn::after {
+.calendar-ring-btn::before {
   content: "";
   position: absolute;
   inset: -3px;
   border-radius: inherit;
-  border: 1.5px solid var(--primary);
-  opacity: 0;
-  animation: calendar-ring 2.4s ease-out infinite;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 300deg,
+    color-mix(in srgb, var(--primary) 35%, transparent) 330deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: calendar-spin 8s linear infinite;
   pointer-events: none;
+  opacity: 0.35;
 }
 
-.calendar-ring-btn::after {
-  animation-delay: 1.2s;
+@keyframes calendar-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Focus visible styles */
