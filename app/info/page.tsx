@@ -145,8 +145,8 @@ export default function InfoPage() {
             {/* Quick info cards */}
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
-                <CardContent className="p-4">
-                  <div className="flex flex-col items-center text-center gap-3">
+                <CardContent className="p-5">
+                  <div className="flex flex-col items-center text-center gap-4">
                     <div className="p-3 rounded-xl bg-primary/10 text-primary">
                       <Calendar className="w-6 h-6" />
                     </div>
