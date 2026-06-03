@@ -8,32 +8,17 @@ export async function GET(request: NextRequest) {
     ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 14:00."
     : "Please arrive by 13:45. Ceremony starts at 14:00."
 
+  // August 19, 2026 is during EEST (UTC+3)
+  // 13:45 EEST = 10:45 UTC, 23:00 EEST = 20:00 UTC
   const icsContent = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Johanna & Rannar Wedding//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "BEGIN:VTIMEZONE",
-    "TZID:Europe/Tallinn",
-    "BEGIN:STANDARD",
-    "DTSTART:19701025T040000",
-    "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU",
-    "TZOFFSETFROM:+0300",
-    "TZOFFSETTO:+0200",
-    "TZNAME:EET",
-    "END:STANDARD",
-    "BEGIN:DAYLIGHT",
-    "DTSTART:19700329T030000",
-    "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU",
-    "TZOFFSETFROM:+0200",
-    "TZOFFSETTO:+0300",
-    "TZNAME:EEST",
-    "END:DAYLIGHT",
-    "END:VTIMEZONE",
     "BEGIN:VEVENT",
-    "DTSTART;TZID=Europe/Tallinn:20260819T134500",
-    "DTEND;TZID=Europe/Tallinn:20260819T230000",
+    "DTSTART:20260819T104500Z",
+    "DTEND:20260819T200000Z",
     `SUMMARY:${eventTitle}`,
     `DESCRIPTION:${eventDescription.replace(/\n/g, "\\n")}`,
     "LOCATION:Maarja-Magdaleena kirik\\, Maarja-Magdaleena\\, Tartu maakond\\, Estonia",
