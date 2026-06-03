@@ -161,29 +161,30 @@ export default function InfoPage() {
                     </div>
                   </div>
             
-                  <Button
-                    variant="default"
-                    size="sm"
-                    className="mt-3 w-full gap-1.5"
-                    onClick={() => {
-                      const ua = navigator.userAgent
-                      const isIOS = /iPad|iPhone|iPod/.test(ua)
-                      const isAndroid = /Android/.test(ua)
-                      const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
-            
-                      if (isIOS || isMacSafari) {
-                        window.location.href = /api/calendar?lang=${language}
-                      } else if (isAndroid) {
-                        window.location.href = /api/calendar?lang=${language}
-                      } else {
-                        const link = document.createElement("a")
-                        link.href = /api/calendar?lang=${language}
-                        link.download = "johanna-rannar-pulmad.ics"
-                        document.body.appendChild(link)
-                        link.click()
-                        document.body.removeChild(link)
-                      }
-                  >
+                 <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 calendar-ring-btn"
+                      onClick={() => {
+                        const ua = navigator.userAgent
+                        const isIOS = /iPad|iPhone|iPod/.test(ua)
+                        const isAndroid = /Android/.test(ua)
+                        const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
+
+                        if (isIOS || isMacSafari) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else if (isAndroid) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else {
+                          const link = document.createElement("a")
+                          link.href = `/api/calendar?lang=${language}`
+                          link.download = "johanna-rannar-pulmad.ics"
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                        }
+                      }}
+                    >
                     <CalendarPlus className="w-4 h-4" />
                     {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
                   </Button>
