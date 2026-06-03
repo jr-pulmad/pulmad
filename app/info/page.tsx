@@ -157,7 +157,7 @@ export default function InfoPage() {
                     <Button
                       variant="default"
                       size="sm"
-                      className="gap-1.5 transition-all duration-200"
+                      className="gap-1.5 transition-all duration-200 hover:scale-105"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)
