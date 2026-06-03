@@ -175,9 +175,16 @@ export function RSVPMenuForm() {
         return
       }
 
+      // Scroll to top BEFORE showing success to ensure animation is visible
+      // Use instant behavior and requestAnimationFrame for reliable mobile scrolling
+      window.scrollTo({ top: 0, behavior: "instant" })
+      // Double-ensure scroll on mobile with requestAnimationFrame
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "instant" })
+        document.documentElement.scrollTop = 0
+        document.body.scrollTop = 0 // For Safari
+      })
       setCurrentStep("success")
-      // Scroll to top when success page appears
-      window.scrollTo({ top: 0, behavior: "smooth" })
     } catch {
       setError(t.rsvp.error)
     } finally {
