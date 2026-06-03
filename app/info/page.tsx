@@ -155,9 +155,9 @@ export default function InfoPage() {
                       <p className="font-medium text-foreground">{t.hero.date}</p>
                     </div>
                     <Button
-                      variant="outline"
+                      variant="default"
                       size="sm"
-                      className="gap-2 calendar-ring-btn"
+                      className="gap-1.5 transition-all duration-200"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)
