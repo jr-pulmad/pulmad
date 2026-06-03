@@ -145,13 +145,44 @@ export default function InfoPage() {
             {/* Quick info cards */}
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                    <Calendar className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
-                    <p className="font-medium text-foreground">{t.hero.date}</p>
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-4 flex-1">
+                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                        <Calendar className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
+                        <p className="font-medium text-foreground">{t.hero.date}</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 px-2 text-muted-foreground hover:text-primary"
+                      onClick={() => {
+                        const ua = navigator.userAgent
+                        const isIOS = /iPad|iPhone|iPod/.test(ua)
+                        const isAndroid = /Android/.test(ua)
+                        const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
+
+                        if (isIOS || isMacSafari) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else if (isAndroid) {
+                          window.location.href = `/api/calendar?lang=${language}`
+                        } else {
+                          const link = document.createElement("a")
+                          link.href = `/api/calendar?lang=${language}`
+                          link.download = "johanna-rannar-pulmad.ics"
+                          document.body.appendChild(link)
+                          link.click()
+                          document.body.removeChild(link)
+                        }
+                      }}
+                      title={language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+                    >
+                      <CalendarPlus className="w-4 h-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
