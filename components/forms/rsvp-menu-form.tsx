@@ -251,7 +251,10 @@ export function RSVPMenuForm() {
               variant="outline" 
               size="lg" 
               className="gap-2"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
+                console.log("[v0] Calendar button clicked")
+                
                 const eventTitle = language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"
                 const eventDescription = language === "et" 
                   ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
@@ -283,16 +286,26 @@ export function RSVPMenuForm() {
                   "END:VCALENDAR"
                 ].join("\r\n")
                 
-                // Create and download the file
-                const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" })
-                const url = URL.createObjectURL(blob)
+                console.log("[v0] ICS content created")
+                
+                // Use data URI approach which works better on mobile
+                const dataUri = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsContent)
+                
+                // Create a visible anchor and use it
                 const link = document.createElement("a")
-                link.href = url
-                link.download = "johanna-rannar-pulmad.ics"
+                link.setAttribute("href", dataUri)
+                link.setAttribute("download", "johanna-rannar-pulmad.ics")
+                link.style.display = "none"
                 document.body.appendChild(link)
+                
+                console.log("[v0] Triggering download")
                 link.click()
-                document.body.removeChild(link)
-                URL.revokeObjectURL(url)
+                
+                // Clean up after a short delay
+                setTimeout(() => {
+                  document.body.removeChild(link)
+                  console.log("[v0] Download link cleaned up")
+                }, 100)
               }}
             >
               <CalendarPlus className="w-4 h-4" />
