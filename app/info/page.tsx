@@ -146,7 +146,7 @@ export default function InfoPage() {
             <div className="grid sm:grid-cols-3 gap-3 mb-6 sm:mb-8">
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center text-center">
                     <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                       <Calendar className="w-5 h-5" />
                     </div>
@@ -160,11 +160,10 @@ export default function InfoPage() {
                       </p>
                     </div>
                   </div>
-            
                  <Button
-                      variant="outline"
+                      variant="default"
                       size="sm"
-                      className="gap-2 calendar-ring-btn"
+                      className="mt-5 gap-1.5 transition-all duration-200 hover:scale-105"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)
@@ -193,7 +192,7 @@ export default function InfoPage() {
             
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center text-center">
                     <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                       <MapPin className="w-5 h-5" />
                     </div>
@@ -212,7 +211,7 @@ export default function InfoPage() {
             
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center text-center">
                     <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
                       <MapPin className="w-5 h-5" />
                     </div>
