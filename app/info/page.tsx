@@ -185,24 +185,39 @@ export default function InfoPage() {
                 </CardContent>
               </Card>
               <Card className="bg-secondary/30 border-border">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Laulatus" : "Ceremony"}</p>
-                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}</p>
+                <CardContent className="p-5">
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "et" ? "Laulatus" : "Ceremony"}
+                      </p>
+                      <p className="font-medium text-foreground text-sm">
+                        {language === "et"
+                          ? "Maarja-Magdaleena kirik"
+                          : "Maarja-Magdaleena Church"}
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
+          
               <Card className="bg-secondary/30 border-border">
-                <CardContent className="p-5 flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">{language === "et" ? "Pidu" : "Reception"}</p>
-                    <p className="font-medium text-foreground">Alatskivi Loss</p>
+                <CardContent className="p-5">
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <MapPin className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        {language === "et" ? "Pidu" : "Reception"}
+                      </p>
+                      <p className="font-medium text-foreground">
+                        Alatskivi Loss
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
