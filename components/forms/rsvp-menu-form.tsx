@@ -251,65 +251,12 @@ export function RSVPMenuForm() {
               variant="outline" 
               size="lg" 
               className="gap-2"
-              onClick={(e) => {
-                e.preventDefault()
-                console.log("[v0] Calendar button clicked")
-                
-                const eventTitle = language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"
-                const eventDescription = language === "et" 
-                  ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
-                  : "Please arrive by 13:45. Ceremony starts at 15:00. Reception begins at 17:00 at Alatskivi Castle."
-                const eventLocation = "Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
-                
-                // Create ICS file content
-                const icsContent = [
-                  "BEGIN:VCALENDAR",
-                  "VERSION:2.0",
-                  "PRODID:-//Johanna & Rannar Wedding//EN",
-                  "CALSCALE:GREGORIAN",
-                  "METHOD:PUBLISH",
-                  "BEGIN:VEVENT",
-                  "DTSTART:20260819T134500",
-                  "DTEND:20260819T230000",
-                  `SUMMARY:${eventTitle}`,
-                  `DESCRIPTION:${eventDescription.replace(/\n/g, "\\n")}`,
-                  `LOCATION:${eventLocation}`,
-                  `UID:johanna-rannar-wedding-2026@pulmad.ee`,
-                  "STATUS:CONFIRMED",
-                  "SEQUENCE:0",
-                  "BEGIN:VALARM",
-                  "TRIGGER:-P1D",
-                  "ACTION:DISPLAY",
-                  `DESCRIPTION:${language === "et" ? "Homme on Johanna & Rannari pulmad!" : "Johanna & Rannar's Wedding is tomorrow!"}`,
-                  "END:VALARM",
-                  "END:VEVENT",
-                  "END:VCALENDAR"
-                ].join("\r\n")
-                
-                console.log("[v0] ICS content created")
-                
-                // Use data URI approach which works better on mobile
-                const dataUri = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsContent)
-                
-                // Create a visible anchor and use it
-                const link = document.createElement("a")
-                link.setAttribute("href", dataUri)
-                link.setAttribute("download", "johanna-rannar-pulmad.ics")
-                link.style.display = "none"
-                document.body.appendChild(link)
-                
-                console.log("[v0] Triggering download")
-                link.click()
-                
-                // Clean up after a short delay
-                setTimeout(() => {
-                  document.body.removeChild(link)
-                  console.log("[v0] Download link cleaned up")
-                }, 100)
-              }}
+              asChild
             >
-              <CalendarPlus className="w-4 h-4" />
-              {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+              <a href={`/api/calendar?lang=${language}`} download="johanna-rannar-pulmad.ics">
+                <CalendarPlus className="w-4 h-4" />
+                {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+              </a>
             </Button>
           </div>
         </CardContent>
