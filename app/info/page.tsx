@@ -143,75 +143,91 @@ export default function InfoPage() {
             </div>
 
             {/* Quick info cards */}
-           {/* Quick info cards */}
-<div className="grid sm:grid-cols-3 gap-3 mb-6 sm:mb-8">
-  <Card className="bg-secondary/30 border-border">
-    <CardContent className="p-3 sm:p-4">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-          <Calendar className="w-5 h-5" />
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground">
-            {language === "et" ? "Kuupäev" : "Date"}
-          </p>
-          <p className="text-sm font-medium text-foreground truncate">
-            {t.hero.date}
-          </p>
-        </div>
-      </div>
-
-      <Button
-        variant="default"
-        size="sm"
-        className="mt-3 w-full gap-1.5"
-        onClick={...}
-      >
-        <CalendarPlus className="w-4 h-4" />
-        {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
-      </Button>
-    </CardContent>
-  </Card>
-
-  <Card className="bg-secondary/30 border-border">
-    <CardContent className="p-3 sm:p-4">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-          <MapPin className="w-5 h-5" />
-        </div>
-
-        <div>
-          <p className="text-xs text-muted-foreground">
-            {language === "et" ? "Laulatus" : "Ceremony"}
-          </p>
-          <p className="text-sm font-medium text-foreground">
-            {language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}
-          </p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-
-  <Card className="bg-secondary/30 border-border">
-    <CardContent className="p-3 sm:p-4">
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
-          <MapPin className="w-5 h-5" />
-        </div>
-
-        <div>
-          <p className="text-xs text-muted-foreground">
-            {language === "et" ? "Pidu" : "Reception"}
-          </p>
-          <p className="text-sm font-medium text-foreground">
-            Alatskivi Loss
-          </p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-</div>
+            <div className="grid sm:grid-cols-3 gap-3 mb-6 sm:mb-8">
+              <Card className="bg-secondary/30 border-border">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                      <Calendar className="w-5 h-5" />
+                    </div>
+            
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-muted-foreground">
+                        {language === "et" ? "Kuupäev" : "Date"}
+                      </p>
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {t.hero.date}
+                      </p>
+                    </div>
+                  </div>
+            
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="mt-3 w-full gap-1.5"
+                    onClick={() => {
+                      const ua = navigator.userAgent
+                      const isIOS = /iPad|iPhone|iPod/.test(ua)
+                      const isAndroid = /Android/.test(ua)
+                      const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
+            
+                      if (isIOS || isMacSafari) {
+                        window.location.href = /api/calendar?lang=${language}
+                      } else if (isAndroid) {
+                        window.location.href = /api/calendar?lang=${language}
+                      } else {
+                        const link = document.createElement("a")
+                        link.href = /api/calendar?lang=${language}
+                        link.download = "johanna-rannar-pulmad.ics"
+                        document.body.appendChild(link)
+                        link.click()
+                        document.body.removeChild(link)
+                      }
+                  >
+                    <CalendarPlus className="w-4 h-4" />
+                    {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+                  </Button>
+                </CardContent>
+              </Card>
+            
+              <Card className="bg-secondary/30 border-border">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+            
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {language === "et" ? "Laulatus" : "Ceremony"}
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        {language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            
+              <Card className="bg-secondary/30 border-border">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary shrink-0">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+            
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {language === "et" ? "Pidu" : "Reception"}
+                      </p>
+                      <p className="text-sm font-medium text-foreground">
+                        Alatskivi Loss
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Info sections */}
             <div className="space-y-6">
