@@ -146,20 +146,18 @@ export default function InfoPage() {
             <div className="grid sm:grid-cols-3 gap-4 mb-8">
               <Card className="bg-secondary/30 border-border">
                 <CardContent className="p-5">
-                  <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 rounded-xl bg-primary/10 text-primary">
-                        <Calendar className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
-                        <p className="font-medium text-foreground">{t.hero.date}</p>
-                      </div>
+                  <div className="flex flex-col items-center text-center gap-4">
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary">
+                      <Calendar className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{language === "et" ? "Kuupäev" : "Date"}</p>
+                      <p className="font-medium text-foreground">{t.hero.date}</p>
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      className="gap-2 w-fit"
+                      className="gap-2 calendar-ring-btn"
                       onClick={() => {
                         const ua = navigator.userAgent
                         const isIOS = /iPad|iPhone|iPod/.test(ua)

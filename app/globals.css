@@ -521,6 +521,42 @@ html {
   animation: baby-rock 0.5s ease-in-out;
 }
 
+/* Calendar button pulse ring animation */
+@keyframes calendar-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.calendar-ring-btn {
+  position: relative;
+}
+
+.calendar-ring-btn::before,
+.calendar-ring-btn::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1.5px solid var(--primary);
+  opacity: 0;
+  animation: calendar-ring 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+.calendar-ring-btn::after {
+  animation-delay: 1.2s;
+}
+
 /* Focus visible styles */
 :focus-visible {
   outline: 2px solid var(--ring);

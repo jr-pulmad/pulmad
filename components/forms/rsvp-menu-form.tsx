@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
-import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
+import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -245,39 +245,7 @@ export function RSVPMenuForm() {
             </Button>
           </div>
           
-          {/* Add to Calendar button */}
-          <div className="mt-6 animate-fade-in-up flex justify-center" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
-            <Button
-              variant="outline"
-              size="lg"
-              className="gap-2"
-              onClick={() => {
-                const ua = navigator.userAgent
-                const isIOS = /iPad|iPhone|iPod/.test(ua)
-                const isAndroid = /Android/.test(ua)
-                const isMacSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome/.test(ua)
 
-                if (isIOS || isMacSafari) {
-                  // Apple Calendar via .ics - Safari handles this natively
-                  window.location.href = `/api/calendar?lang=${language}`
-                } else if (isAndroid) {
-                  // Android: .ics download opens system calendar picker
-                  window.location.href = `/api/calendar?lang=${language}`
-                } else {
-                  // Windows / other desktop: .ics download (opens Outlook or default calendar)
-                  const link = document.createElement("a")
-                  link.href = `/api/calendar?lang=${language}`
-                  link.download = "johanna-rannar-pulmad.ics"
-                  document.body.appendChild(link)
-                  link.click()
-                  document.body.removeChild(link)
-                }
-              }}
-            >
-              <CalendarPlus className="w-4 h-4" />
-              {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
-            </Button>
-          </div>
         </CardContent>
       </Card>
     )
