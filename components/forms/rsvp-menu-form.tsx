@@ -11,7 +11,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { FloatingInput, FloatingTextarea } from "@/components/ui/floating-input"
 import { CheckCircle2, Loader2, UserCheck, UtensilsCrossed, ChevronRight, ChevronLeft, Users, Plus, Trash2, Bus, Car, Info, Flower2, CalendarPlus } from "lucide-react"
-import { AddToCalendarButton } from 'add-to-calendar-button-react'
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
@@ -247,25 +246,58 @@ export function RSVPMenuForm() {
           </div>
           
           {/* Add to Calendar button */}
-          <div className="mt-6 animate-fade-in-up flex justify-center [&_button]:!font-sans [&_button]:!text-sm [&_button]:!font-medium" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
-            <AddToCalendarButton
-              name={language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"}
-              description={language === "et" 
-                ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
-                : "Please arrive by 13:45. Ceremony starts at 15:00. Reception begins at 17:00 at Alatskivi Castle."}
-              startDate="2026-08-19"
-              startTime="13:45"
-              endTime="23:00"
-              timeZone="Europe/Tallinn"
-              location="Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
-              options={['Apple', 'Google', 'Outlook.com', 'iCal']}
-              buttonStyle="round"
-              size="4"
-              lightMode="bodyScheme"
-              label={language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
-              trigger="click"
-              hideCheckmark
-            />
+          <div className="mt-6 animate-fade-in-up flex justify-center" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="gap-2"
+              onClick={() => {
+                const eventTitle = language === "et" ? "Johanna & Rannari pulmad" : "Johanna & Rannar's Wedding"
+                const eventDescription = language === "et" 
+                  ? "Palume kohal olla kell 13:45. Laulatustseremoonia algab kell 15:00. Peolaud algab kell 17:00 Alatskivi lossis."
+                  : "Please arrive by 13:45. Ceremony starts at 15:00. Reception begins at 17:00 at Alatskivi Castle."
+                const eventLocation = "Maarja-Magdaleena kirik, Maarja-Magdaleena, Tartu maakond, Estonia"
+                
+                // Create ICS file content
+                const icsContent = [
+                  "BEGIN:VCALENDAR",
+                  "VERSION:2.0",
+                  "PRODID:-//Johanna & Rannar Wedding//EN",
+                  "CALSCALE:GREGORIAN",
+                  "METHOD:PUBLISH",
+                  "BEGIN:VEVENT",
+                  "DTSTART:20260819T134500",
+                  "DTEND:20260819T230000",
+                  `SUMMARY:${eventTitle}`,
+                  `DESCRIPTION:${eventDescription.replace(/\n/g, "\\n")}`,
+                  `LOCATION:${eventLocation}`,
+                  `UID:johanna-rannar-wedding-2026@pulmad.ee`,
+                  "STATUS:CONFIRMED",
+                  "SEQUENCE:0",
+                  "BEGIN:VALARM",
+                  "TRIGGER:-P1D",
+                  "ACTION:DISPLAY",
+                  `DESCRIPTION:${language === "et" ? "Homme on Johanna & Rannari pulmad!" : "Johanna & Rannar's Wedding is tomorrow!"}`,
+                  "END:VALARM",
+                  "END:VEVENT",
+                  "END:VCALENDAR"
+                ].join("\r\n")
+                
+                // Create and download the file
+                const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" })
+                const url = URL.createObjectURL(blob)
+                const link = document.createElement("a")
+                link.href = url
+                link.download = "johanna-rannar-pulmad.ics"
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                URL.revokeObjectURL(url)
+              }}
+            >
+              <CalendarPlus className="w-4 h-4" />
+              {language === "et" ? "Lisa kalendrisse" : "Add to Calendar"}
+            </Button>
           </div>
         </CardContent>
       </Card>
