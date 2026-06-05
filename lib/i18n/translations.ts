@@ -98,7 +98,7 @@ export const translations = {
       title: "Kingi lilli",
       subtitle: "Aita meil luua unustamatu lillekaunistus",
       description:
-        "Lillede asemel palume panustada meie floristika eelarvesse. Kõik maksed lähevad otse meie pulmalillede ostuks.",
+        "Lillede asemel palume panustada meie floristika eelarvesse. Kõik maksed lähevad otse pulmalillede ostuks. Pulma florist valmistab teie kingitud lilledest ilusad seaded, mis kaunistavad peopaika",
       presetAmounts: "Vali summa",
       customAmount: "Muu summa",
       customAmountPlaceholder: "Sisesta summa",
