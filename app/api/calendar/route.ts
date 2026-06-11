@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 
+// Never cache this route. A stale cached .ics is what caused the wrong
+// times (16:45 instead of 13:45) and the wrong "15:00" ceremony note to
+// keep showing up after the source was already fixed.
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get("lang") ?? "en"
 
@@ -17,14 +23,18 @@ export async function GET(request: NextRequest) {
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",
+    // 13:45 EEST (UTC+3) on Aug 19, 2026 == 10:45 UTC. The trailing "Z"
+    // makes this an absolute UTC instant, so it is the same wall-clock
+    // time regardless of the user's device timezone or current time.
     "DTSTART:20260819T104500Z",
     "DTEND:20260819T200000Z",
+    `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")}`,
     `SUMMARY:${eventTitle}`,
     `DESCRIPTION:${eventDescription.replace(/\n/g, "\\n")}`,
     "LOCATION:Maarja-Magdaleena kirik\\, Maarja-Magdaleena\\, Tartu maakond\\, Estonia",
     "UID:johanna-rannar-wedding-2026@pulmad.ee",
     "STATUS:CONFIRMED",
-    "SEQUENCE:0",
+    "SEQUENCE:1",
     "BEGIN:VALARM",
     "TRIGGER:-P1D",
     "ACTION:DISPLAY",
@@ -38,6 +48,7 @@ export async function GET(request: NextRequest) {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
       "Content-Disposition": 'attachment; filename="johanna-rannar-pulmad.ics"',
+      "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     },
   })
 }
