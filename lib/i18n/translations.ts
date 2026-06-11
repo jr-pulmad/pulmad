@@ -126,7 +126,7 @@ export const translations = {
         discountCode: "Sooduskood",
         copyCode: "Kopeeri",
         copied: "Kopeeritud!",
-        weddingDiscount: "Soodushind kahele, kui mainid broneerimisel meie pulmi!",
+        weddingDiscount: "Soodushinnaga, kui mainid broneerimisel meie pulmi!",
       },
       transport: {
         title: "Transport ja parkimine",
@@ -304,7 +304,7 @@ export const translations = {
         discountCode: "Discount Code",
         copyCode: "Copy",
         copied: "Copied!",
-        weddingDiscount: "Mention our wedding when booking and you'll get a special discount for two!",
+        weddingDiscount: "Mention our wedding when booking and you'll get a special discount!",
       },
       transport: {
         title: "Transport & Parking",
