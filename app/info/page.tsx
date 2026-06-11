@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -100,6 +100,7 @@ export default function InfoPage() {
       description_en: "Cozy guesthouse next to the castle",
       distance: "0.2 km",
       link: "https://www.booking.com/hotel/ee/sepikoja-ka1-4lalistemaja.et.html",
+      weddingDiscount: true,
     },
     {
       name: "Peipsi Lake House",
@@ -356,6 +357,14 @@ export default function InfoPage() {
                               {language === "et" ? "Vaata" : "View"}
                               <ExternalLink className="w-3 h-3" />
                             </a>
+                            {acc.weddingDiscount && (
+                              <div className="mt-3 flex items-start gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
+                                <Gift className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                                <p className="text-sm text-foreground">
+                                  {t.info.accommodation.weddingDiscount}
+                                </p>
+                              </div>
+                            )}
                           </div>
                           <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full shrink-0">
                             {acc.distance}
