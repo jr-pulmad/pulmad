@@ -13,6 +13,8 @@ import Link from "next/link"
 export default function InfoPage() {
   const { t, language } = useI18n()
   const [copiedEmail, setCopiedEmail] = useState(false)
+  const [antoniusRevealed, setAntoniusRevealed] = useState(false)
+  const [copiedCode, setCopiedCode] = useState(false)
   const [womenOutfitIndex, setWomenOutfitIndex] = useState(0)
   const [menOutfitIndex, setMenOutfitIndex] = useState(0)
   const [womenSpinning, setWomenSpinning] = useState(false)
@@ -24,6 +26,15 @@ export default function InfoPage() {
     navigator.clipboard.writeText(email).then(() => {
       setCopiedEmail(true)
       setTimeout(() => setCopiedEmail(false), 2000)
+    })
+  }
+
+  const antoniusCode = "PULMAD19"
+
+  const copyAntoniusCode = () => {
+    navigator.clipboard.writeText(antoniusCode).then(() => {
+      setCopiedCode(true)
+      setTimeout(() => setCopiedCode(false), 2000)
     })
   }
 
@@ -39,6 +50,21 @@ export default function InfoPage() {
     { et: "Šampanjavärvi siidkleit ja hõbedased kõrvarõngad", en: "Champagne silk dress with silver earrings" },
     { et: "Sinakasroheline maksikleit ja kuldsed aksessuaarid", en: "Teal maxi dress with gold accessories" },
     { et: "Lavendlililla õhtukleit ja pärlkäevõru", en: "Lavender evening dress with pearl bracelet" },
+    { et: "Fuksiaroosa satiinist üheõlakleit ja kuldsed kontsad", en: "Fuchsia satin one-shoulder dress with gold heels" },
+    { et: "Smaragdrohelisest sametist midikleit puhvvarrukatega", en: "Emerald green velvet midi dress with puffed sleeves" },
+    { et: "Magentaroosa krepist maksikleit keebiga", en: "Magenta crepe maxi dress with a cape" },
+    { et: "Puuderroosa drapeeritud satiinkleit pärldetailidega", en: "Blush pink draped satin dress with pearl details" },
+    { et: "Metsaroheline kõrge lõhikuga õhtukleit ja hõbedane pidukott", en: "Forest green high-slit evening gown with silver clutch" },
+    { et: "Tuhmroosa õlgu paljastav maksikleit ja kuldsed aksessuaarid", en: "Dusty rose off-the-shoulder maxi dress with gold accessories" },
+    { et: "Laimirohelisest satiinist midikleit ja rihmadega kontsad", en: "Lime green satin midi dress with strappy heels" },
+    { et: "Oliivrohelisest siidist kombineekleit ja õrnad kuldehted", en: "Olive green silk slip dress with delicate gold jewelry" },
+    { et: "Erkroosa struktuurne krepkleit ja pilkupüüdvad kõrvarõngad", en: "Hot pink structured crepe dress with statement earrings" },
+    { et: "Smaragdrohelisest šifoonist plisseeritud kleit ja pärlkäevõru", en: "Emerald green pleated chiffon dress with pearl bracelet" },
+    { et: "Salveiroheline ümbriskleit ja nahatoonis kontsad", en: "Sage green wrap dress with nude heels" },
+    { et: "Mustast satiinist kombineekleit ja julged kuldaksessuaarid", en: "Black satin slip dress with bold gold accessories" },
+    { et: "Fuksiaroosa midikleit dramaatiliste volangvarrukatega", en: "Fuchsia midi dress with dramatic ruffle sleeves" },
+    { et: "Tumerohelisest sametist kombinesoon ja hõbedased kontsad", en: "Dark green velvet jumpsuit with silver heels" },
+    { et: "Puuderroosa üheõlaline satiinkleit ja pärlpidukott", en: "Blush pink one-shoulder satin dress with pearl clutch" },
   ]
 
   const menOutfits = [
@@ -52,6 +78,21 @@ export default function InfoPage() {
     { et: "Metsaroheline pintsak, mustad püksid ja tumesinine lips", en: "Forest green blazer, black trousers, and navy tie" },
     { et: "Tumesinine smoking ja must kikilips", en: "Navy tuxedo with black bow tie" },
     { et: "Oliivroheline ülikond, valge särk ja pruun nahkvöö", en: "Olive suit, white shirt, and brown leather belt" },
+    { et: "Smaragdrohelisest sametist pidžakk ja must kikilips", en: "Emerald green velvet dinner jacket with black bow tie" },
+    { et: "Metsaroheline kolmeosaline ülikond ja kuldne lipsunõel", en: "Forest green three-piece suit with gold tie pin" },
+    { et: "Salverohelisest linasest ülikond ja valge lahtise kraega särk", en: "Sage green linen suit with white open-collar shirt" },
+    { et: "Antratsiithall sametist pidžakk ja bordoopunane kikilips", en: "Charcoal velvet dinner jacket with burgundy bow tie" },
+    { et: "Tumeroheline ülikond, puuderroosa särk ja kuldne lips", en: "Dark green suit, blush pink shirt, and gold tie" },
+    { et: "Must kolmeosaline ülikond ja smaragdroheline rinnataskurätt", en: "Black three-piece suit with emerald pocket square" },
+    { et: "Oliivroheline tekstuurne ülikond, kreemjas särk ja pruunid nahkkingad", en: "Olive textured suit, cream shirt, and brown leather shoes" },
+    { et: "Tumesinine sametist smoking ja must siidkikilips", en: "Navy velvet tuxedo with black silk bow tie" },
+    { et: "Metsarohelisest sametist pidžakk, must särk ja kuldne lipsunõel", en: "Forest green velvet jacket, black shirt, and gold tie pin" },
+    { et: "Tuhmroosa pidžakk, valge särk ja tumehallid püksid", en: "Dusty rose blazer, white shirt, and dark grey trousers" },
+    { et: "Bordoopunasest sametist pidžakk ja must kikilips", en: "Burgundy velvet dinner jacket with black bow tie" },
+    { et: "Tumeroheline struktuurne ülikond, valge särk ja hõbedane lips", en: "Dark green textured suit, white shirt, and silver tie" },
+    { et: "Hall kolmeosaline ülikond, heleroosa särk ja kuldne lips", en: "Grey three-piece suit, light pink shirt, and gold tie" },
+    { et: "Mustast sametist pidžakk, valge särk ja smaragdroheline rinnataskurätt", en: "Black velvet jacket, white shirt, and emerald pocket square" },
+    { et: "Oliivroheline smoking, valge särk ja must kikilips", en: "Olive tuxedo, white shirt, and black bow tie" },
   ]
 
   const randomizeWomenOutfit = () => {
@@ -122,6 +163,7 @@ export default function InfoPage() {
       description_en: "Various hotels in Tartu city center",
       distance: "45 km",
       link: "https://www.booking.com/city/ee/tartu.html",
+      antonius: true,
     },
   ]
 
@@ -370,6 +412,71 @@ export default function InfoPage() {
                             {acc.distance}
                           </span>
                         </div>
+                        {acc.antonius && (
+                          <div className="mt-3 rounded-lg bg-secondary/30 border border-border p-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Hotel className="w-4 h-4 text-primary shrink-0" />
+                              <h5 className="font-medium text-foreground">{t.info.accommodation.antoniusTitle}</h5>
+                            </div>
+                            <p className="text-sm">
+                              {t.info.accommodation.antoniusDescription}
+                            </p>
+                            <a
+                              href="https://www.hotelantonius.ee"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-2"
+                            >
+                              {t.info.accommodation.antoniusWebsite}
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                            <div className="mt-3">
+                              {!antoniusRevealed ? (
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  className="gap-1.5"
+                                  onClick={() => setAntoniusRevealed(true)}
+                                >
+                                  <Gift className="w-4 h-4" />
+                                  {t.info.accommodation.antoniusReveal}
+                                </Button>
+                              ) : (
+                                <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-3">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="text-xs text-muted-foreground">
+                                      {t.info.accommodation.discountCode}:
+                                    </span>
+                                    <code className="text-sm font-medium text-foreground tracking-wider bg-background/60 px-2 py-1 rounded">
+                                      {antoniusCode}
+                                    </code>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-7 gap-1.5 px-2"
+                                      onClick={copyAntoniusCode}
+                                    >
+                                      {copiedCode ? (
+                                        <>
+                                          <Check className="w-3.5 h-3.5 text-primary" />
+                                          {t.info.accommodation.copied}
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Copy className="w-3.5 h-3.5" />
+                                          {t.info.accommodation.copyCode}
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                  <p className="text-sm text-foreground mt-2">
+                                    {t.info.accommodation.antoniusDiscount}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
