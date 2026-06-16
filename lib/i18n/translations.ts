@@ -127,6 +127,11 @@ export const translations = {
         copyCode: "Kopeeri",
         copied: "Kopeeritud!",
         weddingDiscount: "Soodushinnaga, kui mainid broneerimisel meie pulmi!",
+        antoniusTitle: "Hotel Antonius",
+        antoniusDescription: "Ajalooline butiikhotell Tartu vanalinnas. Pulmakülalistele kehtib eriline soodustus.",
+        antoniusWebsite: "Külasta veebilehte",
+        antoniusReveal: "Vaata sooduskoodi",
+        antoniusDiscount: "Sisesta see kood broneerimisel, et saada pulmakülalise soodustus.",
       },
       transport: {
         title: "Transport ja parkimine",
@@ -305,6 +310,11 @@ export const translations = {
         copyCode: "Copy",
         copied: "Copied!",
         weddingDiscount: "Mention our wedding when booking and you'll get a special discount!",
+        antoniusTitle: "Hotel Antonius",
+        antoniusDescription: "A historic boutique hotel in Tartu's old town. A special discount applies for wedding guests.",
+        antoniusWebsite: "Visit website",
+        antoniusReveal: "Show discount code",
+        antoniusDiscount: "Enter this code when booking to receive the wedding guest discount.",
       },
       transport: {
         title: "Transport & Parking",

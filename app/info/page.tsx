@@ -13,6 +13,8 @@ import Link from "next/link"
 export default function InfoPage() {
   const { t, language } = useI18n()
   const [copiedEmail, setCopiedEmail] = useState(false)
+  const [antoniusRevealed, setAntoniusRevealed] = useState(false)
+  const [copiedCode, setCopiedCode] = useState(false)
   const [womenOutfitIndex, setWomenOutfitIndex] = useState(0)
   const [menOutfitIndex, setMenOutfitIndex] = useState(0)
   const [womenSpinning, setWomenSpinning] = useState(false)
@@ -24,6 +26,15 @@ export default function InfoPage() {
     navigator.clipboard.writeText(email).then(() => {
       setCopiedEmail(true)
       setTimeout(() => setCopiedEmail(false), 2000)
+    })
+  }
+
+  const antoniusCode = "PULMAD19"
+
+  const copyAntoniusCode = () => {
+    navigator.clipboard.writeText(antoniusCode).then(() => {
+      setCopiedCode(true)
+      setTimeout(() => setCopiedCode(false), 2000)
     })
   }
 
@@ -122,6 +133,7 @@ export default function InfoPage() {
       description_en: "Various hotels in Tartu city center",
       distance: "45 km",
       link: "https://www.booking.com/city/ee/tartu.html",
+      antonius: true,
     },
   ]
 
@@ -363,6 +375,71 @@ export default function InfoPage() {
                                 <p className="text-sm text-foreground">
                                   {t.info.accommodation.weddingDiscount}
                                 </p>
+                              </div>
+                            )}
+                            {acc.antonius && (
+                              <div className="mt-3 rounded-lg bg-secondary/50 border border-border p-4">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Hotel className="w-4 h-4 text-primary shrink-0" />
+                                  <h5 className="font-medium text-foreground">{t.info.accommodation.antoniusTitle}</h5>
+                                </div>
+                                <p className="text-sm">
+                                  {t.info.accommodation.antoniusDescription}
+                                </p>
+                                <a
+                                  href="https://www.hotelantonius.ee"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-2"
+                                >
+                                  {t.info.accommodation.antoniusWebsite}
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                                <div className="mt-3">
+                                  {!antoniusRevealed ? (
+                                    <Button
+                                      variant="default"
+                                      size="sm"
+                                      className="gap-1.5"
+                                      onClick={() => setAntoniusRevealed(true)}
+                                    >
+                                      <Gift className="w-4 h-4" />
+                                      {t.info.accommodation.antoniusReveal}
+                                    </Button>
+                                  ) : (
+                                    <div className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-3">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-xs text-muted-foreground">
+                                          {t.info.accommodation.discountCode}:
+                                        </span>
+                                        <code className="text-sm font-medium text-foreground tracking-wider bg-background/60 px-2 py-1 rounded">
+                                          {antoniusCode}
+                                        </code>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="h-7 gap-1.5 px-2"
+                                          onClick={copyAntoniusCode}
+                                        >
+                                          {copiedCode ? (
+                                            <>
+                                              <Check className="w-3.5 h-3.5 text-primary" />
+                                              {t.info.accommodation.copied}
+                                            </>
+                                          ) : (
+                                            <>
+                                              <Copy className="w-3.5 h-3.5" />
+                                              {t.info.accommodation.copyCode}
+                                            </>
+                                          )}
+                                        </Button>
+                                      </div>
+                                      <p className="text-sm text-foreground mt-2">
+                                        {t.info.accommodation.antoniusDiscount}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             )}
                           </div>
