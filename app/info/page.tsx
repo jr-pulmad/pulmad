@@ -141,7 +141,7 @@ export default function InfoPage() {
       description_en: "Stay right at the wedding venue – the best option!",
       distance: "0 km",
       link: "https://www.booking.com/hotel/ee/alatskivi-castle.et.html?chal_t=1783893331721&force_referer=https%3A%2F%2Fwww.google.com%2F",
-      note_et: "Kohtade arv on piiratud, kuid see on parim valik. Toa broneerimiseks võta palun meiega ühendust.",
+      note_et: "Kohtade arv on piiratud. Toa broneerimiseks võta palun meiega ühendust.",
       note_en: "Spots are limited, but this is the best option. Please contact us to book a room.",
     },
     {
