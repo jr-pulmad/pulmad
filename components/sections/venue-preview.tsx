@@ -175,7 +175,7 @@ export function VenuePreview() {
           {/* Two venue cards */}
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8">
             {/* Ceremony - Maarja-Magdaleena Church */}
-            <Card className="overflow-hidden border-border bg-card/50">
+            <Card id="venue-church" className="overflow-hidden border-border bg-card/50 scroll-mt-28">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
                   <div className="flex items-center gap-3 mb-3">
@@ -276,7 +276,7 @@ export function VenuePreview() {
             </Card>
 
             {/* Reception - Alatskivi Castle */}
-            <Card className="overflow-hidden border-border bg-card/50">
+            <Card id="venue-castle" className="overflow-hidden border-border bg-card/50 scroll-mt-28">
               <CardContent className="p-0">
                 <div className="p-5 sm:p-6 border-b border-border">
                   <div className="flex items-center gap-3 mb-3">

@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus, Gift } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus, Gift, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -41,58 +41,58 @@ export default function InfoPage() {
   // Outfit suggestions for the dress code randomizer
   const womenOutfits = [
     { et: "Smaragdroheline siidkleit ja kuldsed sandaalid", en: "Emerald green silk dress with gold sandals" },
-    { et: "Puuderroosa midi-kleit ja pärlkõrvarõngad", en: "Blush midi dress with pearl earrings" },
+    { et: "Sügavsinine sametkleit ja kuldsed kõrvarõngad", en: "Deep navy velvet dress with gold earrings" },
     { et: "Tumesinine õhtukleit ja hõbedased kontsad", en: "Navy blue evening gown with silver heels" },
     { et: "Salveiroheline satiinkleit ja kuldne pidukott", en: "Sage green satin dress with gold clutch" },
     { et: "Bordoopunane maksikleit ja elegantsed sandaalid", en: "Burgundy maxi dress with elegant sandals" },
     { et: "Kreemjas pitskleit ja pärlkaelakee", en: "Cream lace dress with pearl necklace" },
-    { et: "Tuhmroosa A-lõikeline kleit ja kuldne vöö", en: "Dusty rose A-line dress with gold belt" },
+    { et: "Metsaroheline satiinist ümbriskleit ja pärlkõrvarõngad", en: "Forest green satin wrap dress with pearl earrings" },
     { et: "Šampanjavärvi siidkleit ja hõbedased kõrvarõngad", en: "Champagne silk dress with silver earrings" },
     { et: "Sinakasroheline maksikleit ja kuldsed aksessuaarid", en: "Teal maxi dress with gold accessories" },
     { et: "Lavendlililla õhtukleit ja pärlkäevõru", en: "Lavender evening dress with pearl bracelet" },
-    { et: "Fuksiaroosa satiinist üheõlakleit ja kuldsed kontsad", en: "Fuchsia satin one-shoulder dress with gold heels" },
+    { et: "Bordoopunane sametkleit ja kuldne käevõru", en: "Burgundy velvet dress with gold bracelet" },
     { et: "Smaragdrohelisest sametist midikleit puhvvarrukatega", en: "Emerald green velvet midi dress with puffed sleeves" },
-    { et: "Magentaroosa krepist maksikleit keebiga", en: "Magenta crepe maxi dress with a cape" },
-    { et: "Puuderroosa drapeeritud satiinkleit pärldetailidega", en: "Blush pink draped satin dress with pearl details" },
+    { et: "Šampanjavärvi plisseeritud maksikleit ja hõbedased kontsad", en: "Champagne pleated maxi dress with silver heels" },
+    { et: "Süsimust õhtukleit ja pilkupüüdvad kuldkõrvarõngad", en: "Jet black evening gown with statement gold earrings" },
     { et: "Metsaroheline kõrge lõhikuga õhtukleit ja hõbedane pidukott", en: "Forest green high-slit evening gown with silver clutch" },
-    { et: "Tuhmroosa õlgu paljastav maksikleit ja kuldsed aksessuaarid", en: "Dusty rose off-the-shoulder maxi dress with gold accessories" },
+    { et: "Sinakasroheline sametkleit ja pärlkaelakee", en: "Teal velvet dress with pearl necklace" },
     { et: "Laimirohelisest satiinist midikleit ja rihmadega kontsad", en: "Lime green satin midi dress with strappy heels" },
     { et: "Oliivrohelisest siidist kombineekleit ja õrnad kuldehted", en: "Olive green silk slip dress with delicate gold jewelry" },
-    { et: "Erkroosa struktuurne krepkleit ja pilkupüüdvad kõrvarõngad", en: "Hot pink structured crepe dress with statement earrings" },
+    { et: "Kuldpronksjas siidkleit ja õrnad kuldehted", en: "Golden bronze silk dress with delicate gold jewelry" },
     { et: "Smaragdrohelisest šifoonist plisseeritud kleit ja pärlkäevõru", en: "Emerald green pleated chiffon dress with pearl bracelet" },
     { et: "Salveiroheline ümbriskleit ja nahatoonis kontsad", en: "Sage green wrap dress with nude heels" },
     { et: "Mustast satiinist kombineekleit ja julged kuldaksessuaarid", en: "Black satin slip dress with bold gold accessories" },
-    { et: "Fuksiaroosa midikleit dramaatiliste volangvarrukatega", en: "Fuchsia midi dress with dramatic ruffle sleeves" },
+    { et: "Salveiroheline plisseeritud šifoonkleit ja hõbedane pidukott", en: "Sage green pleated chiffon dress with silver clutch" },
     { et: "Tumerohelisest sametist kombinesoon ja hõbedased kontsad", en: "Dark green velvet jumpsuit with silver heels" },
-    { et: "Puuderroosa üheõlaline satiinkleit ja pärlpidukott", en: "Blush pink one-shoulder satin dress with pearl clutch" },
+    { et: "Tumeroheline üheõlaline satiinkleit ja kuldne käevõru", en: "Dark green one-shoulder satin dress with gold bracelet" },
   ]
 
   const menOutfits = [
-    { et: "Tumeroheline ülikond, valge särk ja kuldne lips", en: "Dark green suit, white shirt, and gold tie" },
+    { et: "Klassikaline must ülikond, valge särk ja roosa rinnataskurätt", en: "Classic black suit, white shirt, and pink pocket square" },
     { et: "Tumesinine ülikond, helesinine särk ja hõbedane lipsunõel", en: "Navy suit, light blue shirt, and silver tie pin" },
     { et: "Antratsiithall ülikond, valge särk ja smaragdroheline lips", en: "Charcoal suit, white shirt, and emerald tie" },
     { et: "Beež linane ülikond ja valge lahtise kraega särk", en: "Beige linen suit with white open-collar shirt" },
     { et: "Must klassikaline ülikond ja bordoopunane lips", en: "Classic black suit with burgundy tie" },
     { et: "Tumepruun ülikond, kreemjas särk ja kuldne rinnataskurätt", en: "Dark brown suit, cream shirt, and gold pocket square" },
     { et: "Tumehall kolmeosaline ülikond ja hõbedane lips", en: "Dark grey three-piece suit with silver tie" },
-    { et: "Metsaroheline pintsak, mustad püksid ja tumesinine lips", en: "Forest green blazer, black trousers, and navy tie" },
+    { et: "Sügav öösinine ülikond, valge särk ja kuldne lipsunõel", en: "Midnight blue suit, white shirt, and gold tie pin" },
     { et: "Tumesinine smoking ja must kikilips", en: "Navy tuxedo with black bow tie" },
-    { et: "Oliivroheline ülikond, valge särk ja pruun nahkvöö", en: "Olive suit, white shirt, and brown leather belt" },
-    { et: "Smaragdrohelisest sametist pidžakk ja must kikilips", en: "Emerald green velvet dinner jacket with black bow tie" },
-    { et: "Metsaroheline kolmeosaline ülikond ja kuldne lipsunõel", en: "Forest green three-piece suit with gold tie pin" },
-    { et: "Salverohelisest linasest ülikond ja valge lahtise kraega särk", en: "Sage green linen suit with white open-collar shirt" },
+    { et: "Pehme hall ülikond, valge särk ja heleroosa lips", en: "Soft grey suit, white shirt, and light pink tie" },
+    { et: "Šokolaadipruun ülikond, valge särk ja kuldne lips", en: "Chocolate brown suit, white shirt, and gold tie" },
+    { et: "Sinihall kolmeosaline ülikond ja valge särk", en: "Slate blue three-piece suit and white shirt" },
+    { et: "Kivihall linane ülikond ja valge lahtise kraega särk", en: "Stone grey linen suit with white open-collar shirt" },
     { et: "Antratsiithall sametist pidžakk ja bordoopunane kikilips", en: "Charcoal velvet dinner jacket with burgundy bow tie" },
-    { et: "Tumeroheline ülikond, puuderroosa särk ja kuldne lips", en: "Dark green suit, blush pink shirt, and gold tie" },
+    { et: "Süsimust smoking ja valge särk kuldsete mansetinööpidega", en: "Jet black tuxedo and white shirt with gold cufflinks" },
     { et: "Must kolmeosaline ülikond ja smaragdroheline rinnataskurätt", en: "Black three-piece suit with emerald pocket square" },
-    { et: "Oliivroheline tekstuurne ülikond, kreemjas särk ja pruunid nahkkingad", en: "Olive textured suit, cream shirt, and brown leather shoes" },
+    { et: "Antratsiithall ülikond, valge särk ja roosa lipsunõel", en: "Charcoal suit, white shirt, and pink tie pin" },
     { et: "Tumesinine sametist smoking ja must siidkikilips", en: "Navy velvet tuxedo with black silk bow tie" },
-    { et: "Metsarohelisest sametist pidžakk, must särk ja kuldne lipsunõel", en: "Forest green velvet jacket, black shirt, and gold tie pin" },
+    { et: "Bordoopunane pidžakk, valge särk ja mustad püksid", en: "Burgundy blazer, white shirt, and black trousers" },
     { et: "Tuhmroosa pidžakk, valge särk ja tumehallid püksid", en: "Dusty rose blazer, white shirt, and dark grey trousers" },
     { et: "Bordoopunasest sametist pidžakk ja must kikilips", en: "Burgundy velvet dinner jacket with black bow tie" },
-    { et: "Tumeroheline struktuurne ülikond, valge särk ja hõbedane lips", en: "Dark green textured suit, white shirt, and silver tie" },
+    { et: "Tuhkjashall kolmeosaline ülikond ja kuldne lips", en: "Ash grey three-piece suit and gold tie" },
     { et: "Hall kolmeosaline ülikond, heleroosa särk ja kuldne lips", en: "Grey three-piece suit, light pink shirt, and gold tie" },
     { et: "Mustast sametist pidžakk, valge särk ja smaragdroheline rinnataskurätt", en: "Black velvet jacket, white shirt, and emerald pocket square" },
-    { et: "Oliivroheline smoking, valge särk ja must kikilips", en: "Olive tuxedo, white shirt, and black bow tie" },
+    { et: "Must sametist smoking ja heleroosa rinnataskurätt", en: "Black velvet tuxedo with light pink pocket square" },
   ]
 
   const randomizeWomenOutfit = () => {
@@ -135,6 +135,15 @@ export default function InfoPage() {
 
   // Accommodation options near the venue
   const accommodations = [
+    {
+      name: "Alatskivi Loss",
+      description_et: "Ööbimine otse pulmapaigas – parim valik!",
+      description_en: "Stay right at the wedding venue – the best option!",
+      distance: "0 km",
+      link: "https://www.booking.com/hotel/ee/alatskivi-castle.et.html?chal_t=1783893331721&force_referer=https%3A%2F%2Fwww.google.com%2F",
+      note_et: "Kohtade arv on piiratud. Toa broneerimiseks võta palun meiega ühendust.",
+      note_en: "Spots are limited, but this is the best option. Please contact us to book a room.",
+    },
     {
       name: "Sepikoja Külalistemaja",
       description_et: "Hubane külalistemaja lossi kõrval",
@@ -236,7 +245,13 @@ export default function InfoPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{language === "et" ? "Laulatus" : "Ceremony"}</p>
-                    <p className="font-medium text-foreground text-sm">{language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}</p>
+                    <Link
+                      href="/#venue-church"
+                      className="group inline-flex items-center gap-1 font-medium text-foreground text-sm hover:text-primary transition-colors cursor-pointer"
+                    >
+                      {language === "et" ? "Maarja-Magdaleena kirik" : "Maarja-Magdaleena Church"}
+                      <ArrowUpRight className="w-3.5 h-3.5 text-primary/70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -247,7 +262,13 @@ export default function InfoPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{language === "et" ? "Pidu" : "Reception"}</p>
-                    <p className="font-medium text-foreground">Alatskivi Loss</p>
+                    <Link
+                      href="/#venue-castle"
+                      className="group inline-flex items-center gap-1 font-medium text-foreground hover:text-primary transition-colors cursor-pointer"
+                    >
+                      Alatskivi Loss
+                      <ArrowUpRight className="w-3.5 h-3.5 text-primary/70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -404,6 +425,14 @@ export default function InfoPage() {
                                 <Gift className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                                 <p className="text-sm text-foreground">
                                   {t.info.accommodation.weddingDiscount}
+                                </p>
+                              </div>
+                            )}
+                            {acc.note_et && (
+                              <div className="mt-3 flex items-start gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
+                                <Mail className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                                <p className="text-sm text-foreground">
+                                  {language === "et" ? acc.note_et : acc.note_en}
                                 </p>
                               </div>
                             )}
