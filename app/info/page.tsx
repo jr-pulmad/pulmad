@@ -432,7 +432,13 @@ export default function InfoPage() {
                               <div className="mt-3 flex items-start gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-2">
                                 <Mail className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                                 <p className="text-sm text-foreground">
-                                  {language === "et" ? acc.note_et : acc.note_en}
+                                  {language === "et" ? acc.note_et : acc.note_en}{" "}
+                                  <a
+                                    href={`mailto:${email}`}
+                                    className="text-primary font-medium hover:underline"
+                                  >
+                                    {email}
+                                  </a>
                                 </p>
                               </div>
                             )}
