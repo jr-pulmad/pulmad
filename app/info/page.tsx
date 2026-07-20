@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { InfoSection } from "@/components/info/info-section"
 import { Card, CardContent } from "@/components/ui/card"
-import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus, Gift, ArrowUpRight, Wine } from "lucide-react"
+import { Clock, Shirt, Hotel, Car, Baby, MapPin, Calendar, ExternalLink, Palette, Mail, Copy, Check, Navigation, Bus, Dices, CalendarPlus, Gift, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
@@ -631,13 +631,6 @@ export default function InfoPage() {
                       ? "Lapsed on teretulnud laulatusel kirikus. Õhtune pidustus lossis on planeeritud täiskasvanute üritusena."
                       : "Children are welcome at the church ceremony. The evening reception at the castle is planned as an adults-only event."}
                   </p>
-                </div>
-              </InfoSection>
-
-              {/* Drinks */}
-              <InfoSection icon={<Wine className="w-5 h-5" />} title={t.info.drinks.title}>
-                <div className="text-muted-foreground">
-                  <p>{t.info.drinks.content}</p>
                 </div>
               </InfoSection>
 

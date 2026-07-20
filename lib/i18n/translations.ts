@@ -141,15 +141,10 @@ export const translations = {
         title: "Lapsed",
         content: "Lapsed on tseremooniale oodatud. Info peo kohta tuleb varsti...",
       },
-      drinks: {
-        title: "Joogid",
-        content:
-          "Pulmapeol hoolitseme joogipoolise eest — pakume veini ning muid jooke õhtu jooksul. Nii et jäta oma pudelid rahulikult koju ja naudi õhtut koos meiega.",
-      },
       gifts: {
         title: "Kingitused",
         content:
-          "Teie kohalolek on meile kõige kallim kingitus. Kui soovite meie ühist teekonna algust siiski meeles pidada, oleme tänulikud kingituse eest ümbrikus.",
+          "Kõige rohkem rõõmustab meid see, et tulete meie päeva jagama. Palume mitte tuua esemeid ega lilli. Kui soovite meie ühise elu algust toetada, oleme südamest tänulikud panuse eest ümbrikus.",
       },
       contact: {
         title: "Kontakt",
@@ -334,15 +329,10 @@ export const translations = {
         title: "Children",
         content: "Children are welcome at the ceremony. Party policy information coming soon...",
       },
-      drinks: {
-        title: "Drinks",
-        content:
-          "Drinks are on us — we'll be serving wine and other beverages throughout the evening. So please leave your own bottles at home and simply enjoy the celebration with us.",
-      },
       gifts: {
         title: "Gifts",
         content:
-          "Your presence is the greatest gift of all. Should you wish to mark the beginning of our journey together, we would be grateful for a gift in an envelope.",
+          "Having you there to share our day means the most to us. We kindly ask that you not bring any items or flowers. If you would like to support the start of our life together, a contribution in an envelope would be gratefully received.",
       },
       contact: {
         title: "Contact",
