@@ -144,7 +144,7 @@ export const translations = {
       gifts: {
         title: "Kingitused",
         content:
-          "Kõige rohkem rõõmustab meid see, et tulete meie päeva jagama. Palume mitte tuua esemeid ega lilli. Kui soovite meie ühise elu algust toetada, oleme südamest tänulikud panuse eest ümbrikus.",
+          "Suurim kingitus on meile teie kohalolek. Kui soovite meid siiski kingitusega rõõmustada, ootame seda pigem ümbrikus kui esemena.",
       },
       contact: {
         title: "Kontakt",
@@ -332,7 +332,7 @@ export const translations = {
       gifts: {
         title: "Gifts",
         content:
-          "Having you there to share our day means the most to us. We kindly ask that you not bring any items or flowers. If you would like to support the start of our life together, a contribution in an envelope would be gratefully received.",
+          "Your presence is the greatest gift of all. If you would still like to give us something, we would kindly prefer a gift in an envelope rather than an item.",
       },
       contact: {
         title: "Contact",
