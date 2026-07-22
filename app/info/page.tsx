@@ -634,6 +634,13 @@ export default function InfoPage() {
                 </div>
               </InfoSection>
 
+              {/* Gifts */}
+              <InfoSection icon={<Gift className="w-5 h-5" />} title={t.info.gifts.title}>
+                <div className="text-muted-foreground">
+                  <p>{t.info.gifts.content}</p>
+                </div>
+              </InfoSection>
+
               {/* Contact */}
               <InfoSection icon={<Mail className="w-5 h-5" />} title={t.info.contact.title}>
                 <div className="text-muted-foreground space-y-3">

@@ -141,6 +141,11 @@ export const translations = {
         title: "Lapsed",
         content: "Lapsed on tseremooniale oodatud. Info peo kohta tuleb varsti...",
       },
+      gifts: {
+        title: "Kingitused",
+        content:
+          "Suurim kingitus on meile teie kohalolek. Kui soovite meid siiski kingitusega rõõmustada, ootame seda pigem ümbrikus kui esemena.",
+      },
       contact: {
         title: "Kontakt",
         content: "Küsimuste korral võta meiega ühendust:",
@@ -323,6 +328,11 @@ export const translations = {
       children: {
         title: "Children",
         content: "Children are welcome at the ceremony. Party policy information coming soon...",
+      },
+      gifts: {
+        title: "Gifts",
+        content:
+          "Your presence is the greatest gift of all. If you would still like to give us something, we would kindly prefer a gift in an envelope rather than an item.",
       },
       contact: {
         title: "Contact",
