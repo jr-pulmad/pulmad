@@ -13,6 +13,7 @@ interface WeatherData {
   windSpeed: number
   icon: string
   isForecast?: boolean
+  isHistorical?: boolean
 }
 
 const getWeatherInfo = (code: number, language: string) => {
@@ -50,49 +51,116 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
   const weddingDate = "2026-08-19"
 
   useEffect(() => {
+    // Compute a real historical average for the wedding date across recent years.
+    // Used as a fallback when the live forecast doesn't yet cover the date.
+    const fetchHistoricalAverage = async () => {
+      const [, month, day] = weddingDate.split("-")
+      const currentYear = new Date().getFullYear()
+      const years = [1, 2, 3, 4, 5].map((n) => currentYear - n)
+
+      const results = await Promise.all(
+        years.map(async (year) => {
+          const date = `${year}-${month}-${day}`
+          try {
+            const res = await fetch(
+              `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weather_code,relative_humidity_2m_mean,wind_speed_10m_max&timezone=Europe%2FTallinn&start_date=${date}&end_date=${date}`
+            )
+            if (!res.ok) return null
+            const data = await res.json()
+            const d = data.daily
+            if (!d || d.temperature_2m_max?.[0] == null || d.temperature_2m_min?.[0] == null) return null
+            return {
+              temp: (d.temperature_2m_max[0] + d.temperature_2m_min[0]) / 2,
+              humidity: d.relative_humidity_2m_mean?.[0] ?? null,
+              wind: d.wind_speed_10m_max?.[0] ?? null,
+              code: d.weather_code?.[0] ?? null,
+            }
+          } catch {
+            return null
+          }
+        })
+      )
+
+      const valid = results.filter((r): r is NonNullable<typeof r> => r !== null)
+      if (valid.length === 0) return false
+
+      const avg = (nums: number[]) => nums.reduce((a, b) => a + b, 0) / nums.length
+      const temps = valid.map((r) => r.temp)
+      const humidities = valid.map((r) => r.humidity).filter((n): n is number => n != null)
+      const winds = valid.map((r) => r.wind).filter((n): n is number => n != null)
+      const codes = valid.map((r) => r.code).filter((n): n is number => n != null)
+
+      // Most frequent (mode) weather code, defaulting to partly cloudy
+      const codeCounts = codes.reduce<Record<number, number>>((acc, c) => {
+        acc[c] = (acc[c] || 0) + 1
+        return acc
+      }, {})
+      const modeCode = codes.length
+        ? Object.entries(codeCounts).sort((a, b) => b[1] - a[1])[0][0]
+        : "2"
+
+      setWeather({
+        temperature: Math.round(avg(temps)),
+        humidity: humidities.length ? Math.round(avg(humidities)) : 70,
+        windSpeed: winds.length ? Math.round(avg(winds)) : 12,
+        icon: String(modeCode),
+        isHistorical: true,
+      })
+      return true
+    }
+
     const fetchWeather = async () => {
       try {
-        // First try to get forecast for the wedding date
+        // First try to get the live forecast for the wedding date
         const forecastResponse = await fetch(
           `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,weather_code,relative_humidity_2m_max,wind_speed_10m_max&timezone=Europe%2FTallinn&start_date=${weddingDate}&end_date=${weddingDate}`
         )
-        
+
         if (forecastResponse.ok) {
           const data = await forecastResponse.json()
-          if (data.daily && data.daily.time && data.daily.time.includes(weddingDate)) {
-            const dayIndex = data.daily.time.indexOf(weddingDate)
-            const maxTemp = data.daily.temperature_2m_max[dayIndex]
-            const minTemp = data.daily.temperature_2m_min[dayIndex]
-            setWeather({
-              temperature: Math.round((maxTemp + minTemp) / 2),
-              humidity: data.daily.relative_humidity_2m_max?.[dayIndex] || 70,
-              windSpeed: Math.round(data.daily.wind_speed_10m_max?.[dayIndex] || 10),
-              icon: String(data.daily.weather_code[dayIndex]),
-              isForecast: true,
-            })
-            setLoading(false)
-            return
+          const d = data.daily
+          // Only trust the forecast when it actually returns numbers (dates
+          // beyond the ~16-day horizon come back as null → would show 0°C)
+          if (d && d.time?.includes(weddingDate)) {
+            const i = d.time.indexOf(weddingDate)
+            const maxTemp = d.temperature_2m_max?.[i]
+            const minTemp = d.temperature_2m_min?.[i]
+            if (maxTemp != null && minTemp != null) {
+              setWeather({
+                temperature: Math.round((maxTemp + minTemp) / 2),
+                humidity: d.relative_humidity_2m_max?.[i] ?? 70,
+                windSpeed: Math.round(d.wind_speed_10m_max?.[i] ?? 10),
+                icon: String(d.weather_code?.[i] ?? 2),
+                isForecast: true,
+              })
+              setLoading(false)
+              return
+            }
           }
         }
 
-        // If forecast not available for wedding date, show optimistic placeholder
-        // Average August weather in Estonia: sunny/partly cloudy, 18-22°C
-        setWeather({
-          temperature: 20,
-          humidity: 65,
-          windSpeed: 12,
-          icon: "1", // Mostly clear
-          isForecast: true,
-        })
+        // Forecast not available yet → fall back to real historical averages
+        const ok = await fetchHistoricalAverage()
+        if (!ok) {
+          setWeather({
+            temperature: 19,
+            humidity: 75,
+            windSpeed: 13,
+            icon: "2",
+            isHistorical: true,
+          })
+        }
       } catch {
-        // Silently fail with placeholder
-        setWeather({
-          temperature: 20,
-          humidity: 65,
-          windSpeed: 12,
-          icon: "1",
-          isForecast: true,
-        })
+        const ok = await fetchHistoricalAverage().catch(() => false)
+        if (!ok) {
+          setWeather({
+            temperature: 19,
+            humidity: 75,
+            windSpeed: 13,
+            icon: "2",
+            isHistorical: true,
+          })
+        }
       } finally {
         setLoading(false)
       }
@@ -128,7 +196,13 @@ function WeatherWidget({ lat, lon, location }: { lat: number, lon: number, locat
       </div>
       <div className="flex-1">
         <p className="text-xs text-muted-foreground">
-          {language === "et" ? "19. augusti ilm" : "August 19th weather"}
+          {weather.isHistorical
+            ? language === "et"
+              ? "Tavapärane ilm augustis"
+              : "Typical August weather"
+            : language === "et"
+              ? "19. augusti ilm"
+              : "August 19th weather"}
         </p>
         <div className="flex items-center gap-3 text-sm">
           <span className="font-medium text-foreground">{weather.temperature}°C</span>
