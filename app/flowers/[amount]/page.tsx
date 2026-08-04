@@ -10,21 +10,21 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Card, CardContent } from "@/components/ui/card"
 
-const VALID_AMOUNTS = ["25", "50", "100"] as const
+const VALID_AMOUNTS = ["15", "25", "50"] as const
 type ValidAmount = (typeof VALID_AMOUNTS)[number]
 
 // QR code images mapped by amount
 const QR_CODES: Record<ValidAmount, string> = {
+  "15": "/images/qr-15.jpeg",
   "25": "/images/qr-25.jpeg",
   "50": "/images/qr-50.jpeg",
-  "100": "/images/qr-100.jpeg",
 }
 
 // Bank payment links from env vars (with fallbacks for preview)
 const BANK_LINKS: Record<ValidAmount, string> = {
+  "15": process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_LINK_15 || "https://lhv.ee/et/al/?0GDHIoBr&dl=1",
   "25": process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_LINK_25 || "",
   "50": process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_LINK_50 || "",
-  "100": process.env.NEXT_PUBLIC_FLOWERS_PAYMENT_LINK_100 || "",
 }
 
 // Bank details from env vars (with fallbacks for preview)

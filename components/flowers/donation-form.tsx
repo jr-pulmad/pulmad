@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 
 const DONATION_OPTIONS = [
-  { amount: 25, flowerCount: 2 },
-  { amount: 50, flowerCount: 3 },
-  { amount: 100, flowerCount: 4 },
+  { amount: 15, flowerCount: 2 },
+  { amount: 25, flowerCount: 3 },
+  { amount: 50, flowerCount: 4 },
 ]
 
 const FLOWER_COLORS = ["text-rose-400", "text-pink-400", "text-primary"]
