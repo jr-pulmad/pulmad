@@ -367,7 +367,7 @@ export function VenuePreview() {
                   <p className="text-sm text-muted-foreground mb-3">{t.venue.address}</p>
                   <div className="flex items-center gap-2 text-sm text-foreground">
                     <span className="font-medium">{language === "et" ? "Algus:" : "Start:"}</span>
-                    <span>~17:00</span>
+                    <span>~16:00</span>
                   </div>
                   
                   {/* Weather widget for wedding date */}
