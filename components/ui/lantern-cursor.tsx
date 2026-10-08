@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export function LanternCursor() {
   const [position, setPosition] = useState({ x: -100, y: -100 })
   const [visible, setVisible] = useState(false)
   const [inLanding, setInLanding] = useState(true)
+  const previousPosition = useRef({ x: -100, y: -100 })
 
   useEffect(() => {
     const landing = document.querySelector(".thank-you-section")
@@ -23,10 +24,14 @@ export function LanternCursor() {
   useEffect(() => {
     const move = (event: PointerEvent) => {
       if (!inLanding) return
-      setPosition({ x: event.clientX, y: event.clientY })
+      const deltaX = event.clientX - previousPosition.current.x
+      const deltaY = event.clientY - previousPosition.current.y
+      const tilt = Math.max(-8, Math.min(8, deltaX * 0.35 - deltaY * 0.12))
+      previousPosition.current = { x: event.clientX, y: event.clientY }
       setPosition({ x: event.clientX, y: event.clientY })
       document.documentElement.style.setProperty("--lantern-x", `${event.clientX}px`)
       document.documentElement.style.setProperty("--lantern-y", `${event.clientY}px`)
+      document.documentElement.style.setProperty("--lantern-tilt", `${tilt}deg`)
       setVisible(true)
     }
     const leave = () => setVisible(false)

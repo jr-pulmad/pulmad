@@ -13,7 +13,7 @@ export function ThankYou() {
       <LanternCursor />
       <div
         className="absolute inset-0 z-0 bg-cover brightness-[0.82]"
-        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "62% 52%" }}
+        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "calc(62% + 28px) calc(52% + 200px)" }}
         role="img"
         aria-label="Johanna ja Rannar"
       >
