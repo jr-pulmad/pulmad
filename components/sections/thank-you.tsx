@@ -40,7 +40,7 @@ export function ThankYou() {
         </p>
         <div className="animate-fade-in-up mt-10 sm:mt-14">
           <Link
-            href="/rsvp"
+            href="/photos"
             className="rsvp-glass-btn cursor-pointer group relative inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
            >
              <span className="relative z-10">
