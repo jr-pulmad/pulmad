@@ -48,7 +48,7 @@ export default function PhotosPage() {
                 onClick={(event) => {
                   if (!gallery.href) event.preventDefault()
                 }}
-                className={`group relative min-h-[120px] overflow-hidden rounded-2xl border border-border/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${!gallery.href ? "cursor-default" : ""}`}
+                className={`group relative min-h-[120px] overflow-hidden rounded-2xl border border-border/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
               >
                 <Image src="/images/castle-couple.jpg" alt={gallery.title} fill className={`object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0 ${gallery.position}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition group-hover:from-black/60" />
