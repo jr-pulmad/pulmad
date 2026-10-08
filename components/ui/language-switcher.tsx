@@ -43,7 +43,7 @@ export function LanguageSwitcher({ className, variant = "default", isMobile = fa
             key={lang.code}
             onClick={() => setLanguage(lang.code)}
             className={cn(
-              "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+              "flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
               language === lang.code
                 ? "bg-primary/10 text-primary"
                 : "text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -62,7 +62,7 @@ export function LanguageSwitcher({ className, variant = "default", isMobile = fa
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+          "flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
           variant === "default" 
             ? "bg-secondary/50 hover:bg-secondary text-foreground"
             : "bg-white/10 hover:bg-white/20 text-white"

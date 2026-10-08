@@ -23,7 +23,7 @@ export function ThankYou() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-28 text-center text-white">
         <p className="mb-5 text-xs uppercase tracking-[0.35em] text-white/75">Johanna & Rannar</p>
         <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight text-balance">
-          Aitäh, et olite meiega
+          Aitäh, et olid meiega
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
           {language === "et"
