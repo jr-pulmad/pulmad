@@ -38,7 +38,7 @@ export function ThankYou() {
         <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85 mb-8 sm:mb-12">
           {t.landing.subtitle}
         </p>
-        <div className="animate-fade-in-up mt-18 md:mt-0">
+        <div className="animate-fade-in-up mt-18 md:mt-0 cursor-pointer">
             <Link href="/rsvp" className="rsvp-glass-btn group relative inline-flex items-center gap-3 px-9 py-4 rounded-2xl text-white text-sm font-medium tracking-widest uppercase no-underline transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
               <span className="relative z-10">{t.landing.galleryCta}</span>
               <ArrowRight className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-2" />
