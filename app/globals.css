@@ -142,7 +142,7 @@
 .lantern-reveal { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 1; background: rgba(0, 0, 0, 0.72); -webkit-mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); }
 .thank-you-section > .lantern-cursor { z-index: 2; }
 .thank-you-section > .container, .thank-you-section > a { z-index: 10; }
-.lantern-cursor { position: fixed; z-index: 2; width: 76px; height: 76px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) rotate(var(--lantern-tilt, 0deg)); transition: opacity 180ms ease, transform 180ms ease-out; filter: drop-shadow(0 0 16px rgba(255, 190, 80, 0.95)); }
+.lantern-cursor { position: fixed; z-index: 2; width: 76px; height: 76px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%) rotate(var(--lantern-tilt, 0deg)); transition: opacity 180ms ease, transform 260ms cubic-bezier(0.22, 0.8, 0.32, 1); filter: drop-shadow(0 0 16px rgba(255, 190, 80, 0.95)); }
 .lantern-cursor.is-visible { opacity: 1; }
 .lantern-cursor__glow { position: absolute; inset: -160px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 214, 125, 0.55) 0%, rgba(255, 174, 55, 0.2) 35%, transparent 72%);  }
 .lantern-cursor__image { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); object-fit: contain; mix-blend-mode: screen; transform: translateX(-5px); filter: saturate(1.1) contrast(1.08) drop-shadow(0 0 10px rgba(255, 180, 70, .9)); }
