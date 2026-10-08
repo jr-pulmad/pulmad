@@ -128,13 +128,14 @@
 }
 
 .lantern-page, .lantern-page a, .lantern-page button { cursor: none; }
-.lantern-cursor { position: fixed; z-index: 100; width: 26px; height: 38px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); transition: opacity 180ms ease; animation: lantern-float 2.8s ease-in-out infinite; }
+.lantern-reveal { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0; background: rgba(0, 0, 0, 0.44); -webkit-mask-image: radial-gradient(circle 190px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 38%, #000 100%); mask-image: radial-gradient(circle 190px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 38%, #000 100%); transition: opacity 220ms ease; }
+.lantern-reveal.is-visible { opacity: 1; }
+.lantern-cursor { position: fixed; z-index: 100; width: 52px; height: 76px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); transition: opacity 180ms ease; animation: lantern-float 2.8s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(255, 207, 120, 0.9)); }
 .lantern-cursor.is-visible { opacity: 1; }
-.lantern-cursor__glow { position: absolute; inset: -22px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 196, 90, 0.22), transparent 68%); animation: lantern-flicker 1.8s ease-in-out infinite; }
-.lantern-cursor__body { position: absolute; inset: 6px 1px 8px; display: grid; place-items: center; border: 1px solid rgba(255, 220, 150, 0.8); border-radius: 45% 45% 38% 38%; background: radial-gradient(circle at 50% 45%, #fff2bd 0 10%, #e4a53d 32%, #a84e28 72%); box-shadow: 0 0 13px rgba(255, 189, 82, 0.9), inset 0 0 8px rgba(255, 248, 205, 0.75); }
-.lantern-cursor__mark { color: rgba(112, 36, 30, 0.75); font-family: serif; font-size: 11px; }
-.lantern-cursor__tassel { position: absolute; bottom: 1px; left: 50%; width: 1px; height: 9px; background: #d69b3f; transform: translateX(-50%); }
-@media (pointer: coarse), (prefers-reduced-motion: reduce) { .lantern-cursor { display: none; } .lantern-page, .lantern-page a, .lantern-page button { cursor: auto; } }
+.lantern-cursor__glow { position: absolute; inset: -76px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 210, 130, 0.26), transparent 68%); animation: lantern-flicker 1.8s ease-in-out infinite; }
+.lantern-cursor__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 48% 48% 42% 42%; mix-blend-mode: screen; }
+.lantern-cursor__tassel { position: absolute; bottom: -14px; left: 50%; width: 2px; height: 17px; background: #e7b968; transform: translateX(-50%); box-shadow: 0 8px 0 #e7b968; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .lantern-reveal, .lantern-cursor { display: none; } .lantern-page, .lantern-page a, .lantern-page button { cursor: auto; } }
 
 @layer base {
   * {

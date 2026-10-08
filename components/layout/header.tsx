@@ -151,12 +151,12 @@ export function Header() {
       description: language === "et" ? "Meie hetked" : "Our moments"
     },
     {
-      href: "/info",
-      label: t.nav.info,
-      mobileLabel: language === "et" ? "Info" : "Info",
+      href: "/feedback",
+      label: language === "et" ? "Tagasiside" : "Feedback",
+      mobileLabel: language === "et" ? "Jäta tagasiside" : "Leave feedback",
       icon: Info,
       iconFilled: InfoFilled,
-      description: language === "et" ? "Kasulik info" : "Useful info"
+      description: language === "et" ? "Jaga mõtet" : "Share a thought"
     },
   ]
 
@@ -221,9 +221,7 @@ export function Header() {
                     {index < navItems.length - 1 && (
                       <div className={cn(
                         "w-6 h-px mx-1 transition-colors duration-300",
-                        currentNavIndex > index 
-                          ? "bg-current"
-                          : "bg-current/40"
+                        showSolidBackground ? "bg-muted-foreground/60" : "bg-white/70"
                       )} />
                     )}
                   </div>

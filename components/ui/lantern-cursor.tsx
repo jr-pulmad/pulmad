@@ -9,6 +9,8 @@ export function LanternCursor() {
   useEffect(() => {
     const move = (event: PointerEvent) => {
       setPosition({ x: event.clientX, y: event.clientY })
+      document.documentElement.style.setProperty("--lantern-x", `${event.clientX}px`)
+      document.documentElement.style.setProperty("--lantern-y", `${event.clientY}px`)
       setVisible(true)
     }
     const leave = () => setVisible(false)
@@ -21,14 +23,13 @@ export function LanternCursor() {
   }, [])
 
   return (
-    <div
-      aria-hidden="true"
-      className={`lantern-cursor ${visible ? "is-visible" : ""}`}
-      style={{ left: position.x, top: position.y }}
-    >
-      <span className="lantern-cursor__glow" />
-      <span className="lantern-cursor__body"><span className="lantern-cursor__mark">囍</span></span>
-      <span className="lantern-cursor__tassel" />
-    </div>
+    <>
+      <div aria-hidden="true" className={`lantern-reveal ${visible ? "is-visible" : ""}`} />
+      <div aria-hidden="true" className={`lantern-cursor ${visible ? "is-visible" : ""}`} style={{ left: position.x, top: position.y }}>
+        <span className="lantern-cursor__glow" />
+        <img src="/images/sky-lantern.png" alt="" className="lantern-cursor__image" />
+        <span className="lantern-cursor__tassel" />
+      </div>
+    </>
   )
 }

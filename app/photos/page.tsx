@@ -1,5 +1,4 @@
 import Image from "next/image"
-import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
@@ -16,13 +15,9 @@ export default function PhotosPage() {
       <Header />
       <main className="flex-1 flex items-center pt-24 pb-12">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="mb-8 flex items-end justify-between gap-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-primary">Johanna & Rannar</p>
-              <h1 className="mt-3 font-serif text-5xl sm:text-6xl">Meie pulmapäev</h1>
-              <p className="mt-3 max-w-xl text-muted-foreground">Vali galerii ja astu tagasi meie päeva kõige ilusamatesse hetkedesse.</p>
-            </div>
-            <Link href="/" className="hidden sm:inline-flex text-sm text-muted-foreground hover:text-foreground">Tagasi</Link>
+          <div className="mb-8">
+            <h1 className="font-serif text-5xl sm:text-6xl">Meie päeva hetked</h1>
+            <p className="mt-3 max-w-xl text-muted-foreground">Vali galerii, et meie pulmapäeva juurde tagasi pöörduda.</p>
           </div>
 
           <div className="grid h-[58vh] min-h-[390px] grid-cols-1 gap-3 sm:grid-cols-3">

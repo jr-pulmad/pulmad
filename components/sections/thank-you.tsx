@@ -16,7 +16,7 @@ export function ThankYou() {
           alt="Johanna ja Rannar"
           fill
           priority
-          className="object-cover object-[center_55%]"
+          className="object-cover object-[center_62%]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85" />
       </div>
@@ -28,12 +28,12 @@ export function ThankYou() {
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
           {language === "et"
-            ? "Aitäh, et jagasite meiega seda erilist päeva. Siin saavad meie ühised hetked edasi elada."
+            ? "Aitäh, et olite meiega. Meie päeva ilusamad hetked jäävad siia meenutamiseks."
             : "Thank you for being part of our day. This is a little place to return to and remember it with us."}
         </p>
         <Link
           href="/photos"
-          className="rsvp-glass-btn group mt-9 inline-flex items-center gap-3 px-9 py-4 text-sm font-medium uppercase tracking-widest transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          className="rsvp-glass-btn group relative mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           {language === "et" ? "Vaata galeriid" : "View gallery"}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
