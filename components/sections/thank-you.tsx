@@ -7,6 +7,11 @@ import { LanternCursor } from "@/components/ui/lantern-cursor"
 
 export function ThankYou() {
   const { t } = useI18n()
+  const landing = t?.landing
+
+  if (!landing) {
+    return null
+  }
 
   return (
     <section className="thank-you-section relative isolate min-h-[100dvh] flex items-center justify-center overflow-hidden">
