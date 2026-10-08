@@ -222,8 +222,8 @@ export function Header() {
                       <div className={cn(
                         "w-6 h-px mx-1 transition-colors duration-300",
                         currentNavIndex > index 
-                          ? "bg-primary" 
-                          : "bg-border"
+                          ? "bg-current"
+                          : "bg-current/40"
                       )} />
                     )}
                   </div>

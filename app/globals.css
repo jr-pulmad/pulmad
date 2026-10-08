@@ -117,6 +117,25 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@keyframes lantern-float {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-3deg); }
+  50% { transform: translate(-50%, calc(-50% - 7px)) rotate(3deg); }
+}
+
+@keyframes lantern-flicker {
+  0%, 100% { opacity: 0.65; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.lantern-page, .lantern-page a, .lantern-page button { cursor: none; }
+.lantern-cursor { position: fixed; z-index: 100; width: 26px; height: 38px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); transition: opacity 180ms ease; animation: lantern-float 2.8s ease-in-out infinite; }
+.lantern-cursor.is-visible { opacity: 1; }
+.lantern-cursor__glow { position: absolute; inset: -22px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 196, 90, 0.22), transparent 68%); animation: lantern-flicker 1.8s ease-in-out infinite; }
+.lantern-cursor__body { position: absolute; inset: 6px 1px 8px; display: grid; place-items: center; border: 1px solid rgba(255, 220, 150, 0.8); border-radius: 45% 45% 38% 38%; background: radial-gradient(circle at 50% 45%, #fff2bd 0 10%, #e4a53d 32%, #a84e28 72%); box-shadow: 0 0 13px rgba(255, 189, 82, 0.9), inset 0 0 8px rgba(255, 248, 205, 0.75); }
+.lantern-cursor__mark { color: rgba(112, 36, 30, 0.75); font-family: serif; font-size: 11px; }
+.lantern-cursor__tassel { position: absolute; bottom: 1px; left: 50%; width: 1px; height: 9px; background: #d69b3f; transform: translateX(-50%); }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .lantern-cursor { display: none; } .lantern-page, .lantern-page a, .lantern-page button { cursor: auto; } }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

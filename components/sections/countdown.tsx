@@ -468,10 +468,6 @@ export function Countdown() {
 
   ]
 
-  const scrollHintText = language === "et" 
-    ? "Kinnita osalemine ja tutvu infoga" 
-    : "Confirm attendance and learn more"
-
   return (
     <section 
       ref={containerRef}
@@ -531,8 +527,6 @@ export function Countdown() {
         </div>
       </div>
       
-      {/* Scroll hint with custom text */}
-      <ScrollHint text={scrollHintText} />
     </section>
   )
 }
