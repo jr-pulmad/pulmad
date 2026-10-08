@@ -35,7 +35,7 @@ export function ThankYou() {
         <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight text-balance">
           {t.landing.title}
         </h1>
-        <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
+        <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85 mb-8 sm:mb-12">
           {t.landing.subtitle}
         </p>
         <div className="animate-fade-in-up mt-18 md:mt-0">
