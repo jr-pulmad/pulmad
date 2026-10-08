@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { ArrowDown, ArrowRight } from "lucide-react"
 import { useI18n } from "@/lib/i18n/context"
@@ -10,30 +9,28 @@ export function ThankYou() {
 
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0">
-        <Image
-          src="/images/castle-couple.jpg"
-          alt="Johanna ja Rannar"
-          fill
-          priority
-          className="object-cover object-[center_62%]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/45 to-black/85" />
+      <div
+        className="absolute inset-0 bg-cover bg-center brightness-125"
+        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "center 48%" }}
+        role="img"
+        aria-label="Johanna ja Rannar"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/20 to-black/65" />
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-28 text-center text-white">
+      <div className="relative z-[90] container mx-auto px-4 sm:px-6 py-28 text-center text-white">
         <p className="mb-5 text-xs uppercase tracking-[0.35em] text-white/75">Johanna & Rannar</p>
         <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-medium tracking-tight text-balance">
           Aitäh, et olite meiega
         </h1>
         <p className="mx-auto mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-white/85">
           {language === "et"
-            ? "Aitäh, et olite meiega. Meie päeva ilusamad hetked jäävad siia meenutamiseks."
-            : "Thank you for being part of our day. This is a little place to return to and remember it with us."}
+            ? "Meie päeva ilusamad hetked jäävad siia meenutamiseks."
+            : "The most beautiful moments from our day remain here to remember."}
         </p>
         <Link
           href="/photos"
-          className="rsvp-glass-btn group relative mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          className="rsvp-glass-btn group relative mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-light uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           {language === "et" ? "Vaata galeriid" : "View gallery"}
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

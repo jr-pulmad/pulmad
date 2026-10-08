@@ -128,13 +128,19 @@
 }
 
 .lantern-page, .lantern-page a, .lantern-page button { cursor: none; }
-.lantern-reveal { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0; background: rgba(0, 0, 0, 0.44); -webkit-mask-image: radial-gradient(circle 190px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 38%, #000 100%); mask-image: radial-gradient(circle 190px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 38%, #000 100%); transition: opacity 220ms ease; }
+.lantern-page > header, .lantern-page > footer, .lantern-page > header *, .lantern-page > footer * { position: relative; z-index: 220; }
+.lantern-reveal { position: fixed; inset: 0; z-index: 80; pointer-events: none; opacity: 0; background: rgba(0, 0, 0, 0.46); -webkit-mask-image: radial-gradient(circle 270px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 27%, #000 78%); mask-image: radial-gradient(circle 270px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 27%, #000 78%); transition: opacity 220ms ease; }
 .lantern-reveal.is-visible { opacity: 1; }
-.lantern-cursor { position: fixed; z-index: 100; width: 52px; height: 76px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); transition: opacity 180ms ease; animation: lantern-float 2.8s ease-in-out infinite; filter: drop-shadow(0 0 12px rgba(255, 207, 120, 0.9)); }
+.lantern-cursor { position: fixed; z-index: 100; width: 64px; height: 94px; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); transition: opacity 180ms ease; animation: lantern-float 2.8s ease-in-out infinite; filter: drop-shadow(0 0 16px rgba(255, 225, 160, 0.95)); }
 .lantern-cursor.is-visible { opacity: 1; }
-.lantern-cursor__glow { position: absolute; inset: -76px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 210, 130, 0.26), transparent 68%); animation: lantern-flicker 1.8s ease-in-out infinite; }
-.lantern-cursor__image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 48% 48% 42% 42%; mix-blend-mode: screen; }
-.lantern-cursor__tassel { position: absolute; bottom: -14px; left: 50%; width: 2px; height: 17px; background: #e7b968; transform: translateX(-50%); box-shadow: 0 8px 0 #e7b968; }
+.lantern-cursor__glow { position: absolute; inset: -112px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 225, 155, 0.42) 0%, rgba(255, 203, 100, 0.18) 33%, transparent 72%); animation: lantern-flicker 1.8s ease-in-out infinite; }
+.lantern-cursor__body { position: absolute; inset: 7px 4px 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.75); border-radius: 44% 44% 38% 38% / 17% 17% 25% 25%; background: linear-gradient(90deg, rgba(255,255,255,.92), rgba(248,247,235,.72) 25%, rgba(255,255,255,.95) 50%, rgba(216,216,202,.62) 78%, rgba(255,255,255,.9)); box-shadow: inset 0 0 14px rgba(255,255,255,.75), 0 3px 7px rgba(255,255,255,.35); }
+.lantern-cursor__body::before, .lantern-cursor__body::after { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(116,116,105,.32); }
+.lantern-cursor__body::before { left: 25%; } .lantern-cursor__body::after { right: 25%; }
+.lantern-cursor__top { position: absolute; top: -2px; left: 13%; right: 13%; height: 7px; border-radius: 50%; border: 1px solid rgba(100,100,92,.4); background: rgba(255,255,255,.8); }
+.lantern-cursor__flame { position: absolute; left: 50%; bottom: 12px; width: 13px; height: 21px; transform: translateX(-50%); border-radius: 50% 50% 45% 45%; background: radial-gradient(ellipse at 50% 82%, #fff 0 18%, #ffd878 28%, #f29b38 58%, transparent 70%); filter: blur(.2px); animation: lantern-flicker .72s ease-in-out infinite; }
+.lantern-cursor__basket { position: absolute; bottom: -1px; left: 18%; right: 18%; height: 7px; border-radius: 50%; border: 1px solid rgba(85,85,75,.55); background: radial-gradient(ellipse, #f5cf72 0 20%, #7d5b2d 23% 30%, transparent 34%); }
+.lantern-cursor__tassel { position: absolute; bottom: -11px; left: 50%; width: 1px; height: 14px; background: #f1cd7b; transform: translateX(-50%); box-shadow: 0 9px 0 #f1cd7b; }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) { .lantern-reveal, .lantern-cursor { display: none; } .lantern-page, .lantern-page a, .lantern-page button { cursor: auto; } }
 
 @layer base {
@@ -414,18 +420,23 @@
   will-change: opacity, transform;
 }
 
+.rsvp-glass-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
 .rsvp-glass-btn::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.20) 0%,
-    rgba(35, 97, 48, 0.45) 20%,
-    rgba(35, 97, 48, 0.55) 50%,
-    rgba(35, 97, 48, 0.40) 80%,
-    rgba(255, 255, 255, 0.10) 100%
+  145deg,
+  rgba(255, 255, 255, 0.24) 0%,
+  rgba(35, 97, 48, 0.84) 20%,
+  rgba(35, 97, 48, 0.92) 50%,
+  rgba(35, 97, 48, 0.78) 80%,
+  rgba(255, 255, 255, 0.16) 100%
   );
   backdrop-filter: blur(24px) saturate(1.8) brightness(1.05);
   -webkit-backdrop-filter: blur(24px) saturate(1.8) brightness(1.05);
@@ -433,6 +444,9 @@
 }
 
 .rsvp-glass-btn {
+  isolation: isolate;
+  background: #236130;
+  color: #fff;
   box-shadow:
     0 0 50px rgba(35, 97, 48, 0.20),
     0 0 20px rgba(255, 255, 255, 0.08),
