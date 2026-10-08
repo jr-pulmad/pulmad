@@ -1,4 +1,5 @@
 import type React from "react"
+import { cookies } from "next/headers"
 import type { Metadata, Viewport } from "next"
 import { Manrope, Playfair_Display, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
@@ -57,16 +58,19 @@ export const viewport: Viewport = {
   userScalable: true,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const savedLanguage = (await cookies()).get("wedding-lang")?.value
+  const initialLanguage = savedLanguage === "en" ? "en" : "et"
+
   return (
     <html lang="et" suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen bg-background">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <I18nProvider>{children}</I18nProvider>
+          <I18nProvider initialLanguage={initialLanguage}>{children}</I18nProvider>
         </ThemeProvider>
         <Analytics />
       </body>

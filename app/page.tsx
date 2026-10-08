@@ -1,25 +1,18 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { Hero } from "@/components/sections/hero"
+import { ThankYou } from "@/components/sections/thank-you"
 import { Countdown } from "@/components/sections/countdown"
-import { CTAGrid } from "@/components/sections/cta-grid"
-import { VenuePreview } from "@/components/sections/venue-preview"
-import { ScrollIndicator } from "@/components/ui/scroll-indicator"
-import { HashScroll } from "@/components/ui/hash-scroll"
-
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <HashScroll />
       <Header />
       <main className="flex-1 flex flex-col">
-        <Hero />
-        <Countdown />
-        <CTAGrid />
-        <VenuePreview />
+        <ThankYou />
+        <div id="countdown">
+          <Countdown />
+        </div>
       </main>
       <Footer />
-      <ScrollIndicator />
     </div>
   )
 }

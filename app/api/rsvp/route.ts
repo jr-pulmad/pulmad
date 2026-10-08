@@ -4,13 +4,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { 
-      language,
-      honeypot,
+    language: submittedLanguage,
+    honeypot,
       // Main guest RSVP info
       mainGuest,
       // Additional guests with their menu choices
       additionalGuests,
     } = body
+    const language = submittedLanguage === "en" ? "en" : "et"
 
     // Honeypot check - if this field is filled, it's likely a bot
     if (honeypot) {

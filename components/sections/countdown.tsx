@@ -7,8 +7,7 @@ import { ChevronDown, MousePointer2 } from "lucide-react"
 interface TimeLeft {
   days: number
   hours: number
-  minutes: number
-  seconds: number
+
 }
 
 interface StickmanPosition {
@@ -431,16 +430,12 @@ export function Countdown() {
 
     const calculateTimeLeft = () => {
       const now = new Date()
-      const difference = weddingDate.getTime() - now.getTime()
+      const difference = Math.max(0, now.getTime() - weddingDate.getTime())
 
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        })
-      }
+      setTimeLeft({
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      })
     }
 
     calculateTimeLeft()
@@ -454,7 +449,7 @@ export function Countdown() {
       <section className="min-h-[100dvh] flex items-center justify-center bg-card/30 relative">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="grid grid-cols-4 gap-4 sm:gap-8">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8">
               {[0, 1, 2, 3].map((i) => (
                 <div key={i} className="flex flex-col items-center">
                   <div className="w-20 sm:w-32 h-20 sm:h-32 rounded-2xl bg-secondary/50 animate-pulse" />
@@ -470,13 +465,8 @@ export function Countdown() {
   const timeUnits = [
     { value: timeLeft.days, label: t.countdown.days },
     { value: timeLeft.hours, label: t.countdown.hours },
-    { value: timeLeft.minutes, label: t.countdown.minutes },
-    { value: timeLeft.seconds, label: t.countdown.seconds },
-  ]
 
-  const scrollHintText = language === "et" 
-    ? "Kinnita osalemine ja tutvu infoga" 
-    : "Confirm attendance and learn more"
+  ]
 
   return (
     <section 
@@ -516,7 +506,7 @@ export function Countdown() {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Countdown grid */}
-          <div className="grid grid-cols-4 gap-3 sm:gap-6 lg:gap-8 mb-6 sm:mb-10">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:gap-8 mb-6 sm:mb-10 max-w-xl mx-auto">
             {timeUnits.map((unit, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div className="relative w-full max-w-[120px] sm:max-w-[160px] aspect-square flex items-center justify-center">
@@ -537,8 +527,6 @@ export function Countdown() {
         </div>
       </div>
       
-      {/* Scroll hint with custom text */}
-      <ScrollHint text={scrollHintText} />
     </section>
   )
 }

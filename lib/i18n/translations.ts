@@ -6,8 +6,9 @@ export const translations = {
       home: "Avaleht",
       rsvp: "RSVP",
       menu: "Menüü",
-      flowers: "Lilled",
-      info: "Info",
+  flowers: "Lilled",
+  photos: "Fotod",
+  info: "Info",
       updates: "Uuendused",
     },
     // Hero
@@ -24,7 +25,7 @@ export const translations = {
       hours: "tundi",
       minutes: "minutit",
       seconds: "sekundit",
-      until: "pulmadeni",
+      until: "pulmadest",
     },
     // CTAs
     cta: {
@@ -157,6 +158,33 @@ export const translations = {
       directions: "Vaata kaarti",
       address: "Lossi 1, 60201 Alatskivi, Tartumaa, Eesti",
     },
+    // Landing and gallery pages
+    landing: {
+      title: "Aitäh, et olid meiega",
+      subtitle: "Meie päeva ilusamad hetked jäävad siia meenutamiseks.",
+      galleryCta: "Vaata galeriid",
+    },
+    photos: {
+      title: "Meie päeva hetked",
+      subtitle: "Vali galerii, et meie pulmapäeva juurde tagasi pöörduda.",
+      chooseGallery: "Vali galerii...",
+      weddingParty: "Pulmapidu",
+      ceremony: "Tseremoonia",
+      paparazzi: "Paparazzi",
+    },
+    feedback: {
+      eyebrow: "Tagasiside",
+      title: "Jaga oma mõtteid",
+      subtitle: "Kui soovid, jäta meile paar head sõna või mõni armas mälestus.",
+      name: "Nimi (soovi korral)",
+      email: "E-mail (soovi korral)",
+      message: "Sinu sõnum",
+      submit: "Saada tagasiside",
+      successTitle: "Aitäh!",
+      successMessage: "Sinu mõte jõudis meieni.",
+      galleryCta: "Vaata galeriid",
+      error: "Midagi läks valesti. Palun proovi uuesti.",
+    },
     // Footer
     footer: {
       madeWith: "Tehtud armastusega",
@@ -194,8 +222,9 @@ export const translations = {
       home: "Home",
       rsvp: "RSVP",
       menu: "Menu",
-      flowers: "Flowers",
-      info: "Info",
+  flowers: "Flowers",
+  photos: "Photos",
+  info: "Info",
       updates: "Updates",
     },
     // Hero
@@ -212,7 +241,7 @@ export const translations = {
       hours: "hours",
       minutes: "minutes",
       seconds: "seconds",
-      until: "until the wedding",
+      until: "since the wedding",
     },
     // CTAs
     cta: {
@@ -344,6 +373,33 @@ export const translations = {
       title: "Venue",
       directions: "View Map",
       address: "Lossi 1, 60201 Alatskivi, Tartu County, Estonia",
+    },
+    // Landing and gallery pages
+    landing: {
+      title: "Thank you for being with us",
+      subtitle: "The most beautiful moments from our day remain here to remember.",
+      galleryCta: "View gallery",
+    },
+    photos: {
+      title: "Moments from our day",
+      subtitle: "Choose a gallery to revisit our wedding day.",
+      chooseGallery: "Choose a gallery...",
+      weddingParty: "Wedding celebration",
+      ceremony: "Ceremony",
+      paparazzi: "Paparazzi",
+    },
+    feedback: {
+      eyebrow: "Feedback",
+      title: "Share your thoughts",
+      subtitle: "If you wish, leave us a few kind words or a cherished memory.",
+      name: "Name (optional)",
+      email: "Email (optional)",
+      message: "Your message",
+      submit: "Send feedback",
+      successTitle: "Thank you!",
+      successMessage: "Your message has reached us.",
+      galleryCta: "View gallery",
+      error: "Something went wrong. Please try again.",
     },
     // Footer
     footer: {
