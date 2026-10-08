@@ -13,7 +13,7 @@ export function ThankYou() {
       <LanternCursor />
       <div
         className="absolute inset-0 z-0 bg-cover brightness-[0.82]"
-        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "center 42%" }}
+        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "center 24%" }}
         role="img"
         aria-label="Johanna ja Rannar"
       >
@@ -32,14 +32,14 @@ export function ThankYou() {
         </p>
         <Link
           href="/photos"
-          className="rsvp-glass-btn group relative z-10 mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          className="rsvp-glass-btn cursor-pointer group relative z-10 mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           <span>{language === "et" ? "Vaata galeriid" : "View gallery"}</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
-      <a href="#countdown" aria-label="Vaata möödunud aega" className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 rounded-full p-2 text-white/70 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+      <a href="#countdown" aria-label="Vaata möödunud aega" className="cursor-pointer absolute bottom-8 left-1/2 z-10 -translate-x-1/2 rounded-full p-2 text-white/70 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
         <ArrowDown className="h-6 w-6 animate-bounce" />
       </a>
     </section>
