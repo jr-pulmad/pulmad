@@ -6,10 +6,21 @@ import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { useI18n } from "@/lib/i18n/context"
 
+function getGalleryUrl(value: string | undefined) {
+  if (!value) return null
+
+  try {
+    const url = new URL(value)
+    return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null
+  } catch {
+    return null
+  }
+}
+
 const galleryLinks = [
-  { key: "weddingParty", href: "https://drive.google.com/", position: "object-[center_68%]" },
-  { key: "ceremony", href: "https://drive.google.com/", position: "object-[center_52%]" },
-  { key: "paparazzi", href: "https://drive.google.com/", position: "object-[center_82%]" },
+  { key: "weddingParty", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_WEDDING_PARTY_URL), position: "object-[center_68%]" },
+  { key: "ceremony", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_CEREMONY_URL), position: "object-[center_52%]" },
+  { key: "paparazzi", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_PAPARAZZI_URL), position: "object-[center_82%]" },
 ] as const
 
 export default function PhotosPage() {
@@ -28,7 +39,17 @@ export default function PhotosPage() {
 
           <div className="grid h-[58vh] min-h-[390px] grid-cols-1 gap-3 sm:grid-cols-3">
             {galleries.map((gallery) => (
-              <a key={gallery.title} href={gallery.href} target="_blank" rel="noopener noreferrer" className="group relative min-h-[120px] overflow-hidden rounded-2xl border border-border/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+              <a
+                key={gallery.title}
+                href={gallery.href ?? undefined}
+                target={gallery.href ? "_blank" : undefined}
+                rel={gallery.href ? "noopener noreferrer" : undefined}
+                aria-disabled={!gallery.href}
+                onClick={(event) => {
+                  if (!gallery.href) event.preventDefault()
+                }}
+                className={`group relative min-h-[120px] overflow-hidden rounded-2xl border border-border/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${!gallery.href ? "cursor-default" : ""}`}
+              >
                 <Image src="/images/castle-couple.jpg" alt={gallery.title} fill className={`object-cover grayscale transition duration-700 group-hover:scale-105 group-hover:grayscale-0 ${gallery.position}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent transition group-hover:from-black/60" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-5 text-white">
