@@ -131,7 +131,7 @@
 .lantern-cursor.is-visible { opacity: 1; }
 .lantern-cursor__glow { position: absolute; inset: -160px; border-radius: 999px; background: radial-gradient(circle, rgba(255, 214, 125, 0.55) 0%, rgba(255, 174, 55, 0.2) 35%, transparent 72%);  }
 .lantern-cursor__image { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); object-fit: contain; mix-blend-mode: screen; filter: saturate(1.1) contrast(1.08) drop-shadow(0 0 10px rgba(255, 180, 70, .9)); }
-.lantern-cursor::after { content: ""; position: absolute; left: 50%; top: 68px; width: 26px; height: 30px; pointer-events: none; transform: translateX(-50%); border-radius: 50% 50% 45% 45%; background: radial-gradient(ellipse at 50% 78%, rgba(255, 247, 189, .72) 0 16%, rgba(255, 203, 82, .7) 34%, rgba(242, 107, 33, .48) 58%, transparent 78%); filter: blur(3px) drop-shadow(0 0 12px rgba(255, 157, 50, .72)); opacity: .82; }
+.lantern-cursor::after { content: ""; position: absolute; left: calc(50% - 5px); top: 68px; width: 26px; height: 30px; pointer-events: none; transform: translateX(-50%); border-radius: 50% 50% 45% 45%; background: radial-gradient(ellipse at 50% 78%, rgba(255, 247, 189, .72) 0 16%, rgba(255, 203, 82, .7) 34%, rgba(242, 107, 33, .48) 58%, transparent 78%); filter: blur(3px) drop-shadow(0 0 12px rgba(255, 157, 50, .72)); opacity: .82; }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) { .lantern-reveal, .lantern-cursor { display: none; } .thank-you-section, .thank-you-section a, .thank-you-section button { cursor: auto; } }
 
 @layer base {
