@@ -26,7 +26,7 @@ export function LanternCursor() {
       if (!inLanding) return
       const deltaX = event.clientX - previousPosition.current.x
       const deltaY = event.clientY - previousPosition.current.y
-      const tilt = Math.max(-14, Math.min(14, deltaX * 0.58 - deltaY * 0.2))
+      const tilt = Math.max(-30, Math.min(30, deltaX * 1.15 - deltaY * 0.32))
       previousPosition.current = { x: event.clientX, y: event.clientY }
       setPosition({ x: event.clientX, y: event.clientY })
       document.documentElement.style.setProperty("--lantern-x", `${event.clientX}px`)
