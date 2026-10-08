@@ -11,21 +11,16 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("et")
+export function I18nProvider({ children, initialLanguage = "et" }: { children: ReactNode; initialLanguage?: Language }) {
+  const [language, setLanguageState] = useState<Language>(initialLanguage)
 
   useEffect(() => {
-    // Load saved language preference
-    const saved = localStorage.getItem("wedding-lang") as Language | null
-    if (saved && (saved === "et" || saved === "en")) {
-      setLanguageState(saved)
-    }
-  }, [])
+    document.documentElement.lang = language
+  }, [language])
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
-    localStorage.setItem("wedding-lang", lang)
-    document.documentElement.lang = lang
+    document.cookie = `wedding-lang=${lang}; Path=/; Max-Age=31536000; SameSite=Lax`
   }
 
   const t = (translations[language] ?? translations.et) as TranslationKeys

@@ -2,7 +2,8 @@ import { NextResponse } from "next/server"
 
 export async function POST(request: Request) {
   try {
-    const { name, email, message, honeypot, language } = await request.json()
+    const { name, email, message, honeypot, language: submittedLanguage } = await request.json()
+    const language = submittedLanguage === "en" ? "en" : "et"
 
     if (honeypot) return NextResponse.json({ success: true })
     if (!message?.trim()) return NextResponse.json({ error: "Message is required" }, { status: 400 })
