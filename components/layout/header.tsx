@@ -5,8 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 import { useI18n } from "@/lib/i18n/context"
 import { LanguageSwitcher } from "@/components/ui/language-switcher"
-import { Button } from "@/components/ui/button"
-import { Menu, X, Flower2, Info, Heart } from "lucide-react"
+import { Menu, X, Camera, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 // Filled heart icon
@@ -119,7 +118,6 @@ export function Header() {
   const isHomePage = pathname === "/"
   const showSolidBackground = !isHomePage || isScrolled
   // Hide RSVP button on homepage when at top (hero section visible)
-  const showRsvpButton = !isHomePage || isScrolled
 
   useEffect(() => {
     const handleScroll = () => {
@@ -144,29 +142,21 @@ export function Header() {
   }
 
   const navItems = [
-    { 
-      href: "/rsvp", 
-      label: t.nav.rsvp,
-      mobileLabel: language === "et" ? "Kinnita osalemine" : "RSVP",
-      icon: Heart, 
-      iconFilled: HeartFilled,
-      description: language === "et" ? "Kinnita osalemine" : "Confirm attendance" 
+    {
+      href: "/photos",
+      label: language === "et" ? "Fotod" : "Photos",
+      mobileLabel: language === "et" ? "Vaata pilte" : "View photos",
+      icon: Camera,
+      iconFilled: Camera,
+      description: language === "et" ? "Meie hetked" : "Our moments"
     },
-    { 
-      href: "/flowers", 
-      label: t.nav.flowers,
-      mobileLabel: language === "et" ? "Lilled" : "Flowers",
-      icon: Flower2, 
-      iconFilled: Flower2Filled,
-      description: language === "et" ? "Kingi lilli" : "Gift flowers" 
-    },
-    { 
-      href: "/info", 
+    {
+      href: "/info",
       label: t.nav.info,
       mobileLabel: language === "et" ? "Info" : "Info",
-      icon: Info, 
+      icon: Info,
       iconFilled: InfoFilled,
-      description: language === "et" ? "Kasulik info" : "Useful info" 
+      description: language === "et" ? "Kasulik info" : "Useful info"
     },
   ]
 
@@ -203,7 +193,7 @@ export function Header() {
               {navItems.map((item, index) => {
                 const isActive = pathname === item.href
                 const Icon = isActive ? item.iconFilled : item.icon
-                const isRsvp = item.href === "/rsvp"
+                const isPhotos = item.href === "/photos"
                 
                 return (
                   <div key={item.href} className="flex items-center">
@@ -222,8 +212,7 @@ export function Header() {
                     >
                       <Icon className={cn(
                         "w-4 h-4 transition-transform duration-200",
-                        isRsvp && "md:group-hover:animate-heartbeat",
-                        !isRsvp && "md:group-hover:scale-110"
+                        isPhotos ? "md:group-hover:animate-camera-flash" : "md:group-hover:scale-110"
                       )} />
                       <span>{item.label}</span>
                     </Link>
@@ -247,20 +236,6 @@ export function Header() {
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSwitcher className="hidden sm:flex" variant={showSolidBackground ? "default" : "transparent"} />
             
-            {/* CTA Button - hide on homepage hero */}
-            <Button 
-              asChild 
-              size="sm" 
-              className={cn(
-                "hidden sm:inline-flex h-9 transition-all duration-300",
-                !showRsvpButton && "opacity-0 pointer-events-none scale-90"
-              )}
-            >
-              <Link href="/rsvp">
-                <span>{t.cta.rsvp}</span>
-              </Link>
-            </Button>
-
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -344,11 +319,6 @@ export function Header() {
           
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-border">
             <LanguageSwitcher isMobile />
-            <Button asChild size="sm" className="h-9">
-              <Link href="/rsvp" onClick={() => setIsMobileMenuOpen(false)}>
-                {t.cta.rsvp}
-              </Link>
-            </Button>
           </div>
         </nav>
       </div>

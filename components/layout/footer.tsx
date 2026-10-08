@@ -21,14 +21,20 @@ export function Footer() {
 
           {/* Quick links */}
           <nav className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm text-muted-foreground">
+            <Link href="/photos" className="hover:text-foreground transition-colors">
+              {t.nav.photos ?? "Fotod"}
+            </Link>
+            <Link href="/info" className="hover:text-foreground transition-colors">
+              {t.nav.info}
+            </Link>
             <Link href="/rsvp" className="hover:text-foreground transition-colors">
               {t.nav.rsvp}
             </Link>
             <Link href="/flowers" className="hover:text-foreground transition-colors">
               {t.nav.flowers}
             </Link>
-            <Link href="/info" className="hover:text-foreground transition-colors">
-              {t.nav.info}
+            <Link href="/archive" className="hover:text-foreground transition-colors">
+              Ajalugu
             </Link>
             <Link href="/privacy" className="hover:text-foreground transition-colors">
               {t.footer.privacy}

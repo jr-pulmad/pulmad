@@ -6,8 +6,9 @@ export const translations = {
       home: "Avaleht",
       rsvp: "RSVP",
       menu: "Menüü",
-      flowers: "Lilled",
-      info: "Info",
+  flowers: "Lilled",
+  photos: "Fotod",
+  info: "Info",
       updates: "Uuendused",
     },
     // Hero
@@ -24,7 +25,7 @@ export const translations = {
       hours: "tundi",
       minutes: "minutit",
       seconds: "sekundit",
-      until: "pulmadeni",
+      until: "pulmadest",
     },
     // CTAs
     cta: {
@@ -194,8 +195,9 @@ export const translations = {
       home: "Home",
       rsvp: "RSVP",
       menu: "Menu",
-      flowers: "Flowers",
-      info: "Info",
+  flowers: "Flowers",
+  photos: "Photos",
+  info: "Info",
       updates: "Updates",
     },
     // Hero
@@ -212,7 +214,7 @@ export const translations = {
       hours: "hours",
       minutes: "minutes",
       seconds: "seconds",
-      until: "until the wedding",
+      until: "since the wedding",
     },
     // CTAs
     cta: {

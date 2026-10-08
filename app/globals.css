@@ -186,6 +186,12 @@
   }
 }
 
+@keyframes camera-flash {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  45% { filter: brightness(1.8); transform: scale(1.08); }
+  60% { filter: brightness(1); transform: scale(1); }
+}
+
 @keyframes heartbeat {
   0%, 100% {
     transform: scale(1);
@@ -209,6 +215,9 @@
   .md\:group-hover\:animate-heartbeat:is(:where(.group):hover *),
   .md\:hover\:animate-heartbeat:hover {
     animation: heartbeat 1s ease-in-out infinite;
+  }
+  .md\:group-hover\:animate-camera-flash:is(:where(.group):hover *) {
+    animation: camera-flash 0.8s ease-in-out;
   }
 }
 
