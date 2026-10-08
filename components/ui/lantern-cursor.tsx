@@ -29,7 +29,6 @@ export function LanternCursor() {
         <span className="lantern-cursor__glow" />
         <span className="lantern-cursor__body">
           <span className="lantern-cursor__top" />
-          <span className="lantern-cursor__flame" />
           <span className="lantern-cursor__basket" />
         </span>
         <span className="lantern-cursor__tassel" />
