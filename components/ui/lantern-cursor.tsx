@@ -27,11 +27,7 @@ export function LanternCursor() {
       <div aria-hidden="true" className={`lantern-reveal ${visible ? "is-visible" : ""}`} />
       <div aria-hidden="true" className={`lantern-cursor ${visible ? "is-visible" : ""}`} style={{ left: position.x, top: position.y }}>
         <span className="lantern-cursor__glow" />
-        <span className="lantern-cursor__body">
-          <span className="lantern-cursor__top" />
-          <span className="lantern-cursor__basket" />
-        </span>
-        <span className="lantern-cursor__tassel" />
+        <img className="lantern-cursor__image" src="/images/sky-lantern-cursor.png" alt="" />
       </div>
     </>
   )

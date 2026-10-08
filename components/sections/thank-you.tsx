@@ -12,8 +12,8 @@ export function ThankYou() {
     <section className="thank-you-section relative isolate min-h-[100dvh] flex items-center justify-center overflow-hidden">
       <LanternCursor />
       <div
-        className="absolute inset-0 z-0 bg-cover brightness-125"
-        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "center 72%" }}
+        className="absolute inset-0 z-0 bg-cover brightness-[0.82]"
+        style={{ backgroundImage: "url('/images/castle-couple.jpg')", backgroundPosition: "center 42%" }}
         role="img"
         aria-label="Johanna ja Rannar"
       >
@@ -32,7 +32,7 @@ export function ThankYou() {
         </p>
         <Link
           href="/photos"
-          className="rsvp-glass-btn group relative z-10 mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-normal uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          className="rsvp-glass-btn group relative z-10 mt-9 inline-flex items-center gap-3 rounded-2xl px-9 py-4 text-sm font-medium uppercase tracking-widest text-white transition-transform duration-300 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           <span>{language === "et" ? "Vaata galeriid" : "View gallery"}</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
