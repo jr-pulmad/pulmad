@@ -17,7 +17,7 @@ export function ThankYou() {
     <section className="thank-you-section relative isolate min-h-[100dvh] flex items-center justify-center overflow-hidden">
       <LanternCursor />
       <div
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat brightness-[0.82]"
+        className="thank-you-background absolute inset-0 z-0 bg-cover bg-center bg-no-repeat brightness-[0.82]"
         style={{
           backgroundImage: "url('/images/castle-couple.jpg')",
           backgroundSize: "cover",

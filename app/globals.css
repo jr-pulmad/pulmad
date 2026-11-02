@@ -139,6 +139,14 @@
 
 .thank-you-section, .thank-you-section a, .thank-you-section button { cursor: none; }
 .thank-you-section .cursor-pointer { cursor: pointer !important; }
+
+/* Keep the desktop framing while giving narrow screens enough image height to avoid a black lower band. */
+@media (max-width: 640px) {
+  .thank-you-background {
+    background-size: auto 125% !important;
+    background-position: center 42% !important;
+  }
+}
 .lantern-reveal { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 1; background: rgba(0, 0, 0, 0.72); -webkit-mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); }
 .thank-you-section > .lantern-cursor { z-index: 2; }
 .thank-you-section > .container, .thank-you-section > a { z-index: 10; }
