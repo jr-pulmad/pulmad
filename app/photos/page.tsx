@@ -18,9 +18,9 @@ function getGalleryUrl(value: string | undefined) {
 }
 
 const galleryLinks = [
-  { key: "weddingParty", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_WEDDING_PARTY_URL), position: "object-[center_68%]" },
   { key: "ceremony", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_CEREMONY_URL), position: "object-[center_52%]" },
-  { key: "paparazzi", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_PAPARAZZI_URL), position: "object-[center_82%]" },
+  { key: "weddingParty", href: getGalleryUrl(process.env.NEXT_PUBLIC_GALLERY_WEDDING_PARTY_URL), position: "object-[center_68%]" },
+  { key: "paparazzi", href: getGalleryUrl("https://6adc9f3b23a0b1-45555288.gallery.photo/gallery/johanna-rannar-paparazzi-q4iukp"), position: "object-[center_82%]" },
 ] as const
 
 export default function PhotosPage() {
