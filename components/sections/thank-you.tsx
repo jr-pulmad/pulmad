@@ -22,7 +22,7 @@ export function ThankYou() {
           backgroundImage: "url('/images/castle-couple.jpg')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center calc(50% - 500px)",
+          backgroundPosition: "center 38%",
         }}
         role="img"
         aria-label="Johanna ja Rannar"
