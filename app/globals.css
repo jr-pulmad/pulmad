@@ -147,6 +147,12 @@
     background-position: center 42% !important;
   }
 }
+
+@media (min-width: 1200px) {
+  .thank-you-background {
+    background-position: center 44% !important;
+  }
+}
 .lantern-reveal { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 1; background: rgba(0, 0, 0, 0.72); -webkit-mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); mask-image: radial-gradient(circle 390px at var(--lantern-x, -100px) var(--lantern-y, -100px), transparent 0 29%, #000 80%); }
 .thank-you-section > .lantern-cursor { z-index: 2; }
 .thank-you-section > .container, .thank-you-section > a { z-index: 10; }
